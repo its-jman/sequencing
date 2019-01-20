@@ -12,13 +12,13 @@ services:
     build: "./api"
     command: "pipenv run flask run -h 0.0.0.0"
     volumes:
-      - ./api/:/code/
+      - "./api/:/code/"
     ports:
       - "5000:5000"
   interface:
     build: "./interface"
     command: "npm run start"
     volumes:
-      - ./interface/:/code/
+      - "./interface/:/code/"
     ports:
       - "3000:3000"

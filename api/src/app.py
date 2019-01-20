@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate, MigrateCommand
+from flask_migrate import Migrate
 
+from models import db
 from routes.datasets import datasets_routes
 from routes.search import search_routes
 
@@ -23,9 +23,8 @@ app.config["SQLALCHEMY_DATABASE_URI"] = (
     "postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s" % POSTGRES
 )
 
-db = SQLAlchemy(app)
-import models.models
-
+db.init_app(app)
+db.app = app
 db.create_all()
 
 migrate = Migrate(app, db)
