@@ -1,0 +1,285 @@
+/*                                   Resets                                    */
+html {
+  /*overflow-y: scroll;*/
+  box-sizing: border-box;
+
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  height: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  height: 100%;
+}
+
+th {
+  font-weight: normal;
+}
+
+input {
+  display: block;
+}
+
+input[type="text"] {
+  font-size: 18px;
+}
+
+/*                                      Containers                                             */
+#root {
+  display: flex;
+  flex-direction: column;
+
+  height: 100%;
+}
+
+.title-container {
+}
+
+.content {
+  display: flex;
+  flex-grow: 1;
+
+  min-height: 540px;
+}
+
+/*                                   Title                                           */
+.title {
+  display: flex;
+  justify-content: center;
+
+  width: 100%;
+
+  margin-top: 15px;
+}
+
+.title-link {
+  margin: 0 auto;
+  padding-bottom: 5px;
+
+  font-family: "Josefin Slab", serif;
+  font-size: 40px;
+}
+
+.title-link:link {
+  text-decoration: none;
+  color: #5067af;
+}
+
+.title-link:visited {
+  text-decoration: none;
+  color: #5067af;
+}
+
+.separator {
+  border-bottom: 3px #eeeeee solid;
+}
+
+.separator-dark {
+  border-bottom: 2px hsla(0, 0%, 5%, 0.3) solid;
+}
+
+/*                                    Components                                          */
+.clickable {
+  cursor: pointer;
+}
+
+.submit-btn {
+  margin-left: auto;
+}
+
+.input-submitted {
+  background-color: hsla(102, 75%, 90%, 1);
+}
+
+.input-not-submitted {
+  background-color: hsla(357, 55%, 87%, 1);
+}
+
+.input-loading {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/*                                        Modal                                   */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-content {
+  width: 375px;
+
+  margin: 15% auto;
+  padding: 10px;
+
+  background-color: #fff;
+}
+
+.modal-content-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 3px;
+}
+
+.modal-content-body {
+  margin-top: 3px;
+}
+
+/*                                               ???                              */
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+}
+
+.header {
+  font-weight: bold;
+  font-size: large;
+  color: hsl(0, 0%, 13%);
+}
+
+.dataset-table {
+  margin-left: 10px;
+}
+
+/*                                             Visualize - Sidebar                                          */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+
+  border-right: 1px solid hsla(0, 0%, 50%, 0.3);
+
+  width: 270px;
+}
+
+.sidebar-header {
+  display: flex;
+  flex-direction: column;
+
+  padding: 5px;
+}
+
+.upload-button {
+  display: flex;
+  align-items: center;
+
+  padding: 1px 4px 1px 1px;
+  margin-bottom: 5px;
+
+  width: fit-content;
+}
+
+.sidebar-header-search {
+  flex-grow: 1;
+}
+
+.dataset-list-container {
+  display: flex;
+  flex-direction: column;
+
+  flex-grow: 1;
+}
+
+.dataset-list {
+  flex-grow: 1;
+
+  padding: 0;
+  margin: 0;
+
+  overflow-y: scroll;
+}
+
+.dataset-list-item:first-of-type {
+  border-top: 1px solid hsla(0, 0%, 50%, 0.3);
+}
+
+.dataset-list-item {
+  list-style-type: none;
+
+  border-bottom: 1px solid hsla(0, 0%, 50%, 0.3);
+  padding: 5px;
+
+  height: 80px;
+}
+
+.dataset-list-item-active {
+  background-color: hsla(229, 58%, 88%, 0.5);
+}
+
+.dataset-list-item:not(.dataset-list-item-active):hover {
+  background-color: hsla(333, 8%, 77%, 0.5);
+}
+
+/*
+REG COLOR: #BAC1E1
+ERR COLOR: #C1666B
+*/
+
+/*                                             Visualize - Details                                       */
+.details {
+  flex-grow: 1;
+  overflow-y: scroll;
+
+  padding: 5px 5px 50px;
+}
+
+.sequences {
+  display: flex;
+  flex-direction: column;
+
+  height: 500px;
+  width: 640px;
+}
+
+.sequences__trigger {
+  display: flex;
+  align-items: center;
+  background: #00bebe;
+
+  width: 100%;
+
+  padding: 10px;
+}
+
+/* Div that expands upon opening*/
+.sequences__contentOuter {
+}
+
+/* Actual content of the collapsible */
+.sequences__contentInner {
+  border: 1px solid hsla(333, 8%, 77%, 0.5);
+  border-top: 0;
+  padding: 15px 15px 15px 20px;
+}
