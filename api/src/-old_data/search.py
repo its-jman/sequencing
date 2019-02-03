@@ -5,7 +5,7 @@ def regexify_pattern(simple_pattern):
     if simple_pattern is None:
         return None
 
-    simple_pattern = simple_pattern.replace("X", "[A-Z\*]")
+    simple_pattern = simple_pattern.replace("X", "[A-Z*]")
     simple_pattern = re.sub(r"(\d+)-(\d+)", r"{\1,\2}", simple_pattern)
     # Replace numbers in string as long as they have not already been put in curly braces (by previous regexp)
     simple_pattern = re.sub(r"(\d+)(?![\d,]*})", r"{\1}", simple_pattern)

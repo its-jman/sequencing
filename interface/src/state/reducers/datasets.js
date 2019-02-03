@@ -14,14 +14,7 @@ export const datasets = (state = initialState, action) => {
         initialState: initialState,
         transformResponse: (response) => {
           if (response.status === 200) {
-            const dataset = response.data.dataset;
-            return {
-              ...state.data,
-              items: {
-                ...state.data.items,
-                [dataset.id]: dataset
-              }
-            };
+            return state.data;
           } else {
             console.log("NON 200 RESPONSE");
             console.log(response);

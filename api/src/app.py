@@ -1,37 +1,19 @@
+import uuid
 from flask import Flask
 from flask_cors import CORS
-from flask_migrate import Migrate
 
-from models import db
-from routes.datasets import datasets_routes
-from routes.search import search_routes
-
-
-POSTGRES = {
-    "user": "myuser",
-    "pw": "mypass",
-    "db": "sequencing",
-    "host": "localhost",
-    "port": "5432",
-}
+import data
+from routes import bp
 
 app = Flask(__name__)
+app.secret_key = str(uuid.uuid4())
 app.config["DEBUG"] = True
-app.secret_key = "A0Zr98j/3yX R~XHH!jmN]LWX/,?RT"
+app.config["CORS_HEADERS"] = "Content-Type"
+app.json_encoder = data.utils.MongoEncoder
 
-app.config["SQLALCHEMY_DATABASE_URI"] = (
-    "postgresql://%(user)s:%(pw)s@%(host)s:%(port)s/%(db)s" % POSTGRES
-)
-
-db.init_app(app)
-db.app = app
-db.create_all()
-
-migrate = Migrate(app, db)
 CORS(app)
 
-app.register_blueprint(datasets_routes)
-app.register_blueprint(search_routes)
+app.register_blueprint(bp)
 
 
 if __name__ == "__main__":

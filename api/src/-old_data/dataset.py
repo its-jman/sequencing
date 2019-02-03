@@ -1,9 +1,9 @@
 import os
 import time
 
-import utils
-from models.record import RecordSchema
-from models.dataset import UploadMetaSchema, RecordsMetaSchema
+from old_data import utils
+from old_models.record import RecordSchema
+from old_models.dataset import UploadMetaSchema, RecordsMetaSchema
 
 
 class Dataset:
@@ -31,12 +31,12 @@ class Dataset:
 
     def refresh(self, force_update=False):
         """
-        Refresh should proceed as a check of both meta and records validity. It retrieves data from filesystem if need
+        Refresh should proceed as a check of both meta and records validity. It retrieves -old_data from filesystem if need
         be, and updates `self` respectively.
 
         :return:
         """
-        # These should fetch the most recent data. Updating if need be.
+        # These should fetch the most recent -old_data. Updating if need be.
         self._refresh_upload_meta(force_update=force_update)
         self._refresh_records_meta(force_update=force_update)
 
@@ -103,7 +103,7 @@ class Dataset:
         """
         Efficient method to get the stored dataset meta (All fields of the dataset meta, excluding `records_meta`).
         Will check if the file has been updated since the last time it was parsed, and return the JSON object of
-        (either) the data read from the filesystem, or what was previously read.
+        (either) the -old_data read from the filesystem, or what was previously read.
 
         :param force_update: boolean that forces filesystem refresh
         :return:
@@ -119,7 +119,7 @@ class Dataset:
     def _refresh_records_meta(self, force_update=False):
         """
         Efficient method to get the records meta. Will check if the file has been updated since the last time it was
-        parsed, and return the JSON object of (either) the data read from the filesystem, or what was previously read.
+        parsed, and return the JSON object of (either) the -old_data read from the filesystem, or what was previously read.
 
         :param force_update: boolean that forces filesystem refresh
         :return:

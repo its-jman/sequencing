@@ -26,7 +26,7 @@ class UploadModal extends React.Component {
     const data = new FormData();
     data.append("name", this._components.nameInput.value);
     data.append("file", this._components.uploadInput.files[0]);
-    data.append("file_type", this._components.fileTypeInput.value);
+    data.append("data_format", this._components.fileTypeInput.value);
 
     this.props.uploadDataset(data);
   };

@@ -18,7 +18,7 @@ class UploadMetaSchema(Schema):
 
     @post_load
     def make_upload(self, data):
-        # data['dataset_id'] = data.pop('id')
+        # -old_data['dataset_id'] = -old_data.pop('id')
         return self.UploadMeta(**data)
 
 
@@ -40,7 +40,7 @@ class RecordsMetaSchema(Schema):
     @classmethod
     def from_records(cls, records):
         """
-        Processes an []RecordSchema to give an overview of all of the data combined as RecordsMetaSchema
+        Processes an []RecordSchema to give an overview of all of the -old_data combined as RecordsMetaSchema
 
         :param records: []RecordSchema
         :return: RecordsMetaSchema

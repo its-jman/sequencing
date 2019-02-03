@@ -5,11 +5,11 @@ from marshmallow import ValidationError
 from flask import Blueprint, jsonify, request
 from flask.views import MethodView
 
-import utils
+from old_data import utils
 import config
 
-from models.record import RecordSchema
-from models.dataset import DatasetSchema, RecordsMetaSchema
+from old_models.record import RecordSchema
+from old_models.dataset import DatasetSchema
 
 datasets_routes = Blueprint("datasets", __name__)
 
@@ -36,7 +36,7 @@ class DatasetsView(MethodView):
     @staticmethod
     def post():
         """
-        data = {
+        -old_data = {
             "file": FilePart(...),
             "name": "My Dataset Name",
             "file_type": fasta | undefined

@@ -4,11 +4,11 @@ import datetime as dt
 from dateutil.tz import tzlocal
 from marshmallow import ValidationError
 
-import utils
+from old_data import utils
 import config
-from dataset import Dataset
-from models.record import RecordSchema
-from models.dataset import UploadMetaSchema
+from old_data.dataset import Dataset
+from old_models.record import RecordSchema
+from old_models.dataset import UploadMetaSchema
 
 
 class Manager:

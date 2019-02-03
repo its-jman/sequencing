@@ -1,13 +1,13 @@
 version: "3"
 services:
-  db:
-    image: "postgres:latest"
+  mongo:
+    image: "mongo:4.0.5"
     environment:
-      POSTGRES_USER: "myuser"
-      POSTGRES_PASSWORD: "mypass"
-      POSTGRES_DB: "sequencing"
+      MONGO_INITDB_ROOT_USERNAME: "myuser"
+      MONGO_INITDB_ROOT_PASSWORD: "mypass"
+      MONGO_INITDB_DATABASE: "sequencing"
     ports:
-      - "5432:5432"
+      - "27017:27017"
   api:
     build: "./api"
     command: "pipenv run flask run -h 0.0.0.0"

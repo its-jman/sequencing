@@ -1,4 +1,4 @@
-.tmp/
-.vscode/
-uploads/
+__pycache__/
+*.py[cod]
+
 config/*secret*

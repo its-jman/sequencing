@@ -13,7 +13,7 @@ def gen_pattern(pattern: str):
     return re.compile(pattern)
 
 
-AMINO_PATTERN = re.compile("\(([0-9]*) amino acids\)")
+AMINO_PATTERN = re.compile("\\(([0-9]*) amino acids\\)")
 PATTERNS = map(
     lambda pattern: {
         "name": pattern,

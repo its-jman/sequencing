@@ -6,16 +6,14 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-boto3 = "*"
 flask = "*"
 marshmallow = "*"
 flask-cors = "*"
 numpy = "*"
 biopython = "*"
 python-dotenv = "*"
-flask-sqlalchemy = "*"
-flask-migrate = "*"
-psycopg2-binary = "*"
+pymodm = "*"
+pymongo = "*"
 
 [requires]
 python_version = "3.7"

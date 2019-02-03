@@ -1,9 +1,8 @@
 from flask import Blueprint, jsonify
 
-import search
+from old_data import search
 
-from models.record import RecordSchema
-from models.dataset import DatasetSchema, RecordsMetaSchema
+from old_models.dataset import RecordsMetaSchema
 
 search_routes = Blueprint("search", __name__)
 

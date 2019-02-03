@@ -7,7 +7,7 @@ from marshmallow import ValidationError
 from collections import namedtuple
 
 import config
-from models.record import RecordSchema
+from old_models.record import RecordSchema
 
 
 def should_update(path: str, update_time: float):
@@ -15,13 +15,6 @@ def should_update(path: str, update_time: float):
         return True
     file_update_time = os.path.getmtime(path)
     return file_update_time > update_time
-
-
-def allowed_file(filename):
-    return (
-        "." in filename
-        and filename.rsplit(".", 1)[1].lower() in config.ALLOWED_EXTENSIONS
-    )
 
 
 def get_directory_list(folder, join=True):
@@ -53,7 +46,7 @@ def parse_fasta_stream(tmp_path):
     return sorted(records_out, key=lambda r: r.id)
 
 
-ParsedResult = namedtuple("ParsedResult", ("data", "errors"))
+ParsedResult = namedtuple("ParsedResult", ("-old_data", "errors"))
 
 
 def parse_schema_file(schema, path: str):
