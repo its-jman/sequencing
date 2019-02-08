@@ -1,7 +1,7 @@
 from flask import g
 from Bio import SeqIO
 from datetime import datetime
-from collections import defaultdict, Counter
+from collections import Counter
 
 from pymongo import MongoClient
 from pymongo.errors import BulkWriteError
@@ -34,8 +34,18 @@ class DataEngine:
 
         return dataset_id
 
-    def get_datasets(self):
-        return list(self._datasets.find())
+    def get_datasets(self, page=0, page_size=100):
+        offset = page * page_size
+        cursor = self._datasets.find().skip(offset).limit(page_size)
+        return list(cursor)
+
+    def get_dataset_records(self, dataset_id, page, page_size):
+        records_cname = str(dataset_id)
+        records_collection = self.db.get_collection(records_cname)
+
+        offset = page * page_size
+        cursor = records_collection.find().skip(offset).limit(page_size)
+        return list(cursor)
 
     def delete_dataset(self, dataset_id):
         dataset = self._datasets.find_one_and_delete({"_id": dataset_id})
@@ -47,7 +57,13 @@ class DataEngine:
         seq = str(raw_record.seq)
 
         record = Record(description=raw_record.description, sequence=seq)
-        if not seq or seq[0] != "M" or seq[-1] != "*" or "*" in seq[1:-1]:
+        if (
+            not seq
+            or not record.description
+            or seq[0] != "M"
+            or seq[-1] != "*"
+            or "*" in seq[1:-1]
+        ):
             record.discarded = True
         else:
             record.analysis = RecordAnalysis(
@@ -55,6 +71,30 @@ class DataEngine:
             )
 
         return record
+
+    def _insert_records(self, records_cname, records_iterator):
+        records_collection = self.db.get_collection(records_cname)
+        analysis = {
+            "discarded_count": 0,
+            "record_count": 0,
+            "amino_count": 0,
+            "alphabet": Counter(),
+        }
+
+        with utils.BulkWriter(records_collection.insert_many) as bw:
+            for raw_record in records_iterator:
+                record = self._create_record(raw_record)
+                bw.insert(utils.convert_model(record))
+
+                if record.discarded or not record.analysis:
+                    analysis.discarded_count += 1
+                    continue
+                else:
+                    analysis.record_count += 1
+                    analysis.amino_count += record.analysis.amino_count
+                    analysis.alphabet += record.analysis.alphabet
+
+        return analysis
 
     def create_dataset(self, name, data_format, user_filename, path):
         dataset_id = self.gen_dataset_id()
@@ -67,40 +107,15 @@ class DataEngine:
         )
 
         records_cname = str(dataset_id)
-        records_collection = self.db.get_collection(records_cname)
-
-        alphabet = Counter()
-        record_count = 0
-        discarded_count = 0
-        amino_count = 0
 
         records_iterator = SeqIO.parse(path, data_format)
-        with utils.BulkWriter(records_collection.insert_many) as bw:
-            for raw_record in records_iterator:
-                record = self._create_record(raw_record)
-                bw.insert(utils.convert_model(record))
+        analysis = self._insert_records(records_cname, records_iterator)
 
-                if record.discarded:
-                    discarded_count += 1
-                else:
-                    if record.analysis:
-                        record_count += 1
-                        amino_count += record.analysis.amino_count
-                        alphabet += record.analysis.alphabet
-                    else:
-                        discarded_count += 1
-                        continue
-
-        if record_count == 0:
+        if analysis.record_count == 0:
             self.db.drop_collection(records_cname)
             print("Failure!")
         else:
-            dataset.analysis = DatasetAnalysis(
-                alphabet=dict(alphabet),
-                record_count=record_count,
-                discarded_count=discarded_count,
-                amino_count=amino_count,
-            )
+            dataset.analysis = DatasetAnalysis(**analysis)
 
             self._datasets.insert_one(utils.convert_model(dataset))
 

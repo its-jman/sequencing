@@ -38,6 +38,7 @@ class DatasetsView(MethodView):
             "dataset": DatasetMeta(...)
         }
         """
+        engine = data.engine.get_engine()
         input_file = request.files.get("file", None)
 
         file_errors = data.utils.validate_file(input_file)
@@ -48,7 +49,7 @@ class DatasetsView(MethodView):
         try:
             input_file.save(tmp_path)
 
-            upload_errors, dataset_id = data.engine.create_dataset(
+            upload_errors, dataset_id = engine.create_dataset(
                 name=request.form["name"],
                 data_format=request.form["data_format"].lower(),
                 user_filename=input_file.filename,
@@ -59,10 +60,53 @@ class DatasetsView(MethodView):
             os.remove(tmp_path)
 
 
+class DatasetView(MethodView):
+    @staticmethod
+    def delete(dataset_id):
+        """
+
+        :param dataset_id: reference to provide the upload manager
+        :return: 204 -> No Content
+        """
+        engine = data.engine.get_engine()
+        engine.delete_dataset(dataset_id)
+        return "", 204
+
+
+@bp.route("/datasets/<string:dataset_id>/sequences")
+def dataset_sequences_view(dataset_id):
+    """
+
+    :param dataset_id:
+    :return: {
+        "pagination": {
+            page=0
+            page_size=100
+        },
+        "dataset_id": id,
+        "records": [
+            Record(...)
+        ]
+    }
+    """
+    page = request.args.get("page", 0, int)
+    page_size = request.args.get("page_size", 100, int)
+
+    engine = data.engine.get_engine()
+    records = engine.get_dataset_records(dataset_id, page, page_size)
+    return jsonify(records)
+
+
 bp.add_url_rule(
     "/datasets",
     view_func=DatasetsView.as_view("datasets_view"),
     methods=["GET", "POST"],
+)
+
+bp.add_url_rule(
+    "/datasets/<string:dataset_id>",
+    view_func=DatasetView.as_view("dataset_view"),
+    methods=["DELETE"],
 )
 
 
