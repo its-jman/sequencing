@@ -1,10 +1,10 @@
-from bson import ObjectId
+import bson
 from flask.json import JSONEncoder
 
 
 class MongoEncoder(JSONEncoder):
     def default(self, obj):
-        if isinstance(obj, ObjectId):
+        if isinstance(obj, bson.ObjectId):
             return str(obj)
         return super().default(obj)
 
@@ -23,8 +23,9 @@ class BulkWriter:
 
     def flush(self, full=True):
         if full or len(self._items) >= self._num:
-            self._flush(self._items)
-            self._items = []
+            if len(self._items) > 0:
+                self._flush(self._items)
+                self._items = []
 
     def insert(self, item):
         self._items.append(item)
@@ -39,6 +40,25 @@ def validate_file(input_file):
     return errors
 
 
+REMOVED_FIELDS = ["_cls"]
+
+
+def _remove_unnecessary_son_fields(son):
+    for key, val in son.items():
+        # Remove field
+        if key in REMOVED_FIELDS:
+            son.pop(key)
+        # Iterate recursively for any nested attributes
+        elif isinstance(val, bson.son.SON):
+            _remove_unnecessary_son_fields(val)
+
+
 def convert_model(model):
+    # Validate
     model.full_clean()
-    return model.to_son()
+
+    # Convert to regular object, and remove unnecessary fields.
+    son = model.to_son()
+    _remove_unnecessary_son_fields(son)
+
+    return son

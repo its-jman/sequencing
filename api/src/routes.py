@@ -79,7 +79,7 @@ def test():
         name="My Dataset",
         data_format="fasta",
         user_filename="test.fast",
-        path="../demo/all.fasta",
+        path="../demo/some.fasta",
     )
 
     datasets = engine.get_datasets()

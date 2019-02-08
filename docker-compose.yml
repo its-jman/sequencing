@@ -16,9 +16,9 @@ services:
     ports:
       - "5000:5000"
   interface:
-    build: "./interface"
+    build: "./old-interface"
     command: "npm run start"
     volumes:
-      - "./interface/:/code/"
+      - "./old-interface/:/code/"
     ports:
       - "3000:3000"

@@ -2,14 +2,3 @@
 # yarn lockfile v1
 
 
-fasta-to-object-parser@^1.3.2:
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/fasta-to-object-parser/-/fasta-to-object-parser-1.3.2.tgz#a94f557043b0fef65d8de3d2de9456a3e3c33d01"
-  integrity sha1-qU9VcEOw/vZdjePS3pRWo+PDPQE=
-  dependencies:
-    lodash "^4.17.4"
-
-lodash@^4.17.11, lodash@^4.17.4:
-  version "4.17.11"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
-  integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==

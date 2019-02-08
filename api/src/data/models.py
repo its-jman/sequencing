@@ -1,13 +1,5 @@
 from pymodm import MongoModel, EmbeddedMongoModel, EmbeddedDocumentField, fields
 
-# Connect to database
-# connect(
-#     mongodb_uri="mongodb://localhost:27017/sequencing",
-#     username="myuser",
-#     password="mypass",
-#     authSource="admin",
-# )
-
 
 class DatasetAnalysis(EmbeddedMongoModel):
     alphabet = fields.DictField(required=True)
