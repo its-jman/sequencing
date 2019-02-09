@@ -110,14 +110,28 @@ bp.add_url_rule(
 )
 
 
-@bp.route("/")
-def test():
+@bp.route("/alphabet")
+def alphabet():
+    return jsonify(data.constants.ALPHABET)
+
+
+@bp.route("/clear")
+def clear():
     engine = data.engine.get_engine()
     datasets = engine.get_datasets()
     for d in datasets:
         dataset_id = d.get("_id", None)
         if dataset_id is not None:
             engine.delete_dataset(dataset_id)
+
+    datasets = engine.get_datasets()
+    out = json_util.loads(json_util.dumps(datasets))
+    return jsonify(out)
+
+
+@bp.route("/create")
+def upload():
+    engine = data.engine.get_engine()
 
     engine.create_dataset(
         name="My Dataset",

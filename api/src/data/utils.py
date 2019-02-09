@@ -1,5 +1,8 @@
 import bson
+from collections import Counter
 from flask.json import JSONEncoder
+
+from data import constants as c
 
 
 class MongoEncoder(JSONEncoder):
@@ -40,13 +43,38 @@ def validate_file(input_file):
     return errors
 
 
-REMOVED_FIELDS = ["_cls"]
+def validate_record(record):
+    seq = record.sequence
+    desc = record.description
+
+    if not seq or not desc:
+        return False
+
+    if seq[0] != "M" or seq[-1] != "*":
+        return False
+
+    if not set(seq).issubset(c.VALID_ALPHABET):
+        return False
+
+    # TODO: Figure out if this is proper to discard such sequences
+    if "*" in seq[:-1] or "." in seq:
+        return False
+
+    return True
+
+
+def get_sequence_distribution(seq):
+    return dict(Counter(seq))
+
+
+def get_sequence_amino_count(seq):
+    return len(seq)
 
 
 def _remove_unnecessary_son_fields(son):
     for key, val in son.items():
         # Remove field
-        if key in REMOVED_FIELDS:
+        if key in c.REMOVED_FIELDS:
             son.pop(key)
         # Iterate recursively for any nested attributes
         elif isinstance(val, bson.son.SON):

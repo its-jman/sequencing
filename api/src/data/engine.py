@@ -57,22 +57,17 @@ class DataEngine:
         seq = str(raw_record.seq)
 
         record = Record(description=raw_record.description, sequence=seq)
-        if (
-            not seq
-            or not record.description
-            or seq[0] != "M"
-            or seq[-1] != "*"
-            or "*" in seq[1:-1]
-        ):
+        if not utils.validate_record(record):
             record.discarded = True
         else:
             record.analysis = RecordAnalysis(
-                alphabet=dict(Counter(seq[1:-1])), amino_count=len(seq)
+                alphabet=utils.get_sequence_distribution(seq),
+                amino_count=utils.get_sequence_amino_count(seq),
             )
 
         return record
 
-    def _insert_records(self, records_cname, records_iterator):
+    def _create_and_insert_records(self, records_cname, records_iterator):
         records_collection = self.db.get_collection(records_cname)
         analysis = {
             "discarded_count": 0,
@@ -87,12 +82,12 @@ class DataEngine:
                 bw.insert(utils.convert_model(record))
 
                 if record.discarded or not record.analysis:
-                    analysis.discarded_count += 1
+                    analysis["discarded_count"] += 1
                     continue
                 else:
-                    analysis.record_count += 1
-                    analysis.amino_count += record.analysis.amino_count
-                    analysis.alphabet += record.analysis.alphabet
+                    analysis["record_count"] += 1
+                    analysis["amino_count"] += record.analysis.amino_count
+                    analysis["alphabet"] += record.analysis.alphabet
 
         return analysis
 
@@ -109,14 +104,13 @@ class DataEngine:
         records_cname = str(dataset_id)
 
         records_iterator = SeqIO.parse(path, data_format)
-        analysis = self._insert_records(records_cname, records_iterator)
+        analysis = self._create_and_insert_records(records_cname, records_iterator)
 
-        if analysis.record_count == 0:
+        if analysis["record_count"] == 0:
             self.db.drop_collection(records_cname)
             print("Failure!")
         else:
             dataset.analysis = DatasetAnalysis(**analysis)
-
             self._datasets.insert_one(utils.convert_model(dataset))
 
 
