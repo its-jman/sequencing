@@ -61,7 +61,7 @@ class DataEngine:
             record.discarded = True
         else:
             record.analysis = RecordAnalysis(
-                alphabet=utils.get_sequence_distribution(seq),
+                distribution=utils.get_sequence_distribution(seq),
                 amino_count=utils.get_sequence_amino_count(seq),
             )
 
@@ -73,7 +73,7 @@ class DataEngine:
             "discarded_count": 0,
             "record_count": 0,
             "amino_count": 0,
-            "alphabet": Counter(),
+            "distribution": Counter(),
         }
 
         with utils.BulkWriter(records_collection.insert_many) as bw:
@@ -87,7 +87,7 @@ class DataEngine:
                 else:
                     analysis["record_count"] += 1
                     analysis["amino_count"] += record.analysis.amino_count
-                    analysis["alphabet"] += record.analysis.alphabet
+                    analysis["distribution"] += record.analysis.distribution
 
         return analysis
 
