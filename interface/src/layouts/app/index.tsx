@@ -1,5 +1,5 @@
 import React from "react";
-import { connect, Provider } from "react-redux";
+import { connect } from "react-redux";
 import Helmet from "react-helmet";
 
 import { IAppState, store } from "src/state";
@@ -17,7 +17,7 @@ class App extends React.Component<IAppProps> {
     return (
       <>
         <Helmet>
-          <title>{context.title ? `${context.title} | jman.me` : "jman.me"}</title>
+          <title>{context.title ? `${context.title} | sequencing` : "sequencing"}</title>
         </Helmet>
         <Visualization />
       </>

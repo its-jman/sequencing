@@ -36,8 +36,6 @@ export class Reducer<TState> implements IReducer<TState> {
   }
 
   call(state: TState | undefined, action: IAction<unknown>): TState {
-    console.log("this");
-    console.log(this);
     if (state === undefined) state = this.initialState;
 
     if (action.type in this.actionMap) {

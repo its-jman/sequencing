@@ -1,6 +1,8 @@
 import React from "react";
 
-class DatasetList extends React.Component {
+import { IDatasetsState } from "src/state/reducers";
+
+class DatasetList extends React.Component<{ datasets: IDatasetsState }> {
   render() {
     return <div className="dataset-list" />;
   }

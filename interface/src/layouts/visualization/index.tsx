@@ -1,32 +1,26 @@
 import React from "react";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
 
-import { IAppState } from "src/state";
-import * as a from "src/state/actions";
+import { IAppProps, connect } from "src/state/connect";
 import DatasetList from "src/layouts/visualization/components/datasetList";
 import Analysis from "src/layouts/visualization/components/analysis";
 
-interface IVisualizationProps {
-  state: IAppState;
-  actions: {};
-}
+class Visualization extends React.Component<IAppProps> {
+  componentDidMount() {
+    const { actions } = this.props;
 
-class Visualization extends React.Component<IVisualizationProps> {
-  componentDidMount() {}
+    actions.fetchDatasets.create({ items: [] });
+  }
 
   render() {
-    const { state, actions } = this.props;
+    const { state } = this.props;
+
     return (
       <div className="visualization">
-        <DatasetList />
+        <DatasetList datasets={state.datasets} />
         <Analysis />
       </div>
     );
   }
 }
 
-export default connect(
-  (state: IAppState) => ({ state }),
-  (dispatch) => ({ actions: bindActionCreators(a, dispatch) })
-)(Visualization);
+export default connect(Visualization);
