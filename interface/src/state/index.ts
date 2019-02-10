@@ -1,17 +1,16 @@
-import { configureStore } from "redux-starter-kit";
+import { createStore, combineReducers, applyMiddleware } from "redux";
 import logger from "redux-logger";
 
-import { contextReducer, datasetsReducer, IContextState, IDatasetsState } from "src/state/reducers";
+import { datasetsReducer, contextReducer, IContextState, IDatasetsState } from "src/state/reducers";
 
 export interface IAppState {
   context: IContextState;
   datasets: IDatasetsState;
 }
 
-export const store = configureStore<IAppState>({
-  reducer: {
-    context: contextReducer,
-    datasets: datasetsReducer
-  },
-  middleware: [logger]
+const reducer = combineReducers<IAppState>({
+  context: (state, action) => contextReducer.call(state, action),
+  datasets: (state, action) => datasetsReducer.call(state, action)
 });
+
+export const store = createStore(reducer, applyMiddleware(logger));
