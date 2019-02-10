@@ -1,6 +1,6 @@
 import { createAction } from "redux-starter-kit";
 
-import { IDataset } from "src/old-state/models";
+import { IDataset } from "src/state/models";
 
 type IFetchDatasetsPayload = {
   items: Array<IDataset>;

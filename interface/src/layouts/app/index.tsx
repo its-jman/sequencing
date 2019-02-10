@@ -14,12 +14,12 @@ class App extends React.Component<IAppProps> {
     const { context } = this.props;
 
     return (
-      <Provider store={store}>
+      <>
         <Helmet>
           <title>{context.title ? `${context.title} | jman.me` : "jman.me"}</title>
         </Helmet>
         {"Hello World"}
-      </Provider>
+      </>
     );
   }
 }
