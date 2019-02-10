@@ -1,11 +1,12 @@
-import { IDataset } from "src/state/models";
-import { ActionCreator, Reducer } from "src/state/typed";
+import { createAction } from "redux-starter-kit";
+
+import { IDataset } from "src/old-state/models";
 
 type IFetchDatasetsPayload = {
   items: Array<IDataset>;
 };
 
-export const fetchDatasets = new ActionCreator<IFetchDatasetsPayload>("FETCH_DATASETS");
-export const clearDatasets = new ActionCreator<undefined>("CLEAR_DATASETS");
+export const fetchDatasets = createAction<IFetchDatasetsPayload>("FETCH_DATASETS");
+export const clearDatasets = createAction<undefined>("CLEAR_DATASETS");
 
-export const setTitle = new ActionCreator<string | undefined>("SET_TITLE");
+export const setTitle = createAction<string | undefined>("SET_TITLE");
