@@ -1,20 +1,29 @@
 import React from "react";
-import { Provider } from "react-redux";
+import { connect, Provider } from "react-redux";
 import Helmet from "react-helmet";
 
-import { store } from "src/state";
+import { IAppState, store } from "src/state";
+import { IContextState } from "src/state/reducers";
 
-export class App extends React.Component {
+type IAppProps = {
+  context: IContextState;
+};
+
+class App extends React.Component<IAppProps> {
   render() {
-    const { context, children } = this.props;
+    const { context } = this.props;
 
     return (
       <Provider store={store}>
         <Helmet>
-          <title>{context.app.title}</title>
+          <title>{context.title ? `${context.title} | jman.me` : "jman.me"}</title>
         </Helmet>
-        {children}
+        {"Hello World"}
       </Provider>
     );
   }
 }
+
+export default connect((state: IAppState) => ({
+  context: state.context
+}))(App);

@@ -7,3 +7,5 @@ type IFetchDatasetsPayload = {
 
 export const fetchDatasets = new ActionCreator<IFetchDatasetsPayload>("FETCH_DATASETS");
 export const clearDatasets = new ActionCreator<undefined>("CLEAR_DATASETS");
+
+export const setTitle = new ActionCreator<string | undefined>("SET_TITLE");

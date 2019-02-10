@@ -1,9 +1,15 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import logger from "redux-logger";
 
-import { datasetsReducer } from "src/state/reducers";
+import { datasetsReducer, contextReducer, IContextState, IDatasetsState } from "src/state/reducers";
 
-const reducer = combineReducers({
+export interface IAppState {
+  context: IContextState;
+  datasets: IDatasetsState;
+}
+
+const reducer = combineReducers<IAppState>({
+  context: contextReducer.call,
   datasets: datasetsReducer.call
 });
 
