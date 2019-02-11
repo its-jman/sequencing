@@ -6,9 +6,9 @@ import Analysis from "src/layouts/visualization/components/analysis";
 
 class Visualization extends React.Component<IAppProps> {
   componentDidMount() {
-    const { actions } = this.props;
+    const { actions, dispatch } = this.props;
 
-    actions.fetchDatasets.create({ items: [] });
+    dispatch(actions.fetchDatasets.create({}));
   }
 
   render() {

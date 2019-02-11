@@ -107,12 +107,17 @@ class DataEngine:
         records_iterator = SeqIO.parse(path, data_format)
         analysis = self._create_and_insert_records(records_cname, records_iterator)
 
+        errors = []
         if analysis["record_count"] == 0:
             self.db.drop_collection(records_cname)
-            print("Failure!")
+
+            errors.append("no_valid_records")
+            dataset_id = None
         else:
             dataset.analysis = DatasetAnalysis(**analysis)
             self._datasets.insert_one(utils.convert_model(dataset))
+
+        return errors, dataset_id
 
 
 def get_engine():

@@ -26,10 +26,10 @@ export const datasets = (state = initialState, action) => {
       return networkReducer(state, action, {
         initialState: initialState,
         transformResponse: (response) => {
-          const { [action.payload.datasetID]: deletedItem, ...newItems } = state.data.items;
+          const { [action.payload["dataset_id"]]: deletedItem, ...remainingItems } = state.data.items;
           return {
             ...state.data,
-            items: newItems
+            items: remainingItems
           };
         }
       });

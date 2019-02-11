@@ -14,6 +14,7 @@ interface IStateProps {
 
 type IDispatchProps = {
   actions: { [actionName in keyof ActionsType]: typeof actions[actionName] };
+  dispatch: Dispatch;
 };
 
 export type IAppProps = IStateProps & IDispatchProps;
@@ -26,10 +27,11 @@ export const connect = <TComponentProps = {}>(component: ComponentType<IAppProps
     // }) // TODO: Make this dynamic...
     (dispatch) => ({
       actions: {
-        fetchDatasets: dispatch(actions.fetchDatasets),
-        clearDatasets: dispatch(actions.clearDatasets),
-        setTitle: dispatch(actions.setTitle)
-      }
+        fetchDatasets: actions.fetchDatasets,
+        clearDatasets: actions.clearDatasets,
+        setTitle: actions.setTitle
+      },
+      dispatch: dispatch
     })
   )(component);
 };

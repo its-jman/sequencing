@@ -10,7 +10,8 @@ services:
       - "27017:27017"
   api:
     build: "./api"
-    command: "pipenv run flask run -h 0.0.0.0"
+    network_mode: "host"
+    command: bash -c "pipenv install && pipenv run flask run -h 0.0.0.0"
     volumes:
       - "./api/:/code/"
     ports:

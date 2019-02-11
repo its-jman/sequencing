@@ -1,5 +1,6 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import logger from "redux-logger";
+import thunk from "redux-thunk";
 
 import { datasetsReducer, contextReducer, IContextState, IDatasetsState } from "src/state/reducers";
 
@@ -13,4 +14,4 @@ const reducer = combineReducers<IAppState>({
   datasets: (state, action) => datasetsReducer.call(state, action)
 });
 
-export const store = createStore(reducer, applyMiddleware(logger));
+export const store = createStore(reducer, applyMiddleware(thunk, logger));

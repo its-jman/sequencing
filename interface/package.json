@@ -13,6 +13,7 @@
     "redux": "^4.0.1",
     "redux-logger": "^3.0.6",
     "redux-starter-kit": "^0.4.3",
+    "redux-thunk": "^2.3.0",
     "tslint": "^5.12.1",
     "typescript": "3.3.1"
   },
@@ -33,7 +34,7 @@
     "extends": "react-app"
   },
   "prettier": {
-    "printWidth": 100,
+    "printWidth": 120,
     "arrowParens": "always"
   },
   "browserslist": [
