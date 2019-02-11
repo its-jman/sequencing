@@ -18,17 +18,12 @@ type IDispatchProps = {
 
 export type IAppProps = IStateProps & IDispatchProps;
 
-// const mapDispatchToActions = (dispatch) => {
-//   const out: ActionsType = {};
-// };
-// Object.entries(actions).map(([actionName, action]) => dispatch(action));
-
-export const connect = (component: ComponentType<IAppProps>) => {
-  return connectRaw<IStateProps, IDispatchProps, IAppProps, IAppState>(
+export const connect = <TComponentProps = {}>(component: ComponentType<IAppProps>) => {
+  return connectRaw<IStateProps, IDispatchProps, TComponentProps, IAppState>(
     (state) => ({ state }),
     // (dispatch) => ({
     //   actions: bindActionCreators(actions, dispatch)
-    // }) // TODO: Make this work correctly...
+    // }) // TODO: Make this dynamic...
     (dispatch) => ({
       actions: {
         fetchDatasets: dispatch(actions.fetchDatasets),
