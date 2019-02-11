@@ -22,6 +22,7 @@ class DataEngine:
             password="mypass",
             authSource="admin",
             socketTimeoutMS=6000,
+            connectTimeoutMS=6000,
         )
 
         self.db = self.client.get_database(DataEngine.mongo_db_name)
