@@ -1,37 +1,20 @@
 import { ComponentType } from "react";
-import { connect as connectRaw } from "react-redux";
-import { bindActionCreators, Dispatch } from "redux";
+import { connect as connectRaw, GetProps, Matching } from "react-redux";
 
-import { IAppState } from "src/state/index";
-import * as actions from "src/state/actions";
-import { ActionCreator } from "src/state/typed";
+import { IStateProps, IDispatchProps, IAppState, IAppProps } from "src/state/models";
 
-type ActionsType = typeof actions;
-
-interface IStateProps {
-  state: IAppState;
-}
-
-type IDispatchProps = {
-  actions: { [actionName in keyof ActionsType]: typeof actions[actionName] };
-  dispatch: Dispatch;
-};
-
-export type IAppProps = IStateProps & IDispatchProps;
-
+// TODO: Fix TComponentProps to actually work.
 export const connect = <TComponentProps = {}>(component: ComponentType<IAppProps>) => {
   return connectRaw<IStateProps, IDispatchProps, TComponentProps, IAppState>(
     (state) => ({ state }),
-    // (dispatch) => ({
-    //   actions: bindActionCreators(actions, dispatch)
-    // }) // TODO: Make this dynamic...
-    (dispatch) => ({
-      actions: {
-        fetchDatasets: actions.fetchDatasets,
-        clearDatasets: actions.clearDatasets,
-        setTitle: actions.setTitle
-      },
-      dispatch: dispatch
-    })
+    (dispatch) => ({ dispatch })
+  )(component);
+};
+
+// TODO: Fix TComponentProps to actually work.
+export const connectDispatch = <TComponentProps = {}>(component: ComponentType<IDispatchProps>) => {
+  return connectRaw<{}, IDispatchProps, TComponentProps, IAppState>(
+    () => ({}),
+    (dispatch) => ({ dispatch })
   )(component);
 };

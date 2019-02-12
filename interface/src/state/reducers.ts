@@ -1,33 +1,45 @@
-import { Reducer } from "src/state/typed";
-import { IDataset } from "src/state/models";
-import * as a from "src/state/actions";
+import { AnyAction, combineReducers } from "redux";
+import { actions } from "src/state/actions";
+import { networkReducer } from "src/state/network/utils";
+import { IDataset, IDatasetsState } from "src/state/models";
 
-export interface IDatasetsState {
-  [_id: string]: IDataset;
-}
+const initialContextState = {
+  title: undefined
+};
 
-export const datasetsReducer = new Reducer<IDatasetsState>({}).registerNetworkCase(a.fetchDatasets, (state, action) => {
-  //@ts-ignore
-  for (const item of action.response) {
-    console.log("ITEM");
-    console.log(item);
-    //@ts-ignore
-    state = {
-      ...state,
-      [item._id]: item
-    };
+const initialDatasetsState = {
+  isFetching: false,
+  errors: {},
+  data: {}
+};
+
+export default combineReducers({
+  context: (state = initialContextState, action: AnyAction) => {
+    switch (action.type) {
+      case actions.SET_TITLE:
+        return {
+          ...state,
+          title: action.payload
+        };
+      default:
+        return state;
+    }
+  },
+  datasets: (state = initialDatasetsState, action: AnyAction) => {
+    switch (action.type) {
+      case actions.LOAD_DATASETS:
+        return networkReducer(state, action, {
+          initialState: initialDatasetsState,
+          clearData: true,
+          // @ts-ignore
+          transformResponse: (response) =>
+            response.reduce((state: IDatasetsState = {}, item: IDataset) => {
+              state[item._id] = item;
+              return state;
+            }, {})
+        });
+      default:
+        return state;
+    }
   }
-  return state;
 });
-
-export interface IContextState {
-  title: string | undefined;
-}
-
-export const contextReducer = new Reducer<IContextState>({ title: undefined }).registerCase(
-  a.setTitle,
-  (state, action) => {
-    state.title = action.payload;
-    return state;
-  }
-);

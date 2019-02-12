@@ -1,18 +1,18 @@
-import { IDataset } from "src/state/models";
-import { ActionCreator, Reducer } from "src/state/typed";
-import { NetworkActionCreator } from "src/state/typed/actions";
 import * as api from "src/api";
 
-type IFetchDatasetsResponse = {
-  items: Array<IDataset>;
+export const actions = {
+  SET_TITLE: "SET_TITLE",
+  LOAD_DATASETS: "LOAD_DATASETS"
 };
 
-export const fetchDatasets = new NetworkActionCreator<{}, IFetchDatasetsResponse>(
-  "FETCH_DATASETS",
-  api.fetchDatasets,
-  {}
-);
+export const fetchDatasets = () => ({
+  apiRequest: true,
+  type: actions.LOAD_DATASETS,
+  callAPI: api.fetchDatasets
+});
 
-export const clearDatasets = new ActionCreator<undefined>("CLEAR_DATASETS");
-
-export const setTitle = new ActionCreator<string | undefined>("SET_TITLE");
+export const deleteDataset = (_id: string) => ({
+  apiRequest: true,
+  type: actions.LOAD_DATASETS,
+  callAPI: () => api.deleteDataset(_id)
+});

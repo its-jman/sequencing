@@ -1,23 +1,18 @@
 import React from "react";
-import { connect } from "react-redux";
+import { connect } from "src/state/connect";
 import Helmet from "react-helmet";
 
-import { IAppState, store } from "src/state";
-import { IContextState } from "src/state/reducers";
 import Visualization from "src/layouts/visualization";
+import { IAppProps } from "src/state/models";
 
-type IAppProps = {
-  context: IContextState;
-};
-
-class App extends React.Component<IAppProps> {
+class App extends React.PureComponent<IAppProps> {
   render() {
-    const { context } = this.props;
+    const { state } = this.props;
 
     return (
       <>
         <Helmet>
-          <title>{context.title ? `${context.title} | sequencing` : "sequencing"}</title>
+          <title>{state.context.title ? `${state.context.title} | sequencing` : "sequencing"}</title>
         </Helmet>
         <Visualization />
       </>
@@ -25,6 +20,4 @@ class App extends React.Component<IAppProps> {
   }
 }
 
-export default connect((state: IAppState) => ({
-  context: state.context
-}))(App);
+export default connect(App);
