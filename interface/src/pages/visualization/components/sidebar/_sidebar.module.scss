@@ -1,4 +1,32 @@
+@import "../../../../styles/globals/all";
+
+.header {
+  height: 35px;
+  border-bottom: 1px solid black;
+}
+
 .sidebar {
+  height: 100%;
   width: 300px;
   border-right: 1px solid black;
+
+  overflow-y: scroll;
+}
+
+.list {
+  li {
+    border-bottom: 1px solid $bg-3;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}
+
+.listItem {
+  height: 90px;
+  width: 100%;
+
+  & * {
+    display: inline-block;
+  }
 }

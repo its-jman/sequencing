@@ -12,8 +12,8 @@ export const fetchDatasets = () => ({
   callAPI: api.fetchDatasets
 });
 
-export const deleteDataset = (_id: string) => ({
+export const deleteDataset = ({ _id }: { _id: string }) => ({
   apiRequest: true,
   type: actions.DELETE_DATASET,
-  callAPI: () => api.deleteDataset(_id)
+  callAPI: () => api.deleteDataset({ _id })
 });

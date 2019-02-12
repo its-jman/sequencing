@@ -27,8 +27,14 @@ export type IContextState = {
   title: string | undefined;
 };
 
-export type IDatasetsState = {
+export type IDatasetsStateData = {
   [dataset_id: string]: IDataset;
+};
+
+export type IDatasetsState = {
+  isFetching: boolean;
+  errors: object;
+  data: IDatasetsStateData;
 };
 
 export type IAppState = {

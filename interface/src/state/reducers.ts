@@ -1,7 +1,7 @@
 import { AnyAction, combineReducers } from "redux";
 import { actions } from "src/state/actions";
 import { networkReducer } from "src/state/network/utils";
-import { IDataset, IDatasetsState } from "src/state/models";
+import { IDataset, IDatasetsState, IDatasetsStateData } from "src/state/models";
 
 const initialContextState = {
   title: undefined
@@ -33,7 +33,7 @@ export default combineReducers({
           clearData: true,
           // @ts-ignore
           transformResponse: (response) =>
-            response.reduce((state: IDatasetsState = {}, item: IDataset) => {
+            response.reduce((state: IDatasetsStateData, item: IDataset) => {
               state[item._id] = item;
               return state;
             }, {})

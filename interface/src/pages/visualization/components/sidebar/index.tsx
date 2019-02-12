@@ -8,10 +8,14 @@ import styles from "./_sidebar.module.scss";
 class Sidebar extends React.PureComponent<{ datasets: IDatasetsState }> {
   render() {
     const { datasets } = this.props;
+
     return (
       <div className={styles.sidebar}>
-        <ul>
-          {Object.values(datasets).map((dataset, i) => (
+        <div className={styles.header}>
+          <button />
+        </div>
+        <ul className={styles.list}>
+          {Object.values(datasets.data).map((dataset, i) => (
             <ListItem key={i} dataset={dataset} />
           ))}
         </ul>

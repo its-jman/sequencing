@@ -6,7 +6,7 @@ import styles from "./_iconButton.module.scss";
 
 type IIconButtonProps = {
   Icon: IconType;
-  onClick: () => void;
+  onClick?: () => void;
 };
 
 class IconButton extends React.PureComponent<IIconButtonProps> {
