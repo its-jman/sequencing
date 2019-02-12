@@ -6,6 +6,7 @@ import { IDataset, IDispatchProps } from "src/state/models";
 import { connectDispatch } from "src/state/connect";
 
 import { IconButton } from "src/components";
+import Checkbox from "src/components/checkbox";
 
 class ListItem extends React.PureComponent<{ dataset: IDataset } & IDispatchProps> {
   render() {
@@ -13,6 +14,7 @@ class ListItem extends React.PureComponent<{ dataset: IDataset } & IDispatchProp
 
     return (
       <div className="dataset-item">
+        <Checkbox />
         <IconButton Icon={FiTrash2} onClick={() => dispatch(actions.deleteDataset(dataset._id))} />
       </div>
     );
