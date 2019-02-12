@@ -1,0 +1,44 @@
+@import '../globals/colors';
+
+$a-tags: 'a, a:active, a:hover, a:visited';
+$a-tags-hover: 'a:active, a:hover';
+
+.btn {
+  $button-color: $pc-1;
+
+  border: 1px solid transparent;
+  padding: 10px 16px;
+
+  border-radius: 3px;
+
+  text-align: center;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+  }
+
+  &:hover,
+  &:focus {
+    color: darken($link-color, 95%);
+  }
+
+  &:visited {
+    text-decoration: none;
+  }
+
+  &.btn-1 {
+    background-color: $button-color;
+    transition: all .2s ease-in-out;
+    &:hover, &:focus {
+      background-color: darken($button-color, 5%);
+    }
+  }
+
+  &.btn-2 {
+    transition: border 0.2s ease-in-out;
+    &:hover, &:focus {
+      border: 1px solid $button-color;
+    }
+  }
+}

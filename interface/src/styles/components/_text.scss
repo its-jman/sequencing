@@ -1,0 +1,43 @@
+@import '../globals/all';
+
+.regular {
+  @include regular();
+}
+
+body {
+  @extend .regular;
+}
+
+.light-1 {
+  @extend .regular;
+  font-weight: $light-weight;
+}
+
+.light-2 {
+  @extend .light-1;
+  font-style: italic;
+}
+
+.bold-1 {
+  color: transparentize($text-2, $text-transparency);;
+
+  font-weight: $bold-weight;
+}
+
+.bold-2 {
+  @extend .bold-1;
+  border-bottom: 1px solid $bg-3;
+}
+
+.text-small {
+  font-size: .75rem;
+}
+
+.text-large {
+  font-size: 1.5rem;
+}
+
+.text-huge {
+  font-size: 2rem;
+}
+

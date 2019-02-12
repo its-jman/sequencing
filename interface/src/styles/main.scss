@@ -1,0 +1,37 @@
+@import "reset";
+
+@import "globals/all";
+@import "components/all";
+
+body {
+  display: flex;
+  flex-direction: column;
+
+  max-width: 100%;
+
+  overflow-x: hidden;
+  overflow-y: scroll;
+
+  background-color: $bg-1;
+
+  font-size: 16px;
+  line-height: 1.5em;
+}
+
+.page-content {
+  max-width: $page-width;
+  width: 100%;
+  margin: 0 auto;
+}
+
+a {
+  color: $link-color;
+
+  &:focus {
+    outline: 1px solid $pc-1;
+  }
+}
+
+.center {
+  margin: 0 auto;
+}

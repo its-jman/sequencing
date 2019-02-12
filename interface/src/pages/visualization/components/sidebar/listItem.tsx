@@ -1,9 +1,11 @@
 import React from "react";
-import { FiDelete } from "react-icons/fi";
+import { FiTrash2 } from "react-icons/fi";
 
 import * as actions from "src/state/actions";
 import { IDataset, IDispatchProps } from "src/state/models";
 import { connectDispatch } from "src/state/connect";
+
+import { IconButton } from "src/components";
 
 class ListItem extends React.PureComponent<{ dataset: IDataset } & IDispatchProps> {
   render() {
@@ -11,9 +13,7 @@ class ListItem extends React.PureComponent<{ dataset: IDataset } & IDispatchProp
 
     return (
       <div className="dataset-item">
-        <button onClick={() => dispatch(actions.deleteDataset(dataset._id))}>
-          <FiDelete />
-        </button>
+        <IconButton Icon={FiTrash2} onClick={() => dispatch(actions.deleteDataset(dataset._id))} />
       </div>
     );
   }

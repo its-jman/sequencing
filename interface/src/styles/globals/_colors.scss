@@ -1,0 +1,42 @@
+@import 'values';
+
+$pc-1: #9aa9f1;
+
+$themes: (
+  cool: (
+    bg-1: hsl(200, 33%, 96%),
+    bg-2: hsl(200, 25%, 94%),
+    bg-3: hsl(200, 25%, 88%),
+
+    text-1: hsl(200, 16%, 16%),
+    text-2: hsl(200, 31%, 14%)
+  ),
+  neutral: (
+    bg-1: hsl(0, 0%, 96%),
+    bg-2: hsl(0, 0%, 93%),
+    bg-3: hsl(0, 0%, 85%),
+
+    text-1: hsl(0, 0%, 12%),
+    text-2: hsl(0, 0%, 23%)
+  ),
+  warm: (
+    bg-1: hsl(24, 20%, 95%),
+    bg-2: hsl(24, 21%, 93%),
+    bg-3: hsl(24, 9%, 82%),
+
+    text-1: hsl(24, 12%, 30%),
+    text-2: hsl(24, 24%, 11%)
+  )
+);
+
+$theme: map-get($themes, neutral);
+
+$bg-0: white;
+$bg-1: map_get($theme, bg-1);
+$bg-2: map_get($theme, bg-2);
+$bg-3: map_get($theme, bg-3);
+
+$text-1: map_get($theme, text-1);
+$text-2: map_get($theme, text-2);
+
+$link-color: transparentize($text-1, $text-transparency);

@@ -4,8 +4,9 @@ import { connect } from "react-redux";
 
 import * as actions from "src/state/actions";
 import { IAppState } from "src/state/models";
-import Sidebar from "src/layouts/visualization/components/sidebar";
-import Analysis from "src/layouts/visualization/components/analysis";
+
+import Sidebar from "./components/sidebar";
+import Analysis from "./components/analysis";
 
 class Visualization extends React.PureComponent<{ state: IAppState; dispatch: Dispatch }> {
   componentDidMount() {

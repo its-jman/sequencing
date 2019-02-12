@@ -1,0 +1,17 @@
+@import "../styles/globals/all";
+
+.iconButton {
+  $iconSize: 24px;
+  height: $iconSize;
+  width: $iconSize;
+
+  cursor: pointer;
+
+  $iconColor: hsla(0, 0%, 45%, 1);
+  color: $iconColor;
+  @include transition(color);
+
+  &:hover {
+    color: darken($iconColor, 35%);
+  }
+}

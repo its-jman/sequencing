@@ -1,8 +1,8 @@
 import React from "react";
 
 import { IDatasetsState } from "src/state/models";
-import ListItem from "src/layouts/visualization/components/sidebar/listItem";
 
+import ListItem from "./listItem";
 import styles from "./_sidebar.module.scss";
 
 class Sidebar extends React.PureComponent<{ datasets: IDatasetsState }> {

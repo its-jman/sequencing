@@ -2,8 +2,11 @@ import React from "react";
 import { connect } from "src/state/connect";
 import Helmet from "react-helmet";
 
-import Visualization from "src/layouts/visualization";
+import Visualization from "src/pages/visualization";
 import { IAppProps } from "src/state/models";
+
+import "normalize.css";
+import "src/styles/main.scss";
 
 class App extends React.PureComponent<IAppProps> {
   render() {
@@ -12,7 +15,9 @@ class App extends React.PureComponent<IAppProps> {
     return (
       <>
         <Helmet>
-          <title>{state.context.title ? `${state.context.title} | sequencing` : "sequencing"}</title>
+          <title>
+            {state.context.title ? `${state.context.title} | sequencing` : "sequencing"}
+          </title>
         </Helmet>
         <Visualization />
       </>
