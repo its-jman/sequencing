@@ -18,11 +18,11 @@ class ListItem extends React.PureComponent<{ dataset: IDataset } & IDispatchProp
       <li className={styles.listItem}>
         <Checkbox size={18} />
         <IconButton
-          Icon={FiTrash2}
+          icon={FiTrash2}
           onClick={() => dispatch(actions.deleteDataset({ _id: dataset._id }))}
         />
-        <IconButton Icon={FiPieChart} />
-        <IconButton Icon={FiBarChart2} />
+        <IconButton icon={FiPieChart} />
+        <IconButton icon={FiBarChart2} />
       </li>
     );
   }

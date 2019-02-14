@@ -1,22 +1,14 @@
 import React from "react";
-import { Dispatch } from "redux";
 import { connect } from "react-redux";
 
-import * as actions from "src/state/actions";
-import { IAppState } from "src/state/models";
+import { IAppProps } from "src/state/models";
 
 import Sidebar from "./components/sidebar";
 import Analysis from "./components/analysis";
 
 import style from "./_visualization.module.scss";
 
-class Visualization extends React.PureComponent<{ state: IAppState; dispatch: Dispatch }> {
-  componentDidMount() {
-    const { dispatch } = this.props;
-
-    dispatch(actions.fetchDatasets());
-  }
-
+class Visualization extends React.PureComponent<IAppProps> {
   render() {
     const { state } = this.props;
 
@@ -29,8 +21,4 @@ class Visualization extends React.PureComponent<{ state: IAppState; dispatch: Di
   }
 }
 
-export default connect(
-  (state) => ({ state }),
-  (dispatch) => ({ dispatch })
-  // @ts-ignore
-)(Visualization);
+export default Visualization;

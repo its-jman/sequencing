@@ -3,37 +3,33 @@
 @import "globals/all";
 @import "components/all";
 
+html {
+  min-height: 100%;
+  min-width: 100%;
+  overflow-x: scroll;
+  overflow-y: scroll;
+}
+
 html,
-body,
-#root {
+body {
   height: 100%;
   width: 100%;
+}
 
-  max-height: 100%;
-  max-width: 100%;
+// Some of these values are probably unnecessary.
+#root {
+  height: 100%;
+  min-height: 100%;
+  width: 100%;
+  min-width: 100%;
+  //max-width: 100%;
 }
 
 body {
-  display: flex;
-  flex-direction: column;
-
-  max-width: 100%;
-  max-height: 100%;
-  height: 100%;
-
-  overflow-x: hidden;
-  overflow-y: hidden;
-
-  background-color: $bg-1;
+  background-color: $bg-2;
 
   font-size: 16px;
   line-height: 1.5em;
-}
-
-.page-content {
-  max-width: $page-width;
-  width: 100%;
-  margin: 0 auto;
 }
 
 a {
@@ -42,8 +38,4 @@ a {
   &:focus {
     outline: 1px solid $pc-1;
   }
-}
-
-.center {
-  margin: 0 auto;
 }

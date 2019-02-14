@@ -1,0 +1,13 @@
+@import "../../styles/globals/all";
+
+.button {
+  margin: 0;
+  border: 0;
+  border-radius: 4px;
+  padding: 8px 18px;
+
+  display: flex;
+  align-items: center;
+
+  cursor: pointer;
+}

@@ -1,5 +1,5 @@
 import { AnyAction, combineReducers } from "redux";
-import { actions } from "src/state/actions";
+import { actionIDs } from "src/state/actions";
 import { networkReducer } from "src/state/network/utils";
 import { IDataset, IDatasetsState, IDatasetsStateData } from "src/state/models";
 
@@ -16,7 +16,7 @@ const initialDatasetsState = {
 export default combineReducers({
   context: (state = initialContextState, action: AnyAction) => {
     switch (action.type) {
-      case actions.SET_TITLE:
+      case actionIDs.SET_TITLE:
         return {
           ...state,
           title: action.payload
@@ -27,7 +27,7 @@ export default combineReducers({
   },
   datasets: (state = initialDatasetsState, action: AnyAction) => {
     switch (action.type) {
-      case actions.LOAD_DATASETS:
+      case actionIDs.LOAD_DATASETS:
         return networkReducer(state, action, {
           initialState: initialDatasetsState,
           clearData: true,
@@ -37,6 +37,18 @@ export default combineReducers({
               state[item._id] = item;
               return state;
             }, {})
+        });
+      default:
+        return state;
+    }
+  },
+  alphabet: (state = {}, action: AnyAction) => {
+    switch (action.type) {
+      case actionIDs.FETCH_ALPHABET:
+        return networkReducer(state, action, {
+          initialState: initialDatasetsState,
+          clearData: true,
+          transformResponse: (response: any) => response
         });
       default:
         return state;

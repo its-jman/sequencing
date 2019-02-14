@@ -1,14 +1,21 @@
+import "normalize.css";
+import "src/styles/main.scss";
+
 import React from "react";
 import { connect } from "src/state/connect";
 import Helmet from "react-helmet";
 
-import Visualization from "src/pages/visualization";
+import { Selection } from "src/pages";
 import { IAppProps } from "src/state/models";
-
-import "normalize.css";
-import "src/styles/main.scss";
+import * as actions from "src/state/actions";
 
 class App extends React.PureComponent<IAppProps> {
+  componentDidMount() {
+    const { dispatch } = this.props;
+
+    dispatch(actions.fetchDatasets());
+  }
+
   render() {
     const { state } = this.props;
 
@@ -19,7 +26,7 @@ class App extends React.PureComponent<IAppProps> {
             {state.context.title ? `${state.context.title} | sequencing` : "sequencing"}
           </title>
         </Helmet>
-        <Visualization />
+        <Selection {...this.props} />
       </>
     );
   }

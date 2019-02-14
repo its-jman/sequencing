@@ -1,11 +1,8 @@
 @import "../../styles/globals/all";
 
 .iconButton {
-  $iconSize: 24px;
-  height: $iconSize;
-  width: $iconSize;
-
   cursor: pointer;
+  display: inline-block;
 
   $iconColor: hsla(0, 0%, 45%, 1);
   color: $iconColor;

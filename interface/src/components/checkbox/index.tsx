@@ -2,8 +2,10 @@ import React from "react";
 import { FiCheck } from "react-icons/fi";
 
 import styles from "./_checkbox.module.scss";
+import { getClassNames } from "src/components/utils";
 
 type ICheckboxProps = {
+  className?: string;
   size: number;
 };
 
@@ -19,11 +21,14 @@ class Checkbox extends React.PureComponent<ICheckboxProps> {
   };
 
   render() {
-    const { size } = this.props;
+    const { size, className } = this.props;
     const { checked } = this.state;
 
     return (
-      <div className={styles.container} style={{ width: size, height: size }}>
+      <div
+        className={getClassNames(className, styles.container)}
+        style={{ width: size, height: size }}
+      >
         <input type="checkbox" checked={checked} onChange={this._onChange} />
         <div className={styles.state}>
           <FiCheck className={styles.icon} size={Math.floor(size * 0.8)} />

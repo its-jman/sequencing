@@ -1,0 +1,85 @@
+@import "../../../styles/globals/all";
+
+.header {
+  background-color: $bg-1;
+
+  & th {
+    height: 45px;
+
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+}
+
+.row {
+  border-bottom: 1px solid $bg-3;
+  & td {
+    border-right: 1px solid $bg-3;
+    //border-bottom: 1px solid $bg-3;
+  }
+}
+
+.col {
+  padding: 10px 14px;
+}
+
+.controlCol {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.datasetColTd {
+  width: 300px;
+  max-width: 300px;
+}
+
+.datasetCol {
+  display: flex;
+  align-items: center;
+  //background-color: lightblue;
+
+  overflow: hidden;
+  white-space: nowrap;
+
+  .datasetColCheckbox {
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .datasetColExpander {
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .datasetColDetails {
+    display: inline-block;
+    flex-shrink: 0;
+    line-height: 1.15;
+
+    .datasetColName {
+      font-weight: bold;
+      font-size: larger;
+    }
+
+    .datasetColFilename {
+      font-weight: lighter;
+
+      width: 220px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+  }
+}
+
+.infoCol {
+}
+
+.queryCol {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.distributionCol {
+  text-align: center;
+}

@@ -4,7 +4,10 @@
   "private": true,
   "dependencies": {
     "@types/redux-logger": "^3.0.6",
-    "immer": "^2.0.0",
+    "@types/styled-components": "^4.1.9",
+    "d3-axis": "^1.0.12",
+    "d3-scale": "^2.2.2",
+    "d3-selection": "^1.4.0",
     "node-sass": "^4.11.0",
     "normalize.css": "^8.0.1",
     "react": "^16.8.1",
