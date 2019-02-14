@@ -21,11 +21,11 @@ class TableItem extends React.PureComponent<{ dataset: IDataset }> {
         <td className={getClassNames(tableStyles.col, tableStyles.datasetColTd)}>
           <div className={tableStyles.datasetCol}>
             <Checkbox className={tableStyles.datasetColExpander} size={20} />
-            <IconButton
+            {/*<IconButton
               className={tableStyles.datasetColExpander}
               icon={FiChevronRight}
               size={28}
-            />
+            />*/}
             <div className={tableStyles.datasetColDetails}>
               <div className={tableStyles.datasetColName}>{dataset.name}</div>
               <div className={tableStyles.datasetColFilename}>{dataset.user_filename}</div>

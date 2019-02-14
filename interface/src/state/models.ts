@@ -43,12 +43,12 @@ export type IDatasetsStateData = {
   [dataset_id: string]: IDataset;
 };
 
-export type IAlphabet = {
+export type IAminoDetails = {
   [letter: string]: { abr: string; name: string; freq: number };
 };
 
 export type IDatasetsState = INetworkState<IDatasetsStateData>;
-export type IAlphabetState = INetworkState<IAlphabet>;
+export type IAlphabetState = INetworkState<IAminoDetails>;
 
 export type IAppState = {
   context: IContextState;

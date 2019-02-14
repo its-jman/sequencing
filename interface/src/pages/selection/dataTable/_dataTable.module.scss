@@ -38,3 +38,11 @@
 
   box-shadow: 0 2px 8px 0 $bg-3;
 }
+
+.svg {
+  background-color: lightgreen;
+  // TODO: Apply only to lines.
+  & line, path {
+    //shape-rendering: crispEdges;
+  }
+}

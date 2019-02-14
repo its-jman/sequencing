@@ -1,7 +1,7 @@
 @import "../../../styles/globals/all";
 
 .header {
-  background-color: $bg-1;
+  background-color: $bg-2;
 
   & th {
     height: 45px;
@@ -13,9 +13,12 @@
 
 .row {
   border-bottom: 1px solid $bg-3;
-  & td {
-    border-right: 1px solid $bg-3;
-    //border-bottom: 1px solid $bg-3;
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: $bg-1;
   }
 }
 
@@ -44,15 +47,13 @@
 
   .datasetColCheckbox {
     display: inline-block;
-    flex-shrink: 0;
   }
   .datasetColExpander {
     display: inline-block;
-    flex-shrink: 0;
   }
   .datasetColDetails {
+    margin-left: 15px;
     display: inline-block;
-    flex-shrink: 0;
     line-height: 1.15;
 
     .datasetColName {
