@@ -22,8 +22,8 @@ ALPHABET = {
     "Y": {"name": "Tyrosine", "abr": "Tyr", "freq": 0.033},
     "V": {"name": "Valine", "abr": "Val", "freq": 0.068},
     # Amino acids ambiguity codes:
-    "B": {"name": "Asparagine/Aspartic Acid", "abr": "Asx"},
-    "Z": {"name": "Glutamine/Glutamic Acid", "abr": "Glx"},
+    # "B": {"name": "Asparagine/Aspartic Acid", "abr": "Asx"},
+    # "Z": {"name": "Glutamine/Glutamic Acid", "abr": "Glx"},
 }
 
 # This is all valid letters for a record. If you want to allow records with all characters is another question.

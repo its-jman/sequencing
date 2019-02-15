@@ -8,6 +8,7 @@ import styles from "./_dataTable.module.scss";
 import { connect } from "src/state/connect";
 import { IAminoDetails, IAppProps, IDataset } from "src/state/models";
 import * as actions from "src/state/actions";
+import { ALPHABET_COLORS } from "src/pages/constants";
 
 type IData = {
   letter: string;
@@ -22,9 +23,23 @@ type IChartProps = {
   data: Array<IData>;
 };
 
+class DistributionTip extends PureComponent<{ data: IData }> {
+  render() {
+    const { data } = this.props;
+    return (
+      <div>
+        {`% Error: ${data.percentDiff}`}
+        {`Actual: ${data.actual}`}
+        {`Expected: ${data.expected}`}
+        {`Actual: ${data.actual}`}
+      </div>
+    );
+  }
+}
+
 class Chart extends PureComponent<IChartProps> {
-  static SVGHeight = 180;
-  static SVGWidth = 300;
+  static SVGHeight = 145;
+  static SVGWidth = 280;
   static margin = 30;
   static height = Chart.SVGHeight - Chart.margin;
   static width = Chart.SVGWidth - Chart.margin;
@@ -68,7 +83,7 @@ class Chart extends PureComponent<IChartProps> {
     const chart = svg.append("g"); //.attr("transform", `translate(${Chart.margin}, ${Chart.margin})`);
 
     const yAxisRaw = axisLeft(yScaleRaw)
-      // .ticks(6)
+      .ticks(6)
       .tickSizeOuter(0);
 
     const yAxis = svg
@@ -90,7 +105,7 @@ class Chart extends PureComponent<IChartProps> {
       .attr("transform", `translate(0, ${yScaleRaw(0)})`)
       .call(zeroAxisRaw);
 
-    chart
+    const bars = chart
       .selectAll("rect")
       .data(data)
       .enter()
@@ -114,7 +129,10 @@ class Chart extends PureComponent<IChartProps> {
         const y0 = yScaleRaw(0);
 
         return Math.abs(y - y0);
-      });
+      })
+      .attr("fill", (d) => ALPHABET_COLORS[d.letter]);
+    // .on("mouseover", tip.show)
+    // .on("mouseout", tip.hide);
   };
 
   render() {

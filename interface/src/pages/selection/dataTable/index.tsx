@@ -1,8 +1,7 @@
 import React from "react";
-import { FiUpload, FiChevronRight, FiArrowUp, FiArrowDown, FiBarChart2 } from "react-icons/fi";
+import { FiUpload, FiArrowUp, FiBarChart2 } from "react-icons/fi";
 
 import { IDataset, IDatasetsState } from "src/state/models";
-import { IconButton } from "src/components";
 import Checkbox from "src/components/checkbox";
 import DateComponent from "src/components/date";
 
@@ -18,9 +17,12 @@ class TableItem extends React.PureComponent<{ dataset: IDataset }> {
 
     return (
       <tr className={tableStyles.row}>
-        <td className={getClassNames(tableStyles.col, tableStyles.datasetColTd)}>
+        <td className={getClassNames(tableStyles.col, tableStyles.colSpace)}>
+          <Checkbox className={tableStyles.datasetColExpander} size={20} />
+        </td>
+
+        <td className={tableStyles.col}>
           <div className={tableStyles.datasetCol}>
-            <Checkbox className={tableStyles.datasetColExpander} size={20} />
             {/*<IconButton
               className={tableStyles.datasetColExpander}
               icon={FiChevronRight}
@@ -53,7 +55,7 @@ class TableItem extends React.PureComponent<{ dataset: IDataset }> {
           </div>
         </td>
 
-        <td className={tableStyles.col}>
+        <td className={getClassNames(tableStyles.col, tableStyles.colSpace)}>
           <div className={tableStyles.distributionCol}>
             <FiBarChart2 size={20} />
           </div>
@@ -82,8 +84,9 @@ class DataTable extends React.PureComponent<{ datasets: IDatasetsState }> {
             <thead>
               <tr className={tableStyles.header}>
                 {/*<th />*/}
-                <th>Dataset</th>
-                <th>Details</th>
+                <th />
+                <th style={{ textAlign: "left" }}>Dataset</th>
+                <th style={{ textAlign: "left" }}>Details</th>
                 <th>Query</th>
                 <th>Dist.</th>
               </tr>

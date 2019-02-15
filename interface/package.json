@@ -3,10 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@types/d3-axis": "^1.0.12",
-    "@types/d3-scale": "^2.1.1",
-    "@types/redux-logger": "^3.0.6",
-    "@types/styled-components": "^4.1.9",
     "d3-axis": "^1.0.12",
     "d3-scale": "^2.2.2",
     "d3-selection": "^1.4.0",
@@ -31,7 +27,10 @@
     "@types/react": "16.8.2",
     "@types/react-dom": "16.8.0",
     "@types/react-helmet": "^5.0.8",
-    "@types/react-redux": "^7.0.1"
+    "@types/react-redux": "^7.0.1",
+    "@types/d3-axis": "^1.0.12",
+    "@types/d3-scale": "^2.1.1",
+    "@types/redux-logger": "^3.0.6"
   },
   "scripts": {
     "start": "react-scripts start",

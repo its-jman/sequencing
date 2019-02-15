@@ -23,7 +23,12 @@
 }
 
 .col {
-  padding: 10px 14px;
+  padding: 10px 52px 10px 0;
+}
+
+.colSpace {
+  padding-left: 14px;
+  padding-right: 14px;
 }
 
 .controlCol {
@@ -32,12 +37,9 @@
   justify-content: flex-start;
 }
 
-.datasetColTd {
-  width: 300px;
-  max-width: 300px;
-}
-
 .datasetCol {
+  width: 150px;
+  max-width: 150px;
   display: flex;
   align-items: center;
   //background-color: lightblue;
@@ -52,19 +54,28 @@
     display: inline-block;
   }
   .datasetColDetails {
-    margin-left: 15px;
     display: inline-block;
     line-height: 1.15;
+    
+    &:hover {
+      text-decoration: underline;
+      cursor: pointer;
+    }
 
     .datasetColName {
       font-weight: bold;
       font-size: larger;
+
+      width: 150px;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
     }
 
     .datasetColFilename {
       font-weight: lighter;
 
-      width: 220px;
+      width: 150px;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
