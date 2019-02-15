@@ -65,7 +65,6 @@ class Chart extends PureComponent<IChartProps> {
     const { aminoDetails, data } = this.props;
     const fullAlphabet = new Set<string>([...Object.keys(aminoDetails), ".", "*"]);
 
-    console.log(data.map((d) => d.percentDiff));
     const dataMax = Math.max(...data.map((d) => d.percentDiff));
     const dataMin = Math.min(...data.map((d) => d.percentDiff));
     const maxScale = Math.max(Math.abs(dataMax), Math.abs(dataMin));
