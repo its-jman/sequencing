@@ -1,5 +1,11 @@
-export const NETWORK_STATUS = {
-  REQUEST: "REQUEST",
-  SUCCESS: "SUCCESS",
-  FAILURE: "FAILURE"
-};
+export enum NETWORK_STATUS {
+  REQUEST = "REQUEST",
+  SUCCESS = "SUCCESS",
+  FAILURE = "FAILURE"
+}
+
+// export const NETWORK_STATUS = {
+//   REQUEST: "REQUEST",
+//   SUCCESS: "SUCCESS",
+//   FAILURE: "FAILURE"
+// };

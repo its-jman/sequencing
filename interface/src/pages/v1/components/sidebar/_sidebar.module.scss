@@ -1,23 +1,23 @@
 @import "../../../../styles/globals/all";
 
 .header {
+  border-bottom: 1px solid #000;
   height: 35px;
-  border-bottom: 1px solid black;
 }
 
 .sidebar {
+  border-right: 1px solid #000;
   height: 100%;
-  width: 300px;
-  border-right: 1px solid black;
-
   overflow-y: scroll;
+
+  width: 300px;
 }
 
 .list {
   li {
     border-bottom: 1px solid $bg-4;
     &:last-child {
-      border-bottom: none;
+      border-bottom: 0;
     }
   }
 }

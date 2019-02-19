@@ -1,4 +1,10 @@
-@import "../../../styles/globals/all";
+@import "../../../../styles/globals/all";
+
+.noResults {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
 
 .header {
   background-color: $bg-2;
@@ -6,15 +12,21 @@
   & th {
     height: 45px;
 
-    text-transform: uppercase;
     letter-spacing: 0.8px;
+    text-transform: uppercase;
   }
+}
+
+.table {
+  border-collapse: collapse;
+
+  flex-grow: 1;
 }
 
 .row {
   border-bottom: 1px solid $bg-3;
   &:last-child {
-    border-bottom: none;
+    border-bottom: 0;
   }
 
   &:hover {
@@ -32,53 +44,55 @@
 }
 
 .controlCol {
-  display: flex;
   align-items: center;
+  display: flex;
   justify-content: flex-start;
 }
 
 .datasetCol {
-  width: 150px;
-  max-width: 150px;
-  display: flex;
   align-items: center;
+  display: flex;
+  max-width: 150px;
+  overflow: hidden;
   //background-color: lightblue;
 
-  overflow: hidden;
   white-space: nowrap;
+  width: 150px;
 
   .datasetColCheckbox {
     display: inline-block;
   }
+
   .datasetColExpander {
     display: inline-block;
   }
+
   .datasetColDetails {
     display: inline-block;
     line-height: 1.15;
     
     &:hover {
-      text-decoration: underline;
       cursor: pointer;
+      text-decoration: underline;
     }
 
     .datasetColName {
-      font-weight: bold;
       font-size: larger;
+      font-weight: bold;
 
-      width: 150px;
       overflow: hidden;
-      white-space: nowrap;
       text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 150px;
     }
 
     .datasetColFilename {
       font-weight: lighter;
 
-      width: 150px;
       overflow: hidden;
-      white-space: nowrap;
       text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 150px;
     }
   }
 }
@@ -87,9 +101,9 @@
 }
 
 .queryCol {
-  display: flex;
   align-items: center;
-  justify-content: space-around;
+  display: flex;
+
 }
 
 .distributionCol {

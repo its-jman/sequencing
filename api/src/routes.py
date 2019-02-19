@@ -1,4 +1,5 @@
 import os
+import time
 import uuid
 import tempfile
 from bson import json_util
@@ -11,6 +12,11 @@ import data
 
 
 bp = Blueprint("datasets", __name__)
+
+
+@bp.before_request
+def sleep_more():
+    time.sleep(750)
 
 
 class DatasetsView(MethodView):

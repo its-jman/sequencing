@@ -1,19 +1,24 @@
 import { AnyAction, combineReducers } from "redux";
 import { actionIDs } from "src/state/actions";
 import { networkReducer } from "src/state/network/utils";
-import { IDataset, IDatasetsStateData } from "src/state/models";
+import { IAppState, IDataset, IDatasetsStateData } from "src/state/models";
 
 const initialContextState = {
   title: undefined
 };
 
-const initialDatasetsState = {
+const initialUploadState = {
+  files: [],
+  currentUpload: 0
+};
+
+const initialNetworkState = {
   isFetching: false,
   errors: {},
   data: {}
 };
 
-export default combineReducers({
+export default combineReducers<IAppState>({
   context: (state = initialContextState, action: AnyAction) => {
     switch (action.type) {
       case actionIDs.SET_TITLE:
@@ -25,11 +30,11 @@ export default combineReducers({
         return state;
     }
   },
-  datasets: (state = initialDatasetsState, action: AnyAction) => {
+  datasets: (state = initialNetworkState, action: AnyAction) => {
     switch (action.type) {
       case actionIDs.LOAD_DATASETS:
         return networkReducer(state, action, {
-          initialState: initialDatasetsState,
+          initialState: initialNetworkState,
           clearData: true,
           transformResponse: (response: any) =>
             response.reduce((state: IDatasetsStateData, item: IDataset) => {
@@ -41,14 +46,25 @@ export default combineReducers({
         return state;
     }
   },
-  alphabet: (state = {}, action: AnyAction) => {
+  alphabet: (state = initialNetworkState, action: AnyAction) => {
     switch (action.type) {
       case actionIDs.FETCH_ALPHABET:
         return networkReducer(state, action, {
-          initialState: initialDatasetsState,
+          initialState: initialNetworkState,
           clearData: true,
           transformResponse: (response: any) => response
         });
+      default:
+        return state;
+    }
+  },
+  upload: (state = initialUploadState, action: AnyAction) => {
+    switch (action.type) {
+      case actionIDs.SET_MODAL:
+        return {
+          ...state,
+          [action.modalID]: action.status
+        };
       default:
         return state;
     }

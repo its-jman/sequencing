@@ -7,6 +7,9 @@
     "d3-axis": "^1.0.12",
     "d3-scale": "^2.2.2",
     "d3-selection": "^1.4.0",
+    "mobx": "^5.9.0",
+    "mobx-logger": "^0.7.1",
+    "mobx-react": "^5.4.3",
     "node-sass": "^4.11.0",
     "normalize.css": "^8.0.1",
     "react": "^16.8.1",
@@ -32,7 +35,8 @@
     "@types/react-dom": "16.8.0",
     "@types/react-helmet": "^5.0.8",
     "@types/react-redux": "^7.0.1",
-    "@types/redux-logger": "^3.0.6"
+    "@types/redux-logger": "^3.0.6",
+    "mobx-react-devtools": "^6.0.3"
   },
   "scripts": {
     "start": "react-scripts start",

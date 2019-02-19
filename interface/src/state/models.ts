@@ -1,4 +1,5 @@
-import { Dispatch } from "redux";
+import { AnyAction, Dispatch } from "redux";
+import { ThunkDispatch } from "redux-thunk";
 
 export type ISequence = {
   description: string;
@@ -29,6 +30,11 @@ export type IDataset = {
   };
 };
 
+type IUploadState = {
+  files: Array<File>;
+  currentUpload: number;
+};
+
 type INetworkState<TData> = {
   isFetching: boolean;
   errors: object;
@@ -43,17 +49,18 @@ export type IDatasetsStateData = {
   [dataset_id: string]: IDataset;
 };
 
-export type IAminoDetails = {
+export type IAlphabetDetails = {
   [letter: string]: { abr: string; name: string; freq: number };
 };
 
 export type IDatasetsState = INetworkState<IDatasetsStateData>;
-export type IAlphabetState = INetworkState<IAminoDetails>;
+export type IAlphabetState = INetworkState<IAlphabetDetails>;
 
 export type IAppState = {
   context: IContextState;
   datasets: IDatasetsState;
   alphabet: IAlphabetState;
+  upload: IUploadState;
 };
 
 export type IStateProps = {
@@ -61,7 +68,7 @@ export type IStateProps = {
 };
 
 export type IDispatchProps = {
-  dispatch: Dispatch;
+  dispatch: ThunkDispatch<IAppState, {}, AnyAction>;
 };
 
 export type IAppProps = IStateProps & IDispatchProps;

@@ -4,11 +4,13 @@ import { scaleBand, scaleLinear } from "d3-scale";
 import { select as d3Select } from "d3-selection";
 import { axisBottom, axisLeft } from "d3-axis";
 
-import styles from "./_dataTable.module.scss";
+import styles from "./_distribution.module.scss";
 import { connect } from "src/state/connect";
-import { IAminoDetails, IAppProps, IDataset } from "src/state/models";
+import { IAlphabetDetails, IAppProps, IDataset } from "src/state/models";
 import * as actions from "src/state/actions";
 import { ALPHABET_COLORS } from "src/pages/constants";
+import { Dispatch } from "redux";
+import { isEmptyObject } from "src/utils";
 
 type IData = {
   letter: string;
@@ -19,7 +21,7 @@ type IData = {
 };
 
 type IChartProps = {
-  aminoDetails: IAminoDetails;
+  alphabet: IAlphabetDetails;
   data: Array<IData>;
 };
 
@@ -57,13 +59,14 @@ class Chart extends PureComponent<IChartProps> {
   }
 
   componentDidUpdate() {
+    console.log("UPDATING");
     this._createChart();
   }
 
   _createChart = () => {
     if (this.node === null) throw new Error("Failed creating svg.");
-    const { aminoDetails, data } = this.props;
-    const fullAlphabet = new Set<string>([...Object.keys(aminoDetails), ".", "*"]);
+    const { alphabet, data } = this.props;
+    const fullAlphabet = new Set<string>([...Object.keys(alphabet), ".", "*"]);
 
     const dataMax = Math.max(...data.map((d) => d.percentDiff));
     const dataMin = Math.min(...data.map((d) => d.percentDiff));
@@ -146,18 +149,12 @@ class Chart extends PureComponent<IChartProps> {
   }
 }
 
-/**
- *
- * @param {IAminoDetails} aminoDetails
- * @param {IDataset} dataset
- * @returns {Array<IData>}
- */
-const calculateData = (aminoDetails: IAminoDetails, dataset: IDataset) => {
+const calculateData = (alphabet: IAlphabetDetails, dataset: IDataset) => {
   const out: Array<IData> = [];
   // const out: Array<{ [letter: string]: number }> = [];
   // TODO: Convert to set
-  for (const letter of Object.keys(aminoDetails)) {
-    const details = aminoDetails[letter];
+  for (const letter of Object.keys(alphabet)) {
+    const details = alphabet[letter];
     if (!details.freq) continue;
 
     // expectedRaw: 1200; expected: 0.075
@@ -168,14 +165,6 @@ const calculateData = (aminoDetails: IAminoDetails, dataset: IDataset) => {
 
     const diffRaw = actual - details.freq;
     const percentDiff = (diffRaw / details.freq) * 100;
-
-    /**
-     * Actual: 3.5%
-     * Expected: 7.2%
-     * % Err: 1.2%
-     *
-     *
-     */
 
     out.push({
       letter: letter,
@@ -190,24 +179,27 @@ const calculateData = (aminoDetails: IAminoDetails, dataset: IDataset) => {
   return out;
 };
 
-class Distribution extends PureComponent<IAppProps> {
-  componentDidMount(): void {
+type IDistributionProps = {
+  alphabet: IAlphabetDetails;
+  dataset: IDataset;
+  dispatch: Dispatch;
+};
+
+class Distribution extends PureComponent<IDistributionProps> {
+  constructor(props: IDistributionProps) {
+    super(props);
     this.props.dispatch(actions.fetchAlphabet());
   }
 
   render() {
-    const { datasets, alphabet } = this.props.state;
-    if (Object.keys(datasets.data).length === 0 || Object.keys(alphabet.data).length === 0) {
+    const { dataset, alphabet } = this.props;
+    if (isEmptyObject(dataset) || isEmptyObject(alphabet)) {
       return null;
     }
-    const datasetID = Object.keys(datasets.data)[0];
 
-    const aminoDetails = alphabet.data;
-    const dataset = datasets.data[datasetID];
-    const out = calculateData(aminoDetails, dataset);
-
-    return <Chart aminoDetails={aminoDetails} data={out} />;
+    const out = calculateData(alphabet, dataset);
+    return <Chart alphabet={alphabet} data={out} />;
   }
 }
 
-export default connect(Distribution);
+export default Distribution;

@@ -1,0 +1,46 @@
+@import "../../../../styles/globals/all";
+
+.header {
+  align-items: center;
+  background-color: $bg-2;
+  display: flex;
+
+  justify-content: space-between;
+  padding: 8px;
+}
+
+.backButton {
+  display: inline-block;
+  & button {
+    align-items: center;
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    padding: 2px 3px;
+  }
+}
+
+.userText {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.datasetInfo {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+
+  line-height: 1.15;
+
+  .datasetName {
+    font-size: larger;
+    font-weight: bold;
+  }
+
+  .datasetFilename {
+    font-weight: lighter;
+
+  }
+}

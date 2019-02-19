@@ -4,19 +4,19 @@ $a-tags: 'a, a:active, a:hover, a:visited';
 $a-tags-hover: 'a:active, a:hover';
 
 .btn {
-  $button-color: $pc-1;
-  $border-size: 1px;
+  $borderSize: 1.5px;
+  $buttonColor: $pc-1;
 
+  align-items: center;
   background-color: inherit;
-  margin: 0;
-  padding: 8px 18px;
-  border: $border-size solid transparent;
-  border-radius: 4px;
+  border: $borderSize solid transparent;
+  border-radius: 20px;
+  cursor: pointer;
 
   display: flex;
-  align-items: center;
+  margin: 0;
 
-  cursor: pointer;
+  padding: 8px 18px;
 
   &:focus {
     outline: none;
@@ -32,25 +32,25 @@ $a-tags-hover: 'a:active, a:hover';
   }
 
   &.btn-1 {
-    background-color: $button-color;
+    background-color: $buttonColor;
     transition: all .2s ease-in-out;
     &:hover, &:focus {
-      background-color: darken($button-color, 5%);
+      background-color: darken($buttonColor, 5%);
     }
   }
 
   &.btn-2 {
-    border: $border-size solid $button-color;
+    border: $borderSize solid $buttonColor;
     transition: all .2s ease-in-out;
     &:hover, &:focus {
-      border: 1px solid darken($button-color, 15%);
+      border: $borderSize solid darken($buttonColor, 15%);
     }
   }
 
   &.btn-3 {
     transition: border 0.2s ease-in-out;
     &:hover, &:focus {
-      border: $border-size solid $button-color;
+      border: $borderSize solid $buttonColor;
     }
   }
 }

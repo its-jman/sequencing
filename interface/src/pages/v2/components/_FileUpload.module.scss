@@ -1,0 +1,21 @@
+@import "../../../styles/globals/all";
+
+.container {
+}
+
+.rawFileInput {
+  display: none;
+}
+
+.fileInput {
+  padding: 8px 16px;
+  border: 1.5px solid $bg-5;
+  border-radius: 8px;
+
+  background-color: $bg-0;
+  cursor: pointer;
+}
+
+.fileInputFilename {
+  font-weight: lighter;
+}

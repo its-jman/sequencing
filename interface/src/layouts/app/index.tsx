@@ -2,18 +2,31 @@ import "normalize.css";
 import "src/styles/main.scss";
 
 import React from "react";
-import { connect } from "src/state/connect";
 import Helmet from "react-helmet";
+import MobxDevTools from "mobx-react-devtools";
+import { RouteProps, Switch, Route, Redirect, withRouter } from "react-router-dom";
 
-import { Selection } from "src/pages";
+import V2 from "src/pages/v2";
+import { connect } from "src/state/connect";
 import { IAppProps } from "src/state/models";
 import * as actions from "src/state/actions";
+import UploadModal from "src/pages/v2/components/uploadModal";
 
 class App extends React.PureComponent<IAppProps> {
-  componentDidMount() {
-    const { dispatch } = this.props;
+  static routes: Array<RouteProps> = [
+    {
+      path: "/v2",
+      component: V2
+    },
+    {
+      // Match all non-handled routes
+      path: "/",
+      render: (props) => <Redirect {...props} to="/v2" />
+    }
+  ];
 
-    dispatch(actions.fetchDatasets());
+  componentDidMount() {
+    this.props.dispatch(actions.fetchDatasets());
   }
 
   render() {
@@ -26,10 +39,17 @@ class App extends React.PureComponent<IAppProps> {
             {state.context.title ? `${state.context.title} | sequencing` : "sequencing"}
           </title>
         </Helmet>
-        <Selection {...this.props} />
+        <MobxDevTools />
+        <UploadModal />
+        <Switch>
+          {App.routes.map((route, i) => (
+            <Route key={i} {...route} />
+          ))}
+        </Switch>
       </>
     );
   }
 }
 
-export default connect(App);
+// @ts-ignore
+export default withRouter(connect(App));

@@ -3,8 +3,8 @@
 /* https://css-tricks.com/snippets/sass/centering-mixin/ */
 @mixin centerer($horizontal: true, $vertical: true) {
   @if ($horizontal and $vertical) {
-    top: 50%;
     left: 50%;
+    top: 50%;
     transform: translate(-50%, -50%);
   } @else if ($horizontal) {
     left: 50%;
@@ -16,8 +16,8 @@
 }
 
 @mixin regular() {
-  font-family: 'Open Sans', sans-serif;
   color: transparentize($text-1, $text-transparency);
+  font-family: 'Open Sans', sans-serif;
 }
 
 @mixin transition($element, $duration: 0.2s) {

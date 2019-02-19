@@ -1,9 +1,17 @@
 import { NETWORK_STATUS } from "src/state/network/types";
+import { ThunkAction, ThunkDispatch } from "redux-thunk";
+import { IAppState } from "src/state/models";
+import { AnyAction } from "redux";
 
 const defaultInitialState = {
   isFetching: false,
   data: {},
   errors: {}
+};
+
+type INetworkAction = {
+  type: string;
+  status: NETWORK_STATUS;
 };
 
 const defaultGetResponseErrors = (response: any) => {
@@ -16,6 +24,7 @@ const defaultGetResponseErrors = (response: any) => {
 };
 
 // @ts-ignore
+// export const networkReducer = <TState>(state: TState, action: INetworkAction, config) => {
 export const networkReducer = (state, action, config) => {
   const {
     initialState = defaultInitialState,
@@ -64,4 +73,43 @@ export const networkReducer = (state, action, config) => {
     default:
       return state;
   }
+};
+
+type INetworkThunkProps<TState> = {
+  type: string;
+  callAPI: () => Promise<any>;
+  shouldCallAPI?: (state: TState) => boolean;
+};
+
+export const networkActionThunk = <TState>({
+  type,
+  callAPI,
+  shouldCallAPI = () => true
+}: INetworkThunkProps<TState>): ThunkAction<void, TState, {}, AnyAction> => {
+  return (dispatch, getState) => {
+    if (!shouldCallAPI(getState())) return;
+
+    const networkAction = (status: NETWORK_STATUS, other: object) => ({
+      type,
+      status,
+      ...other
+    });
+
+    callAPI().then(
+      (response) => dispatch(networkAction(NETWORK_STATUS.SUCCESS, { response })),
+      (error) => dispatch(networkAction(NETWORK_STATUS.FAILURE, { error }))
+    );
+    // .catch((error) => dispatch(networkAction(NETWORK_STATUS.FAILURE, { error })));
+  };
+};
+
+export const promiseThunk = <TState>(
+  onResolve: () => void,
+  onReject: () => void
+): ThunkAction<void, TState, {}, AnyAction> => {
+  return (dispatch, getState) => {
+    const PStatus = new Promise<boolean>((resolve, reject) => {
+      dispatch(showConfirmation(resolve, reject));
+    }).then(onResolve, onReject);
+  };
 };
