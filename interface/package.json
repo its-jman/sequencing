@@ -7,9 +7,6 @@
     "d3-axis": "^1.0.12",
     "d3-scale": "^2.2.2",
     "d3-selection": "^1.4.0",
-    "mobx": "^5.9.0",
-    "mobx-logger": "^0.7.1",
-    "mobx-react": "^5.4.3",
     "node-sass": "^4.11.0",
     "normalize.css": "^8.0.1",
     "react": "^16.8.1",
@@ -21,7 +18,6 @@
     "react-scripts": "2.1.3",
     "redux": "^4.0.1",
     "redux-logger": "^3.0.6",
-    "redux-starter-kit": "^0.4.3",
     "redux-thunk": "^2.3.0",
     "tslint": "^5.12.1",
     "typescript": "3.3.1"
@@ -29,14 +25,12 @@
   "devDependencies": {
     "@types/d3-axis": "^1.0.12",
     "@types/d3-scale": "^2.1.1",
-    "@types/jest": "24.0.0",
     "@types/node": "10.12.21",
     "@types/react": "16.8.2",
     "@types/react-dom": "16.8.0",
     "@types/react-helmet": "^5.0.8",
     "@types/react-redux": "^7.0.1",
-    "@types/redux-logger": "^3.0.6",
-    "mobx-react-devtools": "^6.0.3"
+    "@types/redux-logger": "^3.0.6"
   },
   "scripts": {
     "start": "react-scripts start",
