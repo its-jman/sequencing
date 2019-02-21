@@ -46,4 +46,63 @@ $bg-5: map_get($theme, bg-5);
 $text-1: map_get($theme, text-1);
 $text-2: map_get($theme, text-2);
 
+$gray-0: #F8F9FA;
+$gray-1: #F1F3F5;
+$gray-2: #E9ECEE;
+$gray-3: #DEE2E6;
+$gray-4: #CFD4DA;
+$gray-5: #ADB5BD;
+$gray-6: #868E96;
+$gray-7: #495057;
+$gray-8: #343A40;
+$gray-9: #21252A;
+
+//$gry2-1: #F8F9FA;
+//$gry2-2: #E1E7EC;
+//$gry2-3: #CFD6DE;
+//$gry2-4: #B8C4CE;
+//$gry2-5: #8895A7;
+//$gry2-6: #5F6B7A;
+//$gry2-7: #212934;
+
+$blu-1: #EFF8FF;
+$blu-2: #AAD4F5;
+$blu-3: #63A2D8;
+$blu-4: #3183C8;
+$blu-5: #2368A2;
+$blu-6: #1A4971;
+$blu-7: #12283A;
+
+$teal-1: #E7FFFE;
+$teal-2: #A8EEEB;
+$teal-3: #6ED7D3;
+$teal-4: #3CAEA3;
+$teal-5: #2A9187;
+$teal-6: #1B655E;
+$teal-7: #114443;
+
+$red-1: #FCE8E8;
+$red-2: #F4AAAA;
+$red-3: #E36363;
+$red-4: #DC3030;
+$red-5: #B82020;
+$red-6: #881A1B;
+$red-7: #611717;
+
+$ylw-1: #FFFCF4;
+$ylw-2: #FDF3D7;
+$ylw-3: #FAE29F;
+$ylw-4: #F4CA64;
+$ylw-5: #CAA53D;
+$ylw-6: #8C6D1F;
+$ylw-7: #5C4813;
+
+$grn-1: #E3FCEC;
+$grn-2: #A8EEC1;
+$grn-3: #74D99F;
+$grn-4: #38C172;
+$grn-5: #249D57;
+$grn-6: #187741;
+$grn-7: #155239;
+
 $link-color: transparentize($text-1, $text-transparency);

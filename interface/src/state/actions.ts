@@ -11,7 +11,8 @@ export enum ActionTypes {
   FETCH_SEQUENCES = "FETCH_SEQUENCES",
   SET_MODAL = "SET_MODAL",
   SHOW_CONFIRMATION = "SET_CONFIRMATION",
-  SELECT_FILES = "SELECT_FILES"
+  SELECT_FILES = "SELECT_FILES",
+  CLEAR_CONFIRMATION = "CLEAR_CONFIRMATION"
 }
 
 export enum ModalType {
@@ -60,6 +61,11 @@ export const showConfirmation = (payload: {
   params: IConfirmationParams;
 }) => ({
   type: ActionTypes.SHOW_CONFIRMATION,
+  ...payload
+});
+
+export const clearConfirmation = (payload: { confirmationType: ConfirmationType }) => ({
+  type: ActionTypes.CLEAR_CONFIRMATION,
   ...payload
 });
 

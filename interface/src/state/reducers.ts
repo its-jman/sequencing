@@ -58,7 +58,22 @@ export default combineReducers<IAppState>({
           ...state,
           modalManager: {
             ...state.modalManager,
-            confirmations: [...state.modalManager.confirmations, { ...action.params }]
+            confirmations: [
+              ...state.modalManager.confirmations,
+              { type: action.confirmationType, params: action.params }
+            ]
+          }
+        };
+      case ActionTypes.CLEAR_CONFIRMATION:
+        const rest = state.modalManager.confirmations.filter(
+          (conf) => conf.type !== action.confirmationType
+        );
+
+        return {
+          ...state,
+          modalManager: {
+            ...state.modalManager,
+            confirmations: rest
           }
         };
       default:
@@ -96,7 +111,7 @@ export default combineReducers<IAppState>({
   upload: (state: IUploadState = initialUploadState, action: AnyAction) => {
     switch (action.type) {
       case ActionTypes.SELECT_FILES:
-        if (state.files.length > 0) {
+        if (state.files.length > 0 && action.files.length > 0) {
           console.warn("Setting files while files already exist. Old state will be cleared");
         }
         return {

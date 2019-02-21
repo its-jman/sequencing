@@ -4,15 +4,16 @@ import { connect } from "react-redux";
 import UploadModal from "./uploadModal";
 
 import Modal from "src/components/modal";
-import { IAppState, IModalManager } from "src/state/models";
+import { IAppState, IConfirmationParams, IModalManager } from "src/state/models";
 import { ModalType, ConfirmationType } from "src/state/actions";
+import ClearUpload from "src/pages/v2/components/modals/confirmations/clearUpload";
 
 const ModalMap: { [T in ModalType]: React.ComponentType } = {
   UPLOAD_MANAGER: UploadModal
 };
 
-const ConfirmationMap: { [T in ConfirmationType]: React.ComponentType } = {
-  CLEAR_UPLOAD: UploadModal
+const ConfirmationMap: { [T in ConfirmationType]: React.ComponentType<IConfirmationParams> } = {
+  CLEAR_UPLOAD: ClearUpload
 };
 
 type IModalManagerProps = { modalManager: IModalManager };
@@ -39,9 +40,13 @@ class ModalManager extends PureComponent<IModalManagerProps> {
 
     if (confirmations.length > 0) {
       const confirmation = confirmations[0];
-      const inner = ConfirmationMap[confirmation.type];
-      if (inner) {
-        return <Modal>{inner}</Modal>;
+      const Inner = ConfirmationMap[confirmation.type];
+      if (Inner) {
+        return (
+          <Modal>
+            <Inner {...confirmation.params} />
+          </Modal>
+        );
       } else {
         console.error(`Invalid confirmation type: "${confirmation.type}"`);
       }

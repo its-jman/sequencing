@@ -1,0 +1,52 @@
+@import "../../../../../styles/globals/all";
+
+$borderRadius: 8px;
+.container {
+  width: 370px;
+  border-radius: $borderRadius;
+  margin: 210px auto 0;
+
+  overflow: hidden;
+}
+
+.body {
+  background-color: $bg-0;
+  padding: 16px;
+}
+
+.footer {
+  background-color: $bg-3;
+  padding: 8px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.clearButton {
+  padding: 12px;
+  border-radius: $borderRadius;
+  margin-right: 10px;
+  border: 0;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  //background-color: $red-1;
+  background-color: inherit;
+  //color: $red-7;
+  color: $gray-7;
+  //border: 1.5px solid $red-5;
+}
+
+.resumeButton {
+  padding: 12px 20px;
+  border-radius: $borderRadius;
+  border: 0;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  background-color: $grn-1;
+  color: $grn-7;
+  //border: 1.5px solid $grn-5;
+}

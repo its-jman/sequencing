@@ -31,6 +31,7 @@ class ContentHeader extends React.PureComponent<IContentHeaderProps & IDispatchP
           console.error("ContentHeader.fileInput === null");
         } else {
           dispatch(actions.selectFiles({ files: [] }));
+          this.fileInput.value = "";
           this.fileInput.click();
         }
       };

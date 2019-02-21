@@ -62,7 +62,7 @@ export type IAlphabetState = INetworkState<IAlphabetDetails>;
 
 // Upload/Files state
 export type IUploadState = {
-  files: Array<File>;
+  files: Array<File | null>;
 };
 
 // App State

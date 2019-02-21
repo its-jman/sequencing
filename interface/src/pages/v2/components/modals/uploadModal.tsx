@@ -11,18 +11,22 @@ import * as actions from "src/state/actions";
 import { ModalType } from "src/state/actions";
 
 type IUploadModalProps = {
-  visible: boolean;
+  files: Array<File | null>;
 };
 
-type IUploadFields = {
-  nameInput: HTMLInputElement | null;
-  fileInput: FileInput | null;
-};
+class MultiSelectionHeader extends PureComponent<IUploadModalProps> {
+  render() {
+    const { files } = this.props;
+    if (files.length <= 1) return null;
+    return <div className={styles.multiSelectionHeader} />;
+  }
+}
 
 class UploadModal extends PureComponent<IUploadModalProps & IDispatchProps> {
-  fields: IUploadFields = {
-    nameInput: null,
-    fileInput: null
+  fields: {
+    nameInput: HTMLInputElement | null;
+  } = {
+    nameInput: null
   };
 
   _keyCapture = (event: React.KeyboardEvent<HTMLDivElement>) => {
@@ -69,42 +73,47 @@ class UploadModal extends PureComponent<IUploadModalProps & IDispatchProps> {
   _submitForm = () => {};
 
   render() {
+    const { files } = this.props;
+
     return (
-      <div className={styles.container}>
-        <div className={styles.header}>
-          <div className={styles.headerContent}>
-            <input
-              className={styles.nameInput}
-              type="text"
-              placeholder="Dataset name... "
-              ref={(inp) => (this.fields.nameInput = inp)}
-            />
-            <FiEdit
-              className={styles.nameInputIcon}
-              onClick={() => {
-                if (this.fields.nameInput !== null) {
-                  this.fields.nameInput.focus();
-                  this.fields.nameInput.select();
-                }
-              }}
-            />
+      <div className={styles.superContainer}>
+        <div className={styles.container}>
+          <MultiSelectionHeader files={files} />
+          <div className={styles.header}>
+            <div className={styles.headerContent}>
+              <input
+                className={styles.nameInput}
+                type="text"
+                placeholder="Dataset name... "
+                ref={(inp) => (this.fields.nameInput = inp)}
+              />
+              <FiEdit
+                className={styles.nameInputIcon}
+                onClick={() => {
+                  if (this.fields.nameInput !== null) {
+                    this.fields.nameInput.focus();
+                    this.fields.nameInput.select();
+                  }
+                }}
+              />
+            </div>
+
+            <div className={styles.headerRight}>
+              <button className={styles.formReset} onClick={this._resetForm}>
+                Reset Form
+              </button>
+              <FiX className={styles.closeIcon} onClick={this._closeModal} />
+            </div>
           </div>
 
-          <div className={styles.headerRight}>
-            <button className={styles.formReset} onClick={this._resetForm}>
-              Reset Form
-            </button>
-            <FiX className={styles.closeIcon} onClick={this._closeModal} />
-          </div>
-        </div>
+          <div className={styles.content}>
+            <div className={styles.contentBody}>
+              <div>{"There's nothing here right now..."}</div>
+            </div>
 
-        <div className={styles.content}>
-          <div className={styles.contentBody}>
-            <FileInput ref={(inp) => (this.fields.fileInput = inp)} />
+            <hr />
+            <button className={styles.submitButton}>Submit</button>
           </div>
-
-          <hr />
-          <button className={styles.submitButton}>Submit</button>
         </div>
       </div>
     );
@@ -113,7 +122,7 @@ class UploadModal extends PureComponent<IUploadModalProps & IDispatchProps> {
 
 export default connect<IUploadModalProps, IDispatchProps, {}, IAppState>(
   (state: IAppState) => ({
-    visible: true
+    files: state.upload.files
   }),
   (dispatch) => ({
     dispatch: dispatch
