@@ -3,9 +3,7 @@ import { FiEdit, FiX } from "react-icons/fi";
 import { connect } from "react-redux";
 
 import styles from "./_UploadModal.module.scss";
-import FileInput from "../fileInput";
 
-import Modal from "src/components/modal";
 import { IAppState, IDispatchProps } from "src/state/models";
 import * as actions from "src/state/actions";
 import { ModalType } from "src/state/actions";
@@ -14,11 +12,22 @@ type IUploadModalProps = {
   files: Array<File | null>;
 };
 
-class MultiSelectionHeader extends PureComponent<IUploadModalProps> {
+type IFile = {
+  i: number;
+  file: File | null;
+};
+
+class MultiSelectionHeader extends PureComponent<IUploadModalProps & { file: IFile }> {
   render() {
-    const { files } = this.props;
-    if (files.length <= 1) return null;
-    return <div className={styles.multiSelectionHeader} />;
+    const { files, file } = this.props;
+    if (!(files.length > 1)) return null;
+    return (
+      <div className={styles.multiSelectionHeader}>
+        <span>{"Uploading: "}</span>
+        <span>{file.i + 1}</span>
+        <span>{`/${files.length}`}</span>
+      </div>
+    );
   }
 }
 
@@ -44,6 +53,23 @@ class UploadModal extends PureComponent<IUploadModalProps & IDispatchProps> {
     // @ts-ignore
     document.removeEventListener("keydown", this._keyCapture, false);
   }
+
+  _getFile = (): IFile => {
+    const { files, dispatch } = this.props;
+
+    let fileIndex = -1;
+    for (let i = 0; i < files.length; i++) {
+      if (files[i] !== null) {
+        fileIndex = i;
+        break;
+      }
+    }
+
+    return {
+      i: fileIndex,
+      file: files[fileIndex]
+    };
+  };
 
   _resetForm = () => {
     for (const field of Object.values(this.fields)) {
@@ -73,29 +99,39 @@ class UploadModal extends PureComponent<IUploadModalProps & IDispatchProps> {
   _submitForm = () => {};
 
   render() {
-    const { files } = this.props;
+    const { files, dispatch } = this.props;
+
+    const file = this._getFile();
+    if (file.i === -1 || !file.file) {
+      console.error("File doesn't exist in upload manager.");
+      dispatch(actions.setModal({ modalType: ModalType.UPLOAD_MANAGER, status: false }));
+      return null;
+    }
 
     return (
       <div className={styles.superContainer}>
         <div className={styles.container}>
-          <MultiSelectionHeader files={files} />
+          <MultiSelectionHeader files={files} file={file} />
           <div className={styles.header}>
             <div className={styles.headerContent}>
-              <input
-                className={styles.nameInput}
-                type="text"
-                placeholder="Dataset name... "
-                ref={(inp) => (this.fields.nameInput = inp)}
-              />
-              <FiEdit
-                className={styles.nameInputIcon}
-                onClick={() => {
-                  if (this.fields.nameInput !== null) {
-                    this.fields.nameInput.focus();
-                    this.fields.nameInput.select();
-                  }
-                }}
-              />
+              <div className={styles.nameInputContainer}>
+                <input
+                  className={styles.nameInput}
+                  type="text"
+                  placeholder="Dataset name... "
+                  ref={(inp) => (this.fields.nameInput = inp)}
+                />
+                <FiEdit
+                  className={styles.nameInputIcon}
+                  onClick={() => {
+                    if (this.fields.nameInput !== null) {
+                      this.fields.nameInput.focus();
+                      this.fields.nameInput.select();
+                    }
+                  }}
+                />
+              </div>
+              <div className={styles.fileName}>{file.file.name}</div>
             </div>
 
             <div className={styles.headerRight}>
@@ -108,7 +144,7 @@ class UploadModal extends PureComponent<IUploadModalProps & IDispatchProps> {
 
           <div className={styles.content}>
             <div className={styles.contentBody}>
-              <div>{"There's nothing here right now..."}</div>
+              <div>{"Future ideas go here..."}</div>
             </div>
 
             <hr />

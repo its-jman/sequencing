@@ -66,6 +66,7 @@ class ContentHeader extends React.PureComponent<IContentHeaderProps & IDispatchP
     return (
       <div className={styles.header}>
         <input
+          multiple={true}
           type="file"
           style={{ display: "none" }}
           onChange={this._handleFiles}

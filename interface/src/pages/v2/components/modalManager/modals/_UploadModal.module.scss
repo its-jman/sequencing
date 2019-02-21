@@ -1,4 +1,4 @@
-@import "../../../../styles/globals/all";
+@import "../../../../../styles/globals/all";
 
 $iconColor: darken($bg-5, 30%);
 $borderRadius: 8px;
@@ -23,16 +23,14 @@ $headerBg: $bg-2;
   border-radius: $borderRadius $borderRadius 0 0;
 
   background-color: $headerBg;
-  .headerContent {
 
-    display: flex;
-    align-items: center;
-    padding: 16px 8px;
+  .headerContent {
+    padding: 16px 8px 10px;
   }
 }
 
 .multiSelectionHeader {
-  $height: 65px;
+  $height: 55px;
   width: 260px;
   height: $height;
 
@@ -43,46 +41,74 @@ $headerBg: $bg-2;
 
   background-color: $bg-0;
   border-radius: $borderRadius $borderRadius 0 0;
-  margin: 0 auto;
+  padding: 12px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
 
-.nameInput {
-  @include transition(background-color, 0.1s);
-  width: 325px;
-  height: 36px;
+$inputWidth: 325px;
+.nameInputContainer {
+  display: flex;
+  align-items: center;
 
-  padding: 4px 8px;
-  border: 0;
-  border-radius: 3px;
-  background-color: $headerBg;
+  .nameInput {
+    @include transition(background-color, 0.1s);
+    width: $inputWidth;
+    height: 36px;
 
-  font-size: 20px;
-  line-height: 32px;
+    padding: 4px 8px;
+    border: 0;
+    border-radius: 3px;
+    background-color: $headerBg;
 
-  &::placeholder {
-    font-style: italic;
-    font-weight: normal;
+    font-size: 20px;
+    line-height: 32px;
+
+    &::placeholder {
+      font-style: italic;
+      font-weight: normal;
+    }
+
+    &:focus {
+      background-color: $bg-0;
+    }
   }
 
-  &:focus {
-    background-color: $bg-0;
+  .nameInputIcon {
+    $size: 28px;
+    width: $size;
+    height: $size;
+
+    margin-left: 8px;
+
+    position: relative;
+    top: -2px;
+
+    color: $iconColor;
+    cursor: pointer;
+
+    @include transition(color);
+
+    &:hover {
+      color: darken($iconColor, 15%);
+    }
   }
 }
 
-.nameInputIcon {
+.fileName {
+  width: $inputWidth;
+  max-width: $inputWidth;
 
-  $size: 28px;
-  width: $size;
-  height: $size;
-  margin-left: 8px;
-  color: $iconColor;
-  cursor: pointer;
+  padding-left: 25px;
+  padding-top: 6px;
 
-  @include transition(color);
+  font-weight: lighter;
+  font-style: italic;
+  letter-spacing: .4px;
 
-  &:hover {
-    color: darken($iconColor, 15%);
-  }
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .headerRight {

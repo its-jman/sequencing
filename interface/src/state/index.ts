@@ -5,8 +5,8 @@ import thunk from "redux-thunk";
 import rootReducer from "src/state/reducers";
 
 const logger = createLogger({
-  collapsed: () => true,
-  predicate: (getState, action) => !action.apiRequest
+  collapsed: () => true
+  // predicate: (getState, action) =>
 });
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

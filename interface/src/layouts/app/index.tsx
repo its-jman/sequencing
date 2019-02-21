@@ -9,7 +9,7 @@ import V2 from "src/pages/v2";
 import { connect } from "src/state/connect";
 import { IAppProps } from "src/state/models";
 import * as actions from "src/state/actions";
-import ModalManager from "src/pages/v2/components/modals/modalManager";
+import ModalManager from "src/pages/v2/components/modalManager/modalManager";
 
 class App extends React.PureComponent<IAppProps> {
   static routes: Array<RouteProps> = [
