@@ -95,6 +95,14 @@ export default combineReducers<IAppState>({
   },
   upload: (state: IUploadState = initialUploadState, action: AnyAction) => {
     switch (action.type) {
+      case ActionTypes.SELECT_FILES:
+        if (state.files.length > 0) {
+          console.warn("Setting files while files already exist. Old state will be cleared");
+        }
+        return {
+          ...state,
+          files: action.files
+        };
       default:
         return state;
     }

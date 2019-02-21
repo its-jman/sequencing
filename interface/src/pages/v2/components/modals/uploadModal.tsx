@@ -69,7 +69,6 @@ class UploadModal extends PureComponent<IUploadModalProps & IDispatchProps> {
   _submitForm = () => {};
 
   render() {
-    const { visible, dispatch } = this.props;
     return (
       <div className={styles.container}>
         <div className={styles.header}>

@@ -1,7 +1,7 @@
 import * as api from "src/api";
-import { IAppState, IConfirmationParams } from "src/state/models";
 import { isEmptyObject } from "src/utils";
 import { networkActionThunk } from "src/state/network/utils";
+import { IAppState, IConfirmationParams } from "src/state/models";
 
 export enum ActionTypes {
   SET_TITLE = "SET_TITLE",
@@ -63,7 +63,7 @@ export const showConfirmation = (payload: {
   ...payload
 });
 
-export const selectFiles = (params: { files: Array<string> }) => ({
+export const selectFiles = (params: { files: Array<File> }) => ({
   type: ActionTypes.SELECT_FILES,
   ...params
 });

@@ -16,21 +16,47 @@ type IContentHeaderProps = {
 };
 
 class ContentHeader extends React.PureComponent<IContentHeaderProps & IDispatchProps> {
+  fileInput: HTMLInputElement | null = null;
+
   _uploadClick = () => {
     const { dispatch, canResumeUpload } = this.props;
 
     if (canResumeUpload) {
+      const resolve = () => {
+        dispatch(actions.setModal({ modalType: ModalType.UPLOAD_MANAGER, status: true }));
+      };
+
+      const reject = () => {
+        if (this.fileInput === null) {
+          console.error("ContentHeader.fileInput === null");
+        } else {
+          dispatch(actions.selectFiles({ files: [] }));
+          this.fileInput.click();
+        }
+      };
+
       dispatch(
         actions.showConfirmation({
           confirmationType: ConfirmationType.RESUME_UPLOAD,
-          params: {
-            resolve: () =>
-              dispatch(actions.setModal({ modalType: ModalType.UPLOAD_MANAGER, status: true })),
-            reject: () => console.error("CLICKING FILE UPLOAD")
-          }
+          params: { resolve, reject }
         })
       );
     } else {
+      if (this.fileInput === null) {
+        console.error("ContentHeader.fileInput === null");
+      } else {
+        this.fileInput.click();
+      }
+    }
+  };
+
+  _handleFiles = () => {
+    if (this.fileInput === null) {
+      console.error("ContentHeader.fileInput === null");
+    } else {
+      const { dispatch } = this.props;
+      const files: Array<File> = this.fileInput.files !== null ? [...this.fileInput.files] : [];
+      dispatch(actions.selectFiles({ files }));
       dispatch(actions.setModal({ modalType: ModalType.UPLOAD_MANAGER, status: true }));
     }
   };
@@ -38,6 +64,12 @@ class ContentHeader extends React.PureComponent<IContentHeaderProps & IDispatchP
   render() {
     return (
       <div className={styles.header}>
+        <input
+          type="file"
+          style={{ display: "none" }}
+          onChange={this._handleFiles}
+          ref={(inp) => (this.fileInput = inp)}
+        />
         <button className={`btn btn-2`} onClick={this._uploadClick}>
           <FiUpload className={styles.uploadIcon} />
           <span>{" Upload"}</span>
