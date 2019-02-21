@@ -10,7 +10,7 @@ export enum ActionTypes {
   FETCH_ALPHABET = "FETCH_ALPHABET",
   FETCH_SEQUENCES = "FETCH_SEQUENCES",
   SET_MODAL = "SET_MODAL",
-  SET_CONFIRMATION = "SET_CONFIRMATION",
+  SHOW_CONFIRMATION = "SET_CONFIRMATION",
   SELECT_FILES = "SELECT_FILES"
 }
 
@@ -59,7 +59,7 @@ export const showConfirmation = (payload: {
   confirmationType: ConfirmationType;
   params: IConfirmationParams;
 }) => ({
-  type: ActionTypes.SET_CONFIRMATION,
+  type: ActionTypes.SHOW_CONFIRMATION,
   ...payload
 });
 

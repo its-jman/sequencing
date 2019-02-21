@@ -9,6 +9,7 @@ import V2 from "src/pages/v2";
 import { connect } from "src/state/connect";
 import { IAppProps } from "src/state/models";
 import * as actions from "src/state/actions";
+import ModalManager from "src/pages/v2/components/modals/modalManager";
 
 class App extends React.PureComponent<IAppProps> {
   static routes: Array<RouteProps> = [
@@ -35,6 +36,7 @@ class App extends React.PureComponent<IAppProps> {
         <Helmet>
           <title>{state.ui.title ? `${state.ui.title} | sequencing` : "sequencing"}</title>
         </Helmet>
+        <ModalManager />
         <Switch>
           {App.routes.map((route, i) => (
             <Route key={i} {...route} />

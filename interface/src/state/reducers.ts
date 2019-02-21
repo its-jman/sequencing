@@ -1,11 +1,19 @@
 import { AnyAction, combineReducers } from "redux";
 import { ActionTypes } from "src/state/actions";
 import { networkReducer } from "src/state/network/utils";
-import { IAppState, IDataset, IDatasetsStateData, IUIState, IUploadState } from "src/state/models";
+import {
+  IAlphabetState,
+  IAppState,
+  IDataset,
+  IDatasetsState,
+  IDatasetsStateData,
+  IUIState,
+  IUploadState
+} from "src/state/models";
 
 const initialUIState: IUIState = {
   title: null,
-  modal: {
+  modalManager: {
     modal: null,
     confirmations: []
   }
@@ -22,18 +30,42 @@ const initialNetworkState = {
 };
 
 export default combineReducers<IAppState>({
-  ui: (state = initialUIState, action: AnyAction) => {
+  ui: (state: IUIState = initialUIState, action: AnyAction) => {
     switch (action.type) {
       case ActionTypes.SET_TITLE:
         return {
           ...state,
           title: action.payload
         };
+      case ActionTypes.SET_MODAL:
+        const { modal } = state.modalManager;
+        if (modal !== null && action.modalType !== modal.type) {
+          console.error(
+            `"${modal.type}" already visible while trying to show "${action.modalType}"`
+          );
+          return state;
+        } else {
+          return {
+            ...state,
+            modalManager: {
+              ...state.modalManager,
+              modal: action.status ? { type: action.modalType } : null
+            }
+          };
+        }
+      case ActionTypes.SHOW_CONFIRMATION:
+        return {
+          ...state,
+          modalManager: {
+            ...state.modalManager,
+            confirmations: [...state.modalManager.confirmations, { ...action.params }]
+          }
+        };
       default:
         return state;
     }
   },
-  datasets: (state = initialNetworkState, action: AnyAction) => {
+  datasets: (state: IDatasetsState = initialNetworkState, action: AnyAction) => {
     switch (action.type) {
       case ActionTypes.LOAD_DATASETS:
         return networkReducer(state, action, {
@@ -49,7 +81,7 @@ export default combineReducers<IAppState>({
         return state;
     }
   },
-  alphabet: (state = initialNetworkState, action: AnyAction) => {
+  alphabet: (state: IAlphabetState = initialNetworkState, action: AnyAction) => {
     switch (action.type) {
       case ActionTypes.FETCH_ALPHABET:
         return networkReducer(state, action, {
@@ -61,7 +93,7 @@ export default combineReducers<IAppState>({
         return state;
     }
   },
-  upload: (state = initialUploadState, action: AnyAction) => {
+  upload: (state: IUploadState = initialUploadState, action: AnyAction) => {
     switch (action.type) {
       default:
         return state;

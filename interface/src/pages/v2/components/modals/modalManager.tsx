@@ -7,22 +7,26 @@ import Modal from "src/components/modal";
 import { IAppState, IModalManager } from "src/state/models";
 import { ModalType, ConfirmationType } from "src/state/actions";
 
-const ModalMap: { [T in ModalType]: React.ReactNode } = {
+const ModalMap: { [T in ModalType]: React.ComponentType } = {
   UPLOAD_MANAGER: UploadModal
 };
 
-const ConfirmationMap: { [T in ConfirmationType]: React.ReactNode } = {
+const ConfirmationMap: { [T in ConfirmationType]: React.ComponentType } = {
   CLEAR_UPLOAD: UploadModal
 };
 
-type IModalManagerProps = { modal: IModalManager };
+type IModalManagerProps = { modalManager: IModalManager };
 class ModalManager extends PureComponent<IModalManagerProps> {
   _getModal = () => {
-    const { modal } = this.props.modal;
+    const { modal } = this.props.modalManager;
     if (modal !== null) {
-      const inner = ModalMap[modal.type];
-      if (inner) {
-        return <Modal>{inner}</Modal>;
+      const Inner = ModalMap[modal.type];
+      if (Inner) {
+        return (
+          <Modal>
+            <Inner />
+          </Modal>
+        );
       } else {
         console.error(`Invalid modal type: "${modal.type}"`);
       }
@@ -31,7 +35,7 @@ class ModalManager extends PureComponent<IModalManagerProps> {
   };
 
   _getConfirmations = () => {
-    const { confirmations } = this.props.modal;
+    const { confirmations } = this.props.modalManager;
 
     if (confirmations.length > 0) {
       const confirmation = confirmations[0];
@@ -56,5 +60,5 @@ class ModalManager extends PureComponent<IModalManagerProps> {
 }
 
 export default connect<IModalManagerProps, {}, {}, IAppState>((state) => ({
-  modal: state.ui.modal
+  modalManager: state.ui.modalManager
 }))(ModalManager);

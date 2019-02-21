@@ -39,13 +39,13 @@ type INetworkState<TData> = {
 
 // UI State
 export type IModalManager = {
-  modal: { type: ModalType; params: any } | null;
+  modal: { type: ModalType } | null;
   confirmations: Array<{ type: ConfirmationType; params: IConfirmationParams }>;
 };
 export type IConfirmationParams = { resolve: () => void; reject: () => void };
 export type IUIState = {
   title: string | null;
-  modal: IModalManager;
+  modalManager: IModalManager;
 };
 
 // Datasets State
