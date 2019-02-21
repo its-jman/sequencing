@@ -1,14 +1,14 @@
 import React from "react";
-import { FiArrowUp, FiBarChart2, FiUpload } from "react-icons/fi";
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import { FiArrowUp, FiBarChart2 } from "react-icons/fi";
 
 import containerStyles from "../_content.module.scss";
 import styles from "./_tableStyles.module.scss";
 
-import { IDataset, IDatasetsState } from "src/state/models";
 import Checkbox from "src/components/checkbox";
 import { getClassNames } from "src/components/utils";
-import { Link } from "react-router-dom";
-import LoadingModal from "src/components/modal/loadingModal";
+import { IAppState, IDataset, IDatasetsState } from "src/state/models";
 
 class DataTable extends React.PureComponent<{ datasets: IDatasetsState }> {
   render() {
@@ -92,4 +92,6 @@ class TableItem extends React.PureComponent<{ dataset: IDataset }> {
   }
 }
 
-export default DataTable;
+export default connect((state: IAppState) => ({
+  datasets: state.datasets
+}))(DataTable);

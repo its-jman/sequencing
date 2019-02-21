@@ -1,25 +1,26 @@
 import React, { PureComponent } from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 import containerStyles from "../_content.module.scss";
 import styles from "./_analysis.module.scss";
 
-import { IconButton } from "src/components";
 import { FiArrowLeft } from "react-icons/fi";
-import { IAlphabetDetails, IDataset } from "src/state/models";
+import { IAlphabetDetails, IAppState, IDataset, IDispatchProps } from "src/state/models";
 import { getClassNames } from "src/components/utils";
 import Distribution from "src/pages/v2/content/distribution";
-import { Dispatch } from "redux";
+import { connect } from "react-redux";
 
 type IDatasetAnalysisProps = {
-  dataset: IDataset;
+  dataset: IDataset | null;
   alphabet: IAlphabetDetails;
-  dispatch: Dispatch;
 };
 
-class Index extends PureComponent<IDatasetAnalysisProps> {
+class DatasetAnalysis extends PureComponent<IDatasetAnalysisProps & IDispatchProps> {
   render() {
     const { dataset, alphabet, dispatch } = this.props;
+    if (dataset === null) {
+      return <Redirect to={"/v2"} />;
+    }
 
     return (
       <div className={containerStyles.contentPanel}>
@@ -46,4 +47,10 @@ class Index extends PureComponent<IDatasetAnalysisProps> {
   }
 }
 
-export default Index;
+export default connect<IDatasetAnalysisProps, IDispatchProps, { datasetID: string }, IAppState>(
+  (state: IAppState, ownProps) => ({
+    dataset: state.datasets.data[ownProps.datasetID] || null,
+    alphabet: state.alphabet.data || undefined
+  }),
+  (dispatch) => ({ dispatch })
+)(DatasetAnalysis);

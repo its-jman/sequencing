@@ -1,63 +1,89 @@
 import React, { PureComponent } from "react";
 import { FiUpload } from "react-icons/fi";
-import { Switch, Route, withRouter, RouteComponentProps, Redirect } from "react-router-dom";
+import { Route, RouteComponentProps, Switch, withRouter } from "react-router-dom";
 
 import styles from "./_content.module.scss";
 import DatasetsTable from "./datasetsTable";
 import DatasetAnalysis from "./datasetAnalysis";
 
 import * as actions from "src/state/actions";
-import { ModalType } from "src/state/actions";
-import { IAppProps } from "src/state/models";
-import { connect } from "src/state/connect";
+import { ConfirmationType, ModalType } from "src/state/actions";
+import { IAppState, IDispatchProps } from "src/state/models";
+import { connect } from "react-redux";
 
-type IContentProps = IAppProps & RouteComponentProps;
+type IContentHeaderProps = {
+  canResumeUpload: boolean;
+};
 
-class Content extends PureComponent<IContentProps> {
+class ContentHeader extends React.PureComponent<IContentHeaderProps & IDispatchProps> {
+  _uploadClick = () => {
+    const { dispatch, canResumeUpload } = this.props;
+
+    if (canResumeUpload) {
+      dispatch(
+        actions.showConfirmation({
+          confirmationType: ConfirmationType.RESUME_UPLOAD,
+          params: {
+            resolve: () =>
+              dispatch(actions.setModal({ modalType: ModalType.UPLOAD_MANAGER, status: true })),
+            reject: () => console.error("CLICKING FILE UPLOAD")
+          }
+        })
+      );
+    } else {
+      dispatch(actions.setModal({ modalType: ModalType.UPLOAD_MANAGER, status: true }));
+    }
+  };
+
   render() {
-    const { match, state, dispatch } = this.props;
+    return (
+      <div className={styles.header}>
+        <button className={`btn btn-2`} onClick={this._uploadClick}>
+          <FiUpload className={styles.uploadIcon} />
+          <span>{" Upload"}</span>
+        </button>
+      </div>
+    );
+  }
+}
 
+const ControlledContentHeader = connect(
+  (state: IAppState) => ({
+    canResumeUpload: state.upload.files.length > 0
+  }),
+  (dispatch) => ({ dispatch })
+)(ContentHeader);
+
+class ContentBody extends React.PureComponent<RouteComponentProps> {
+  render() {
+    const { match } = this.props;
+    return (
+      <Switch>
+        <Route exact={true} path={`${match.path}/`} component={DatasetsTable} />
+        <Route
+          path={`${match.path}/:datasetID`}
+          render={(props) => {
+            const { datasetID } = props.match.params;
+
+            return <DatasetAnalysis datasetID={datasetID} />;
+          }}
+        />
+      </Switch>
+    );
+  }
+}
+
+const ControlledContentBody = withRouter(ContentBody);
+
+class Content extends PureComponent {
+  render() {
     return (
       <>
-        <div className={styles.header}>
-          <button
-            className={`btn btn-2`}
-            onClick={() =>
-              dispatch(actions.setModal({ modalType: ModalType.UPLOAD_MANAGER, status: true }))
-            }
-          >
-            <FiUpload className={styles.uploadIcon} />
-            <span>{" Upload"}</span>
-          </button>
-        </div>
-
-        <Switch>
-          <Route
-            exact={true}
-            path={`${match.path}/`}
-            render={(props) => <DatasetsTable datasets={state.datasets} />}
-          />
-          <Route
-            path={`${match.path}/:datasetId`}
-            render={(props) => {
-              const { datasetId } = props.match.params;
-              const dataset = state.datasets.data[datasetId];
-
-              if (!dataset) return <Redirect to={"/v2"} />;
-              return (
-                <DatasetAnalysis
-                  dataset={dataset}
-                  alphabet={state.alphabet.data}
-                  dispatch={this.props.dispatch}
-                />
-              );
-            }}
-          />
-        </Switch>
+        <ControlledContentHeader />
+        <ControlledContentBody />
       </>
     );
   }
 }
 
-// @ts-ignore
-export default withRouter(connect(Content));
+export default Content;

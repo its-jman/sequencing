@@ -1,10 +1,10 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 
-import styles from "./_ModalManager.module.scss";
-import { IAppState, IModalManager, IUIState } from "src/state/models";
+import UploadModal from "./uploadModal";
+
 import Modal from "src/components/modal";
-import UploadModal from "pages/v2/components/modals/uploadModal";
+import { IAppState, IModalManager } from "src/state/models";
 import { ModalType, ConfirmationType } from "src/state/actions";
 
 const ModalMap: { [T in ModalType]: React.ReactNode } = {

@@ -2,7 +2,6 @@ import * as api from "src/api";
 import { IAppState, IConfirmationParams } from "src/state/models";
 import { isEmptyObject } from "src/utils";
 import { networkActionThunk } from "src/state/network/utils";
-import { ThunkAction } from "redux-thunk";
 
 export enum ActionTypes {
   SET_TITLE = "SET_TITLE",
@@ -21,7 +20,7 @@ export enum ModalType {
 // export type IModalTypes = keyof typeof ModalType;
 
 export enum ConfirmationType {
-  CLEAR_UPLOAD = "CLEAR_UPLOAD"
+  RESUME_UPLOAD = "CLEAR_UPLOAD"
 }
 // export type IConfirmationTypes = keyof typeof ConfirmationType;
 
@@ -56,10 +55,9 @@ export const setModal = (payload: { modalType: ModalType; status: boolean }) => 
   ...payload
 });
 
-export const setConfirmation = (payload: {
+export const showConfirmation = (payload: {
   confirmationType: ConfirmationType;
   params: IConfirmationParams;
-  status: boolean;
 }) => ({
   type: ActionTypes.SET_CONFIRMATION,
   ...payload
