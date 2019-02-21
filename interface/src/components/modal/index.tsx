@@ -11,29 +11,24 @@ type IModalProps = {
 
 class Modal extends React.PureComponent<IModalProps> {
   static defaultProps = {
-    display: "block",
-    visible: false
+    visible: true,
+    display: "block"
   };
 
-  _filterBgClick = (fn: (() => void) | undefined) => {
-    return (event: React.MouseEvent) => {
-      if (event.target === event.currentTarget) {
-        if (typeof fn === "function") fn();
-      }
-    };
+  _onBgClick = (event: React.MouseEvent) => {
+    if (event.target === event.currentTarget) {
+      const { onBgClick } = this.props;
+      if (typeof onBgClick === "function") onBgClick();
+    }
   };
 
   render() {
-    const { display, onBgClick, visible, children } = this.props;
+    const { display, visible, children } = this.props;
 
     const shownStyle = { display: visible ? display : "none" };
     return (
       <>
-        <div
-          className={styles.fullScreenModal}
-          onClick={this._filterBgClick(onBgClick)}
-          style={shownStyle}
-        >
+        <div className={styles.fullScreenModal} onClick={this._onBgClick} style={shownStyle}>
           <div className={styles.fullScreenContainer}>{children}</div>
         </div>
       </>

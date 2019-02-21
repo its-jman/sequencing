@@ -6,7 +6,7 @@ import { axisBottom, axisLeft } from "d3-axis";
 
 import styles from "./_distribution.module.scss";
 import { connect } from "src/state/connect";
-import { IAlphabetDetails, IAppProps, IDataset } from "src/state/models";
+import { IAlphabetDetails, IAppProps, IDataset, IDispatchProps } from "src/state/models";
 import * as actions from "src/state/actions";
 import { ALPHABET_COLORS } from "src/pages/constants";
 import { Dispatch } from "redux";
@@ -182,8 +182,7 @@ const calculateData = (alphabet: IAlphabetDetails, dataset: IDataset) => {
 type IDistributionProps = {
   alphabet: IAlphabetDetails;
   dataset: IDataset;
-  dispatch: Dispatch;
-};
+} & IDispatchProps;
 
 class Distribution extends PureComponent<IDistributionProps> {
   constructor(props: IDistributionProps) {

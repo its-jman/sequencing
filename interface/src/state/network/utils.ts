@@ -103,7 +103,7 @@ export const networkActionThunk = <TState>({
   };
 };
 
-export const promiseThunk = <TState>(
+/*export const promiseThunk = <TState>(
   onResolve: () => void,
   onReject: () => void
 ): ThunkAction<void, TState, {}, AnyAction> => {
@@ -112,4 +112,4 @@ export const promiseThunk = <TState>(
       dispatch(showConfirmation(resolve, reject));
     }).then(onResolve, onReject);
   };
-};
+};*/

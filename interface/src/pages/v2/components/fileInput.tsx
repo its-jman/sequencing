@@ -1,8 +1,8 @@
 import React from "react";
 
-import styles from "./_FileUpload.module.scss";
+import styles from "./_FileInput.module.scss";
 
-class FileUpload extends React.PureComponent {
+class FileInput extends React.PureComponent {
   rawInput: HTMLInputElement | null = null;
   // value: string = (this.rawInput || { value: "" }).value;
 
@@ -25,6 +25,10 @@ class FileUpload extends React.PureComponent {
   };
 
   _openFileDialog = () => {
+    /*
+    TODO: If state.uploads.length > 0
+              dispatch(showConfirmation(RESUME_UPLOAD));
+     */
     if (this.rawInput !== null) {
       this.rawInput.click();
     }
@@ -58,4 +62,4 @@ class FileUpload extends React.PureComponent {
   }
 }
 
-export default FileUpload;
+export default FileInput;

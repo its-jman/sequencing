@@ -3,10 +3,12 @@ import { FiEdit, FiX } from "react-icons/fi";
 import { connect } from "react-redux";
 
 import styles from "./_UploadModal.module.scss";
+import FileInput from "../fileInput";
+
 import Modal from "src/components/modal";
 import { IAppState, IDispatchProps } from "src/state/models";
 import * as actions from "src/state/actions";
-import FileUpload from "src/pages/v2/components/fileUpload";
+import { ModalType } from "src/state/actions";
 
 type IUploadModalProps = {
   visible: boolean;
@@ -14,7 +16,7 @@ type IUploadModalProps = {
 
 type IUploadFields = {
   nameInput: HTMLInputElement | null;
-  fileInput: FileUpload | null;
+  fileInput: FileInput | null;
 };
 
 class UploadModal extends PureComponent<IUploadModalProps & IDispatchProps> {
@@ -60,7 +62,7 @@ class UploadModal extends PureComponent<IUploadModalProps & IDispatchProps> {
     const { dispatch } = this.props;
 
     if (!this._areFieldsModified() || window.confirm("Changes you made may not be saved.")) {
-      dispatch(actions.setModal({ modalID: modalIDs.upload, status: false }));
+      dispatch(actions.setModal({ modalType: ModalType.UPLOAD_MANAGER, status: false }));
     }
   };
 
@@ -69,52 +71,50 @@ class UploadModal extends PureComponent<IUploadModalProps & IDispatchProps> {
   render() {
     const { visible, dispatch } = this.props;
     return (
-      <Modal visible={visible}>
-        <div className={styles.container}>
-          <div className={styles.header}>
-            <div className={styles.headerContent}>
-              <input
-                className={styles.nameInput}
-                type="text"
-                placeholder="Dataset name... "
-                ref={(inp) => (this.fields.nameInput = inp)}
-              />
-              <FiEdit
-                className={styles.nameInputIcon}
-                onClick={() => {
-                  if (this.fields.nameInput !== null) {
-                    this.fields.nameInput.focus();
-                    this.fields.nameInput.select();
-                  }
-                }}
-              />
-            </div>
-
-            <div className={styles.headerRight}>
-              <button className={styles.formReset} onClick={this._resetForm}>
-                Reset Form
-              </button>
-              <FiX className={styles.closeIcon} onClick={this._closeModal} />
-            </div>
+      <div className={styles.container}>
+        <div className={styles.header}>
+          <div className={styles.headerContent}>
+            <input
+              className={styles.nameInput}
+              type="text"
+              placeholder="Dataset name... "
+              ref={(inp) => (this.fields.nameInput = inp)}
+            />
+            <FiEdit
+              className={styles.nameInputIcon}
+              onClick={() => {
+                if (this.fields.nameInput !== null) {
+                  this.fields.nameInput.focus();
+                  this.fields.nameInput.select();
+                }
+              }}
+            />
           </div>
 
-          <div className={styles.content}>
-            <div className={styles.contentBody}>
-              <FileUpload ref={(inp) => (this.fields.fileInput = inp)} />
-            </div>
-
-            <hr />
-            <button className={styles.submitButton}>Submit</button>
+          <div className={styles.headerRight}>
+            <button className={styles.formReset} onClick={this._resetForm}>
+              Reset Form
+            </button>
+            <FiX className={styles.closeIcon} onClick={this._closeModal} />
           </div>
         </div>
-      </Modal>
+
+        <div className={styles.content}>
+          <div className={styles.contentBody}>
+            <FileInput ref={(inp) => (this.fields.fileInput = inp)} />
+          </div>
+
+          <hr />
+          <button className={styles.submitButton}>Submit</button>
+        </div>
+      </div>
     );
   }
 }
 
 export default connect<IUploadModalProps, IDispatchProps, {}, IAppState>(
   (state: IAppState) => ({
-    visible: state.upload.upload
+    visible: true
   }),
   (dispatch) => ({
     dispatch: dispatch

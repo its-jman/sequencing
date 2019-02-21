@@ -3,14 +3,12 @@ import "src/styles/main.scss";
 
 import React from "react";
 import Helmet from "react-helmet";
-import MobxDevTools from "mobx-react-devtools";
 import { RouteProps, Switch, Route, Redirect, withRouter } from "react-router-dom";
 
 import V2 from "src/pages/v2";
 import { connect } from "src/state/connect";
 import { IAppProps } from "src/state/models";
 import * as actions from "src/state/actions";
-import UploadModal from "src/pages/v2/components/uploadModal";
 
 class App extends React.PureComponent<IAppProps> {
   static routes: Array<RouteProps> = [
@@ -35,12 +33,8 @@ class App extends React.PureComponent<IAppProps> {
     return (
       <>
         <Helmet>
-          <title>
-            {state.context.title ? `${state.context.title} | sequencing` : "sequencing"}
-          </title>
+          <title>{state.ui.title ? `${state.ui.title} | sequencing` : "sequencing"}</title>
         </Helmet>
-        <MobxDevTools />
-        <UploadModal />
         <Switch>
           {App.routes.map((route, i) => (
             <Route key={i} {...route} />

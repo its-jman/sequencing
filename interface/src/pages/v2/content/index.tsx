@@ -1,23 +1,15 @@
 import React, { PureComponent } from "react";
 import { FiUpload } from "react-icons/fi";
-import {
-  Switch,
-  Route,
-  withRouter,
-  RouteComponentProps,
-  RouteProps,
-  Redirect
-} from "react-router-dom";
+import { Switch, Route, withRouter, RouteComponentProps, Redirect } from "react-router-dom";
 
 import styles from "./_content.module.scss";
 import DatasetsTable from "./datasetsTable";
 import DatasetAnalysis from "./datasetAnalysis";
 
 import * as actions from "src/state/actions";
-import { modalIDs } from "src/state/actions";
+import { ModalType } from "src/state/actions";
 import { IAppProps } from "src/state/models";
 import { connect } from "src/state/connect";
-import UploadModal from "src/pages/v2/components/uploadModal";
 
 type IContentProps = IAppProps & RouteComponentProps;
 
@@ -30,7 +22,9 @@ class Content extends PureComponent<IContentProps> {
         <div className={styles.header}>
           <button
             className={`btn btn-2`}
-            onClick={() => dispatch(actions.setModal({ modalID: modalIDs.upload, status: true }))}
+            onClick={() =>
+              dispatch(actions.setModal({ modalType: ModalType.UPLOAD_MANAGER, status: true }))
+            }
           >
             <FiUpload className={styles.uploadIcon} />
             <span>{" Upload"}</span>

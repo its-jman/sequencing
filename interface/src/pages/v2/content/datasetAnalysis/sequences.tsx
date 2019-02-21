@@ -3,15 +3,14 @@ import { Dispatch } from "redux";
 
 import styles from "./_analysis.module.scss";
 
-import { IDataset } from "src/state/models";
+import { IDataset, IDispatchProps } from "src/state/models";
 import { isEmptyObject } from "src/utils";
 import { connectDispatch } from "src/state/connect";
 import * as actions from "src/state/actions";
 
 type ISequencesProps = {
   dataset: IDataset;
-  dispatch: Dispatch;
-};
+} & IDispatchProps;
 
 class Sequences extends PureComponent<ISequencesProps> {
   constructor(props: ISequencesProps) {

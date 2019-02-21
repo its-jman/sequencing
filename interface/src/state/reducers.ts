@@ -1,15 +1,18 @@
 import { AnyAction, combineReducers } from "redux";
-import { actionIDs } from "src/state/actions";
+import { ActionTypes } from "src/state/actions";
 import { networkReducer } from "src/state/network/utils";
-import { IAppState, IDataset, IDatasetsStateData } from "src/state/models";
+import { IAppState, IDataset, IDatasetsStateData, IUIState, IUploadState } from "src/state/models";
 
-const initialContextState = {
-  title: undefined
+const initialUIState: IUIState = {
+  title: null,
+  modal: {
+    modal: null,
+    confirmations: []
+  }
 };
 
-const initialUploadState = {
-  files: [],
-  currentUpload: 0
+const initialUploadState: IUploadState = {
+  files: []
 };
 
 const initialNetworkState = {
@@ -19,9 +22,9 @@ const initialNetworkState = {
 };
 
 export default combineReducers<IAppState>({
-  context: (state = initialContextState, action: AnyAction) => {
+  ui: (state = initialUIState, action: AnyAction) => {
     switch (action.type) {
-      case actionIDs.SET_TITLE:
+      case ActionTypes.SET_TITLE:
         return {
           ...state,
           title: action.payload
@@ -32,7 +35,7 @@ export default combineReducers<IAppState>({
   },
   datasets: (state = initialNetworkState, action: AnyAction) => {
     switch (action.type) {
-      case actionIDs.LOAD_DATASETS:
+      case ActionTypes.LOAD_DATASETS:
         return networkReducer(state, action, {
           initialState: initialNetworkState,
           clearData: true,
@@ -48,7 +51,7 @@ export default combineReducers<IAppState>({
   },
   alphabet: (state = initialNetworkState, action: AnyAction) => {
     switch (action.type) {
-      case actionIDs.FETCH_ALPHABET:
+      case ActionTypes.FETCH_ALPHABET:
         return networkReducer(state, action, {
           initialState: initialNetworkState,
           clearData: true,
@@ -60,11 +63,6 @@ export default combineReducers<IAppState>({
   },
   upload: (state = initialUploadState, action: AnyAction) => {
     switch (action.type) {
-      case actionIDs.SET_MODAL:
-        return {
-          ...state,
-          [action.modalID]: action.status
-        };
       default:
         return state;
     }

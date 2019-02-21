@@ -1,5 +1,6 @@
 import { AnyAction, Dispatch } from "redux";
 import { ThunkDispatch } from "redux-thunk";
+import { ConfirmationType, ModalType } from "src/state/actions";
 
 export type ISequence = {
   description: string;
@@ -30,39 +31,49 @@ export type IDataset = {
   };
 };
 
-type IUploadState = {
-  files: Array<File>;
-  currentUpload: number;
-};
-
 type INetworkState<TData> = {
   isFetching: boolean;
   errors: object;
   data: TData;
 };
 
-export type IContextState = {
-  title: string | undefined;
+// UI State
+export type IModalManager = {
+  modal: { type: ModalType; params: any } | null;
+  confirmations: Array<{ type: ConfirmationType; params: IConfirmationParams }>;
+};
+export type IConfirmationParams = { resolve: () => void; reject: () => void };
+export type IUIState = {
+  title: string | null;
+  modal: IModalManager;
 };
 
+// Datasets State
 export type IDatasetsStateData = {
   [dataset_id: string]: IDataset;
 };
+export type IDatasetsState = INetworkState<IDatasetsStateData>;
 
+// Alphabet State
 export type IAlphabetDetails = {
   [letter: string]: { abr: string; name: string; freq: number };
 };
-
-export type IDatasetsState = INetworkState<IDatasetsStateData>;
 export type IAlphabetState = INetworkState<IAlphabetDetails>;
 
+// Upload/Files state
+export type IUploadState = {
+  files: Array<File>;
+};
+
+// App State
 export type IAppState = {
-  context: IContextState;
+  ui: IUIState;
   datasets: IDatasetsState;
   alphabet: IAlphabetState;
   upload: IUploadState;
 };
 
+// Connect Props
 export type IStateProps = {
   state: IAppState;
 };
