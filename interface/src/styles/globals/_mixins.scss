@@ -1,4 +1,4 @@
-@import 'colors';
+@import "colors";
 
 /* https://css-tricks.com/snippets/sass/centering-mixin/ */
 @mixin centerer($horizontal: true, $vertical: true) {
@@ -17,7 +17,7 @@
 
 @mixin regular() {
   color: transparentize($text-1, $text-transparency);
-  font-family: 'Open Sans', sans-serif;
+  font-family: "Open Sans", sans-serif;
 }
 
 @mixin transition($element, $duration: 0.2s) {

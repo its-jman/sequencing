@@ -3,7 +3,6 @@
 $color: hsla(0, 0%, 55%, 1);
 $selectedColor: darken($color, 25%);
 .container {
-
   display: inline-block;
   position: relative;
   //margin: 5px;
@@ -35,7 +34,8 @@ $selectedColor: darken($color, 25%);
     }
 
     // Border darkening
-    &:hover + .state, &:checked + .state {
+    &:hover + .state,
+    &:checked + .state {
       border: 1px solid darken($color, 25%);
     }
   }

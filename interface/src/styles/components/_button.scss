@@ -1,7 +1,7 @@
-@import '../globals/colors';
+@import "../globals/colors";
 
-$a-tags: 'a, a:active, a:hover, a:visited';
-$a-tags-hover: 'a:active, a:hover';
+$a-tags: "a, a:active, a:hover, a:visited";
+$a-tags-hover: "a:active, a:hover";
 
 .btn {
   $borderSize: 1.5px;
@@ -33,23 +33,26 @@ $a-tags-hover: 'a:active, a:hover';
 
   &.btn-1 {
     background-color: $buttonColor;
-    transition: all .2s ease-in-out;
-    &:hover, &:focus {
+    transition: all 0.2s ease-in-out;
+    &:hover,
+    &:focus {
       background-color: darken($buttonColor, 5%);
     }
   }
 
   &.btn-2 {
     border: $borderSize solid $buttonColor;
-    transition: all .2s ease-in-out;
-    &:hover, &:focus {
+    transition: all 0.2s ease-in-out;
+    &:hover,
+    &:focus {
       border: $borderSize solid darken($buttonColor, 15%);
     }
   }
 
   &.btn-3 {
     transition: border 0.2s ease-in-out;
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       border: $borderSize solid $buttonColor;
     }
   }

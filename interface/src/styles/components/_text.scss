@@ -1,4 +1,4 @@
-@import '../globals/all';
+@import "../globals/all";
 
 .regular {
   @include regular();
@@ -19,7 +19,7 @@ body {
 }
 
 .bold-1 {
-  color: transparentize($text-2, $text-transparency);;
+  color: transparentize($text-2, $text-transparency);
 
   font-weight: $bold-weight;
 }
@@ -30,7 +30,7 @@ body {
 }
 
 .text-small {
-  font-size: .75rem;
+  font-size: 0.75rem;
 }
 
 .text-large {
@@ -40,4 +40,3 @@ body {
 .text-huge {
   font-size: 2rem;
 }
-

@@ -62,6 +62,7 @@ export type IAlphabetState = INetworkState<IAlphabetDetails>;
 
 // Upload/Files state
 export type IUploadState = {
+  fileInput: HTMLInputElement | null;
   files: Array<File | null>;
 };
 

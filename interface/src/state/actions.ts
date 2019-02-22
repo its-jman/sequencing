@@ -12,7 +12,11 @@ export enum ActionTypes {
   SET_MODAL = "SET_MODAL",
   SHOW_CONFIRMATION = "SET_CONFIRMATION",
   SELECT_FILES = "SELECT_FILES",
-  CLEAR_CONFIRMATION = "CLEAR_CONFIRMATION"
+  CLEAR_CONFIRMATION = "CLEAR_CONFIRMATION",
+  CANCEL_FILE = "CANCEL_FILE",
+  SUBMIT_UPLOAD = "SUBMIT_UPLOAD",
+  SET_FILE_INPUT = "SET_FILE_INPUT",
+  OPEN_FILE_INPUT = "OPEN_FILE_INPUT"
 }
 
 export enum ModalType {
@@ -69,7 +73,22 @@ export const clearConfirmation = (payload: { confirmationType: ConfirmationType 
   ...payload
 });
 
+export const setFileInput = (params: { fileInput: HTMLInputElement | null }) => ({
+  type: ActionTypes.SET_FILE_INPUT,
+  ...params
+});
+
 export const selectFiles = (params: { files: Array<File> }) => ({
   type: ActionTypes.SELECT_FILES,
+  ...params
+});
+
+export const cancelFile = (params: { i: number }) => ({
+  type: ActionTypes.CANCEL_FILE,
+  ...params
+});
+
+export const submitUpload = (params: {}) => ({
+  type: ActionTypes.SUBMIT_UPLOAD,
   ...params
 });

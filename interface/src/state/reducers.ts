@@ -1,5 +1,5 @@
 import { AnyAction, combineReducers } from "redux";
-import { ActionTypes } from "src/state/actions";
+import { ActionTypes, ModalType } from "src/state/actions";
 import { networkReducer } from "src/state/network/utils";
 import {
   IAlphabetState,
@@ -20,6 +20,7 @@ const initialUIState: IUIState = {
 };
 
 const initialUploadState: IUploadState = {
+  fileInput: null,
   files: []
 };
 
@@ -110,14 +111,31 @@ export default combineReducers<IAppState>({
   },
   upload: (state: IUploadState = initialUploadState, action: AnyAction) => {
     switch (action.type) {
+      case ActionTypes.SET_FILE_INPUT:
+        return {
+          ...state,
+          fileInput: action.fileInput
+        };
       case ActionTypes.SELECT_FILES:
         if (state.files.length > 0 && action.files.length > 0) {
           console.warn("Setting files while files already exist. Old state will be cleared");
+        }
+        // TODO: Gross. 0% redux-like programming, but... how should it be?
+        if (action.files.length === 0 && state.fileInput !== null) {
+          state.fileInput.value = "";
+          state.fileInput.files = null;
         }
         return {
           ...state,
           files: action.files
         };
+      case ActionTypes.CANCEL_FILE:
+        return {
+          ...state,
+          files: [...state.files.slice(0, action.i), null, ...state.files.slice(action.i + 1)]
+        };
+      case ActionTypes.SUBMIT_UPLOAD:
+        return networkReducer(state, action, {});
       default:
         return state;
     }

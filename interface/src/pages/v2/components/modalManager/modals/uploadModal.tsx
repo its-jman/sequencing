@@ -7,6 +7,7 @@ import styles from "./_UploadModal.module.scss";
 import { IAppState, IDispatchProps } from "src/state/models";
 import * as actions from "src/state/actions";
 import { ModalType } from "src/state/actions";
+import { getClassNames } from "src/components/utils";
 
 type IUploadModalProps = {
   files: Array<File | null>;
@@ -46,6 +47,11 @@ class UploadModal extends PureComponent<IUploadModalProps & IDispatchProps> {
     }
   };
   componentWillMount() {
+    const { dispatch } = this.props;
+    const file = this._getFile();
+    if (file.i === -1 || !file.file) {
+      dispatch(actions.setModal({ modalType: ModalType.UPLOAD_MANAGER, status: false }));
+    }
     // @ts-ignore
     document.addEventListener("keydown", this._keyCapture, false);
   }
@@ -96,15 +102,36 @@ class UploadModal extends PureComponent<IUploadModalProps & IDispatchProps> {
     }
   };
 
-  _submitForm = () => {};
+  _skipOne = (i: number) => () => {
+    const { dispatch, files } = this.props;
+    if (i === files.length - 1) {
+      this._cancel();
+    } else {
+      dispatch(actions.cancelFile({ i }));
+    }
+  };
+  _cancel = () => {
+    const { dispatch } = this.props;
+    // dispatch(actions.selectFiles({ files: [] }));
+    dispatch(actions.setModal({ modalType: ModalType.UPLOAD_MANAGER, status: false }));
+  };
+  _submit = (i: number) => () => {
+    const { dispatch } = this.props;
+
+    if (this.fields.nameInput === null) {
+      console.error("Name input null while submitting");
+    } else {
+      const name = this.fields.nameInput.value;
+      dispatch(actions.submitUpload({ i, name }));
+    }
+  };
 
   render() {
     const { files, dispatch } = this.props;
-
+    const multi = files.length > 1;
     const file = this._getFile();
     if (file.i === -1 || !file.file) {
       console.error("File doesn't exist in upload manager.");
-      dispatch(actions.setModal({ modalType: ModalType.UPLOAD_MANAGER, status: false }));
       return null;
     }
 
@@ -112,43 +139,67 @@ class UploadModal extends PureComponent<IUploadModalProps & IDispatchProps> {
       <div className={styles.superContainer}>
         <div className={styles.container}>
           <MultiSelectionHeader files={files} file={file} />
+
           <div className={styles.header}>
-            <div className={styles.headerContent}>
-              <div className={styles.nameInputContainer}>
-                <input
-                  className={styles.nameInput}
-                  type="text"
-                  placeholder="Dataset name... "
-                  ref={(inp) => (this.fields.nameInput = inp)}
-                />
-                <FiEdit
-                  className={styles.nameInputIcon}
-                  onClick={() => {
-                    if (this.fields.nameInput !== null) {
-                      this.fields.nameInput.focus();
-                      this.fields.nameInput.select();
-                    }
-                  }}
-                />
-              </div>
+            <div className={styles.headerTop}>
               <div className={styles.fileName}>{file.file.name}</div>
+
+              <div className={styles.headerRight}>
+                <button className={styles.formReset} onClick={this._resetForm}>
+                  Reset Form
+                </button>
+                <FiX className={styles.closeIcon} onClick={this._closeModal} />
+              </div>
             </div>
 
-            <div className={styles.headerRight}>
-              <button className={styles.formReset} onClick={this._resetForm}>
-                Reset Form
-              </button>
-              <FiX className={styles.closeIcon} onClick={this._closeModal} />
+            <div className={styles.nameInputContainer}>
+              <FiEdit
+                className={styles.nameInputIcon}
+                onClick={() => {
+                  if (this.fields.nameInput !== null) {
+                    this.fields.nameInput.focus();
+                    this.fields.nameInput.select();
+                  }
+                }}
+              />
+              <input
+                className={styles.nameInput}
+                type="text"
+                placeholder="Dataset name... "
+                ref={(inp) => (this.fields.nameInput = inp)}
+              />
             </div>
           </div>
 
           <div className={styles.content}>
-            <div className={styles.contentBody}>
-              <div>{"Future ideas go here..."}</div>
+            <div>{"Future ideas go here..."}</div>
+          </div>
+          <div className={styles.footerContainer}>
+            <div className={styles.footer}>
+              {multi && (
+                <button
+                  onClick={this._skipOne(file.i)}
+                  className={getClassNames(styles.button, styles.secondaryButton)}
+                >
+                  Skip One
+                </button>
+              )}
+              <button
+                onClick={this._cancel}
+                className={getClassNames(
+                  styles.button,
+                  multi ? styles.cancelButton : styles.secondaryButton
+                )}
+              >
+                {`Cancel${multi ? " all" : ""}`}
+              </button>
+              <button
+                onClick={this._submit(file.i)}
+                className={getClassNames(styles.button, styles.submitButton)}
+              >
+                Submit
+              </button>
             </div>
-
-            <hr />
-            <button className={styles.submitButton}>Submit</button>
           </div>
         </div>
       </div>

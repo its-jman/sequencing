@@ -14,9 +14,9 @@ import data
 bp = Blueprint("datasets", __name__)
 
 
-@bp.before_request
-def sleep_more():
-    time.sleep(750)
+# @bp.before_request
+# def sleep_more():
+#     time.sleep(750)
 
 
 class DatasetsView(MethodView):
@@ -37,7 +37,6 @@ class DatasetsView(MethodView):
         input = {
             "file": FilePart(...),
             "name": "My Dataset Name",
-            "data_format": (fasta,)
         }
 
         :return: {
@@ -57,7 +56,8 @@ class DatasetsView(MethodView):
 
             upload_errors, dataset_id = engine.create_dataset(
                 name=request.form["name"],
-                data_format=request.form["data_format"].lower(),
+                # data_format=request.form["data_format"].lower(),
+                data_format="fasta",
                 user_filename=input_file.filename,
                 path=tmp_path,
             )

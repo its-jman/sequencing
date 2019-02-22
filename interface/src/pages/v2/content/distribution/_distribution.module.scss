@@ -1,7 +1,8 @@
 .svg {
   //background-color: lightgreen;
   // TODO: Apply only to lines.
-  & line, path {
+  & line,
+  path {
     //shape-rendering: crispEdges;
   }
 }

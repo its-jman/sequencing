@@ -1,12 +1,15 @@
 @import "./globals/all";
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-a:visited, a:link {
+a:visited,
+a:link {
   text-decoration: none;
 }
 

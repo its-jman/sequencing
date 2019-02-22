@@ -70,7 +70,10 @@ class ContentHeader extends React.PureComponent<IContentHeaderProps & IDispatchP
           type="file"
           style={{ display: "none" }}
           onChange={this._handleFiles}
-          ref={(inp) => (this.fileInput = inp)}
+          ref={(inp) => {
+            this.props.dispatch(actions.setFileInput({ fileInput: inp }));
+            this.fileInput = inp;
+          }}
         />
         <button className={`btn btn-2`} onClick={this._uploadClick}>
           <FiUpload className={styles.uploadIcon} />
@@ -120,4 +123,5 @@ class Content extends PureComponent {
   }
 }
 
-export default Content;
+// @ts-ignore
+export default withRouter(Content);
