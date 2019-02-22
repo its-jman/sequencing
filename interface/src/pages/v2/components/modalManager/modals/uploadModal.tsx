@@ -47,22 +47,30 @@ class UploadModal extends PureComponent<IUploadModalProps & IDispatchProps> {
     }
   };
   componentWillMount() {
-    const { dispatch } = this.props;
-    const file = this._getFile();
+    const { files, dispatch } = this.props;
+    const file = this._getFile(files);
     if (file.i === -1 || !file.file) {
+      console.warn("File doesn't exist in upload manager.");
       dispatch(actions.setModal({ modalType: ModalType.UPLOAD_MANAGER, status: false }));
     }
     // @ts-ignore
     document.addEventListener("keydown", this._keyCapture, false);
   }
+  componentWillUpdate(nextProps: Readonly<IUploadModalProps & IDispatchProps>): void {
+    const { dispatch } = this.props;
+    const file = this._getFile(nextProps.files);
+    if (file.i === -1 || !file.file) {
+      console.warn("File doesn't exist in upload manager.");
+      dispatch(actions.setModal({ modalType: ModalType.UPLOAD_MANAGER, status: false }));
+    }
+  }
+
   componentWillUnmount() {
     // @ts-ignore
     document.removeEventListener("keydown", this._keyCapture, false);
   }
 
-  _getFile = (): IFile => {
-    const { files, dispatch } = this.props;
-
+  _getFile = (files: Array<File | null>): IFile => {
     let fileIndex = -1;
     for (let i = 0; i < files.length; i++) {
       if (files[i] !== null) {
@@ -116,22 +124,26 @@ class UploadModal extends PureComponent<IUploadModalProps & IDispatchProps> {
     dispatch(actions.setModal({ modalType: ModalType.UPLOAD_MANAGER, status: false }));
   };
   _submit = (i: number) => () => {
-    const { dispatch } = this.props;
+    const { files, dispatch } = this.props;
 
-    if (this.fields.nameInput === null) {
+    if (this.fields.nameInput === null || this.fields.nameInput.value === "") {
       console.error("Name input null while submitting");
     } else {
       const name = this.fields.nameInput.value;
-      dispatch(actions.submitUpload({ i, name }));
+      const file = files[i];
+      if (file === null) {
+        console.error("Can not upload null dataset...");
+      } else {
+        dispatch(actions.submitUpload(i, { file, name }));
+      }
     }
   };
 
   render() {
-    const { files, dispatch } = this.props;
+    const { files } = this.props;
     const multi = files.length > 1;
-    const file = this._getFile();
+    const file = this._getFile(files);
     if (file.i === -1 || !file.file) {
-      console.error("File doesn't exist in upload manager.");
       return null;
     }
 

@@ -10,6 +10,7 @@ import {
   IUIState,
   IUploadState
 } from "src/state/models";
+import { NetworkStatus } from "src/state/network/types";
 
 const initialUIState: IUIState = {
   title: null,
@@ -93,6 +94,19 @@ export default combineReducers<IAppState>({
               return state;
             }, {})
         });
+      case ActionTypes.SUBMIT_UPLOAD:
+        switch (action.status) {
+          case NetworkStatus.SUCCESS:
+            return {
+              ...state,
+              data: {
+                ...state.data,
+                [action.response.dataset._id]: action.response.dataset
+              }
+            };
+          default:
+            return state;
+        }
       default:
         return state;
     }
@@ -135,7 +149,21 @@ export default combineReducers<IAppState>({
           files: [...state.files.slice(0, action.i), null, ...state.files.slice(action.i + 1)]
         };
       case ActionTypes.SUBMIT_UPLOAD:
-        return networkReducer(state, action, {});
+        switch (action.status) {
+          case NetworkStatus.SUCCESS:
+            if (action.i === state.files.length - 1) {
+              return {
+                ...state,
+                files: []
+              };
+            }
+            return {
+              ...state,
+              files: [...state.files.slice(0, action.i), null, ...state.files.slice(action.i + 1)]
+            };
+          default:
+            return state;
+        }
       default:
         return state;
     }

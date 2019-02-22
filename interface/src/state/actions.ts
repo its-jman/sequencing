@@ -1,7 +1,10 @@
 import * as api from "src/api";
 import { isEmptyObject } from "src/utils";
-import { networkActionThunk } from "src/state/network/utils";
+import { networkActionThunk, IThunkAction } from "src/state/network/utils";
 import { IAppState, IConfirmationParams } from "src/state/models";
+import { ThunkAction, ThunkDispatch } from "redux-thunk";
+import { AnyAction } from "redux";
+import { NetworkStatus } from "src/state/network/types";
 
 export enum ActionTypes {
   SET_TITLE = "SET_TITLE",
@@ -88,7 +91,25 @@ export const cancelFile = (params: { i: number }) => ({
   ...params
 });
 
-export const submitUpload = (params: {}) => ({
-  type: ActionTypes.SUBMIT_UPLOAD,
-  ...params
-});
+export const submitUpload = (
+  i: number,
+  params: { name: string; file: File }
+): IThunkAction<IAppState> => (dispatch) => {
+  const type = ActionTypes.SUBMIT_UPLOAD;
+  const networkAction = (status: NetworkStatus, other: object) => ({
+    type,
+    status,
+    ...other
+  });
+
+  api.uploadDataset(params).then(
+    (response) => {
+      if (response.errors.length > 0) {
+        dispatch(networkAction(NetworkStatus.FAILURE, { error: response.errors }));
+      } else {
+        dispatch(networkAction(NetworkStatus.SUCCESS, { i, response }));
+      }
+    },
+    (error) => dispatch(networkAction(NetworkStatus.FAILURE, { error }))
+  );
+};

@@ -1,5 +1,5 @@
 import { Middleware } from "redux";
-import { NETWORK_STATUS } from "src/state/network/types";
+import { NetworkStatus } from "src/state/network/types";
 
 export const APIMiddleware: Middleware = ({ dispatch, getState }) => {
   return (next) => (action) => {
@@ -27,13 +27,13 @@ export const APIMiddleware: Middleware = ({ dispatch, getState }) => {
       };
     };
 
-    dispatch(networkRequest(NETWORK_STATUS.REQUEST));
+    dispatch(networkRequest(NetworkStatus.REQUEST));
 
     return callAPI(payload).then(
       // @ts-ignore
-      (response) => dispatch(networkRequest(NETWORK_STATUS.SUCCESS, { response })),
+      (response) => dispatch(networkRequest(NetworkStatus.SUCCESS, { response })),
       // @ts-ignore
-      (error) => dispatch(networkRequest(NETWORK_STATUS.FAILURE, { error }))
+      (error) => dispatch(networkRequest(NetworkStatus.FAILURE, { error }))
     );
   };
 };

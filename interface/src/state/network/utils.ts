@@ -1,4 +1,4 @@
-import { NETWORK_STATUS } from "src/state/network/types";
+import { NetworkStatus } from "src/state/network/types";
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { IAppState } from "src/state/models";
 import { AnyAction } from "redux";
@@ -11,7 +11,7 @@ const defaultInitialState = {
 
 type INetworkAction = {
   type: string;
-  status: NETWORK_STATUS;
+  status: NetworkStatus;
 };
 
 const defaultGetResponseErrors = (response: any) => {
@@ -37,12 +37,12 @@ export const networkReducer = (state, action, config) => {
   let errors = {};
 
   switch (action.status) {
-    case NETWORK_STATUS.REQUEST:
+    case NetworkStatus.REQUEST:
       return {
         ...(clearData ? initialState : state),
         isFetching: true
       };
-    case NETWORK_STATUS.SUCCESS:
+    case NetworkStatus.SUCCESS:
       const data = transformResponse(action.response);
       const responseErrors = getDataErrors(action.response);
       if (responseErrors) {
@@ -58,7 +58,7 @@ export const networkReducer = (state, action, config) => {
           errors: clearData ? initialState.errors : state.errors
         };
       }
-    case NETWORK_STATUS.FAILURE:
+    case NetworkStatus.FAILURE:
       const requestErrors = transformError(action.error);
       if (requestErrors) {
         // @ts-ignore
@@ -81,23 +81,25 @@ type INetworkThunkProps<TState> = {
   shouldCallAPI?: (state: TState) => boolean;
 };
 
+export type IThunkAction<TState> = ThunkAction<void, TState, {}, AnyAction>;
+
 export const networkActionThunk = <TState>({
   type,
   callAPI,
   shouldCallAPI = () => true
-}: INetworkThunkProps<TState>): ThunkAction<void, TState, {}, AnyAction> => {
+}: INetworkThunkProps<TState>): IThunkAction<TState> => {
   return (dispatch, getState) => {
     if (!shouldCallAPI(getState())) return;
 
-    const networkAction = (status: NETWORK_STATUS, other: object) => ({
+    const networkAction = (status: NetworkStatus, other: object) => ({
       type,
       status,
       ...other
     });
 
     callAPI().then(
-      (response) => dispatch(networkAction(NETWORK_STATUS.SUCCESS, { response })),
-      (error) => dispatch(networkAction(NETWORK_STATUS.FAILURE, { error }))
+      (response) => dispatch(networkAction(NetworkStatus.SUCCESS, { response })),
+      (error) => dispatch(networkAction(NetworkStatus.FAILURE, { error }))
     );
     // .catch((error) => dispatch(networkAction(NETWORK_STATUS.FAILURE, { error })));
   };
