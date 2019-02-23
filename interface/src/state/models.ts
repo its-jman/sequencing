@@ -46,6 +46,10 @@ export type IConfirmationParams = { resolve: () => void; reject: () => void };
 export type IUIState = {
   title: string | null;
   modalManager: IModalManager;
+  fileInput: {
+    shouldOpen: boolean;
+    files: Array<File | null>;
+  };
 };
 
 // Datasets State

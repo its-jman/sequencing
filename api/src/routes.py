@@ -54,14 +54,16 @@ class DatasetsView(MethodView):
         try:
             input_file.save(tmp_path)
 
-            upload_errors, dataset_id = engine.create_dataset(
+            upload_errors, dataset = engine.create_dataset(
                 name=request.form["name"],
                 # data_format=request.form["data_format"].lower(),
                 data_format="fasta",
                 user_filename=input_file.filename,
                 path=tmp_path,
             )
-            return jsonify({"errors": upload_errors, "id": dataset_id})
+            return jsonify(
+                {"errors": upload_errors, "dataset": data.utils.convert_model(dataset)}
+            )
         finally:
             os.remove(tmp_path)
 

@@ -1,23 +1,22 @@
 import React, { PureComponent } from "react";
 import { FiUpload } from "react-icons/fi";
+import { connect } from "react-redux";
 import { Route, RouteComponentProps, Switch, withRouter } from "react-router-dom";
+
+import { actions } from "src/state/actions";
+import { ConfirmationType, ModalType } from "src/state/actions";
+import { IAppState, IDispatchProps } from "src/state/models";
+import ControlledFileInput from "src/components/controlledFileInput";
 
 import styles from "./_content.module.scss";
 import DatasetsTable from "./datasetsTable";
 import DatasetAnalysis from "./datasetAnalysis";
-
-import * as actions from "src/state/actions";
-import { ConfirmationType, ModalType } from "src/state/actions";
-import { IAppState, IDispatchProps } from "src/state/models";
-import { connect } from "react-redux";
 
 type IContentHeaderProps = {
   canResumeUpload: boolean;
 };
 
 class ContentHeader extends React.PureComponent<IContentHeaderProps & IDispatchProps> {
-  fileInput: HTMLInputElement | null = null;
-
   _uploadClick = () => {
     const { dispatch, canResumeUpload } = this.props;
 
@@ -27,13 +26,8 @@ class ContentHeader extends React.PureComponent<IContentHeaderProps & IDispatchP
       };
 
       const reject = () => {
-        if (this.fileInput === null) {
-          console.error("ContentHeader.fileInput === null");
-        } else {
-          dispatch(actions.selectFiles({ files: [] }));
-          this.fileInput.value = "";
-          this.fileInput.click();
-        }
+        dispatch(actions.selectFiles([]));
+        dispatch(actions.setFileInput(true));
       };
 
       dispatch(
@@ -43,38 +37,14 @@ class ContentHeader extends React.PureComponent<IContentHeaderProps & IDispatchP
         })
       );
     } else {
-      if (this.fileInput === null) {
-        console.error("ContentHeader.fileInput === null");
-      } else {
-        this.fileInput.click();
-      }
-    }
-  };
-
-  _handleFiles = () => {
-    if (this.fileInput === null) {
-      console.error("ContentHeader.fileInput === null");
-    } else {
-      const { dispatch } = this.props;
-      const files: Array<File> = this.fileInput.files !== null ? [...this.fileInput.files] : [];
-      dispatch(actions.selectFiles({ files }));
-      dispatch(actions.setModal({ modalType: ModalType.UPLOAD_MANAGER, status: true }));
+      dispatch(actions.setFileInput(true));
     }
   };
 
   render() {
     return (
       <div className={styles.header}>
-        <input
-          multiple={true}
-          type="file"
-          style={{ display: "none" }}
-          onChange={this._handleFiles}
-          ref={(inp) => {
-            this.props.dispatch(actions.setFileInput({ fileInput: inp }));
-            this.fileInput = inp;
-          }}
-        />
+        <ControlledFileInput />
         <button className={`btn btn-2`} onClick={this._uploadClick}>
           <FiUpload className={styles.uploadIcon} />
           <span>{" Upload"}</span>

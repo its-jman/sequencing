@@ -1,14 +1,14 @@
 import React, { PureComponent } from "react";
+import { connect } from "react-redux";
+import { FiArrowLeft } from "react-icons/fi";
 import { Link, Redirect } from "react-router-dom";
 
-import containerStyles from "../_content.module.scss";
-import styles from "./_analysis.module.scss";
-
-import { FiArrowLeft } from "react-icons/fi";
-import { IAlphabetDetails, IAppState, IDataset, IDispatchProps } from "src/state/models";
 import { getClassNames } from "src/components/utils";
-import Distribution from "src/pages/v2/content/distribution";
-import { connect } from "react-redux";
+import { IAlphabetDetails, IAppState, IDataset, IDispatchProps } from "src/state/models";
+
+import containerStyles from "../_content.module.scss";
+import Distribution from "../distribution";
+import styles from "./_analysis.module.scss";
 
 type IDatasetAnalysisProps = {
   dataset: IDataset | null;

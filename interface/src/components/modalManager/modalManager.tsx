@@ -1,12 +1,12 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 
-import UploadModal from "./modals/uploadModal";
-
 import Modal from "src/components/modal";
 import { IAppState, IConfirmationParams, IModalManager } from "src/state/models";
 import { ModalType, ConfirmationType } from "src/state/actions";
-import ClearUpload from "src/pages/v2/components/modalManager/confirmations/clearUpload";
+
+import UploadModal from "./modals/uploadModal";
+import ClearUpload from "./confirmations/clearUpload";
 
 const ModalMap: { [T in ModalType]: React.ComponentType } = {
   UPLOAD_MANAGER: UploadModal

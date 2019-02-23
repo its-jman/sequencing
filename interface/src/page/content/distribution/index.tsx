@@ -4,13 +4,12 @@ import { scaleBand, scaleLinear } from "d3-scale";
 import { select as d3Select } from "d3-selection";
 import { axisBottom, axisLeft } from "d3-axis";
 
-import styles from "./_distribution.module.scss";
-import { connect } from "src/state/connect";
-import { IAlphabetDetails, IAppProps, IDataset, IDispatchProps } from "src/state/models";
-import * as actions from "src/state/actions";
-import { ALPHABET_COLORS } from "src/pages/constants";
-import { Dispatch } from "redux";
+import { IAlphabetDetails, IDataset, IDispatchProps } from "src/state/models";
+import { actions } from "src/state/actions";
+import { ALPHABET_COLORS } from "src/page/constants";
 import { isEmptyObject } from "src/utils";
+
+import styles from "./_distribution.module.scss";
 
 type IData = {
   letter: string;

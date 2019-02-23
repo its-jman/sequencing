@@ -112,12 +112,12 @@ class DataEngine:
             self.db.drop_collection(records_cname)
 
             errors.append("no_valid_records")
-            dataset_id = None
+            dataset = None
         else:
             dataset.analysis = DatasetAnalysis(**analysis)
             self._datasets.insert_one(utils.convert_model(dataset))
 
-        return errors, dataset_id
+        return errors, dataset
 
 
 def get_engine():

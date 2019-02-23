@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import styles from "./_ClearUpload.module.scss";
 import { IConfirmationParams, IDispatchProps } from "src/state/models";
-import * as actions from "src/state/actions";
+import { actions } from "src/state/actions";
 import { ConfirmationType } from "src/state/actions";
 
 class ClearUpload extends PureComponent<IConfirmationParams & IDispatchProps> {

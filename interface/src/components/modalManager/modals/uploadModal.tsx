@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import styles from "./_UploadModal.module.scss";
 
 import { IAppState, IDispatchProps } from "src/state/models";
-import * as actions from "src/state/actions";
+import { actions } from "src/state/actions";
 import { ModalType } from "src/state/actions";
 import { getClassNames } from "src/components/utils";
 
@@ -115,7 +115,7 @@ class UploadModal extends PureComponent<IUploadModalProps & IDispatchProps> {
     if (i === files.length - 1) {
       this._cancel();
     } else {
-      dispatch(actions.cancelFile({ i }));
+      dispatch(actions.cancelFile(i));
     }
   };
   _cancel = () => {

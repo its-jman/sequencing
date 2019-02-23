@@ -1,5 +1,5 @@
 import { AnyAction, combineReducers } from "redux";
-import { ActionTypes, ModalType } from "src/state/actions";
+import { actions, ActionTypes, IActionMap, ModalType } from "src/state/actions";
 import { networkReducer } from "src/state/network/utils";
 import {
   IAlphabetState,
@@ -11,12 +11,17 @@ import {
   IUploadState
 } from "src/state/models";
 import { NetworkStatus } from "src/state/network/types";
+import { getType } from "typesafe-actions";
 
 const initialUIState: IUIState = {
   title: null,
   modalManager: {
     modal: null,
     confirmations: []
+  },
+  fileInput: {
+    shouldOpen: false,
+    files: []
   }
 };
 
@@ -32,18 +37,18 @@ const initialNetworkState = {
 };
 
 export default combineReducers<IAppState>({
-  ui: (state: IUIState = initialUIState, action: AnyAction) => {
+  ui: (state: IUIState = initialUIState, action: IActionMap | AnyAction) => {
     switch (action.type) {
-      case ActionTypes.SET_TITLE:
+      case getType(actions.setTitle):
         return {
           ...state,
           title: action.payload
         };
-      case ActionTypes.SET_MODAL:
+      case getType(actions.setModal):
         const { modal } = state.modalManager;
-        if (modal !== null && action.modalType !== modal.type) {
+        if (modal !== null && action.payload.modalType !== modal.type) {
           console.error(
-            `"${modal.type}" already visible while trying to show "${action.modalType}"`
+            `"${modal.type}" already visible while trying to show "${action.payload.modalType}"`
           );
           return state;
         } else {
@@ -51,24 +56,24 @@ export default combineReducers<IAppState>({
             ...state,
             modalManager: {
               ...state.modalManager,
-              modal: action.status ? { type: action.modalType } : null
+              modal: action.payload.status ? { type: action.payload.modalType } : null
             }
           };
         }
-      case ActionTypes.SHOW_CONFIRMATION:
+      case getType(actions.showConfirmation):
         return {
           ...state,
           modalManager: {
             ...state.modalManager,
             confirmations: [
               ...state.modalManager.confirmations,
-              { type: action.confirmationType, params: action.params }
+              { type: action.payload.confirmationType, params: action.payload.params }
             ]
           }
         };
-      case ActionTypes.CLEAR_CONFIRMATION:
+      case getType(actions.clearConfirmation):
         const rest = state.modalManager.confirmations.filter(
-          (conf) => conf.type !== action.confirmationType
+          (conf) => conf.type !== action.payload.confirmationType
         );
 
         return {
@@ -78,11 +83,19 @@ export default combineReducers<IAppState>({
             confirmations: rest
           }
         };
+      case getType(actions.setFileInput):
+        return {
+          ...state,
+          fileInput: {
+            ...state.fileInput,
+            shouldOpen: action.payload
+          }
+        };
       default:
         return state;
     }
   },
-  datasets: (state: IDatasetsState = initialNetworkState, action: AnyAction) => {
+  datasets: (state: IDatasetsState = initialNetworkState, action: IActionMap | AnyAction) => {
     switch (action.type) {
       case ActionTypes.LOAD_DATASETS:
         return networkReducer(state, action, {
@@ -95,13 +108,15 @@ export default combineReducers<IAppState>({
             }, {})
         });
       case ActionTypes.SUBMIT_UPLOAD:
-        switch (action.status) {
+        // TODO: HERE
+        const a = action as AnyAction;
+        switch (a.status) {
           case NetworkStatus.SUCCESS:
             return {
               ...state,
               data: {
                 ...state.data,
-                [action.response.dataset._id]: action.response.dataset
+                [a.response.dataset._id]: a.response.dataset
               }
             };
           default:
@@ -111,7 +126,7 @@ export default combineReducers<IAppState>({
         return state;
     }
   },
-  alphabet: (state: IAlphabetState = initialNetworkState, action: AnyAction) => {
+  alphabet: (state: IAlphabetState = initialNetworkState, action: IActionMap | AnyAction) => {
     switch (action.type) {
       case ActionTypes.FETCH_ALPHABET:
         return networkReducer(state, action, {
@@ -123,35 +138,37 @@ export default combineReducers<IAppState>({
         return state;
     }
   },
-  upload: (state: IUploadState = initialUploadState, action: AnyAction) => {
+  upload: (state: IUploadState = initialUploadState, action: IActionMap | AnyAction) => {
     switch (action.type) {
-      case ActionTypes.SET_FILE_INPUT:
+      case getType(actions.setFileInput):
         return {
           ...state,
-          fileInput: action.fileInput
+          fileInput: action.payload
         };
-      case ActionTypes.SELECT_FILES:
-        if (state.files.length > 0 && action.files.length > 0) {
+      case getType(actions.selectFiles):
+        if (state.files.length > 0 && action.payload.length > 0) {
           console.warn("Setting files while files already exist. Old state will be cleared");
         }
-        // TODO: Gross. 0% redux-like programming, but... how should it be?
-        if (action.files.length === 0 && state.fileInput !== null) {
-          state.fileInput.value = "";
-          state.fileInput.files = null;
-        }
+
         return {
           ...state,
-          files: action.files
+          files: action.payload
         };
-      case ActionTypes.CANCEL_FILE:
+      case getType(actions.cancelFile):
         return {
           ...state,
-          files: [...state.files.slice(0, action.i), null, ...state.files.slice(action.i + 1)]
+          files: [
+            ...state.files.slice(0, action.payload),
+            null,
+            ...state.files.slice(action.payload + 1)
+          ]
         };
       case ActionTypes.SUBMIT_UPLOAD:
-        switch (action.status) {
+        // TODO: HERE
+        const a = action as AnyAction;
+        switch (a.status) {
           case NetworkStatus.SUCCESS:
-            if (action.i === state.files.length - 1) {
+            if (a.i === state.files.length - 1) {
               return {
                 ...state,
                 files: []
@@ -159,7 +176,7 @@ export default combineReducers<IAppState>({
             }
             return {
               ...state,
-              files: [...state.files.slice(0, action.i), null, ...state.files.slice(action.i + 1)]
+              files: [...state.files.slice(0, a.i), null, ...state.files.slice(a.i + 1)]
             };
           default:
             return state;

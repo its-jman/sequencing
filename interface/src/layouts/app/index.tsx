@@ -5,17 +5,17 @@ import React from "react";
 import Helmet from "react-helmet";
 import { RouteProps, Switch, Route, Redirect, withRouter } from "react-router-dom";
 
-import V2 from "src/pages/v2";
+import Page from "src/page";
 import { connect } from "src/state/connect";
 import { IAppProps } from "src/state/models";
-import * as actions from "src/state/actions";
-import ModalManager from "src/pages/v2/components/modalManager/modalManager";
+import { actions } from "src/state/actions";
+import ModalManager from "src/components/modalManager/modalManager";
 
 class App extends React.PureComponent<IAppProps> {
   static routes: Array<RouteProps> = [
     {
       path: "/v2",
-      component: V2
+      component: Page
     },
     {
       // Match all non-handled routes
