@@ -27,7 +27,7 @@ class ContentHeader extends React.PureComponent<IContentHeaderProps & IDispatchP
 
       const reject = () => {
         dispatch(actions.selectFiles([]));
-        dispatch(actions.setFileInput(true));
+        dispatch(actions.setFileInput({ status: true }));
       };
 
       dispatch(
@@ -37,7 +37,7 @@ class ContentHeader extends React.PureComponent<IContentHeaderProps & IDispatchP
         })
       );
     } else {
-      dispatch(actions.setFileInput(true));
+      dispatch(actions.setFileInput({ status: true }));
     }
   };
 
@@ -56,19 +56,18 @@ class ContentHeader extends React.PureComponent<IContentHeaderProps & IDispatchP
 
 const ControlledContentHeader = connect(
   (state: IAppState) => ({
-    canResumeUpload: state.upload.files.length > 0
+    canResumeUpload: state.ui.fileInput.files.length > 0
   }),
   (dispatch) => ({ dispatch })
 )(ContentHeader);
 
 class ContentBody extends React.PureComponent<RouteComponentProps> {
   render() {
-    const { match } = this.props;
     return (
       <Switch>
-        <Route exact={true} path={`${match.path}/`} component={DatasetsTable} />
+        <Route exact={true} path={`/v2/`} component={DatasetsTable} />
         <Route
-          path={`${match.path}/:datasetID`}
+          path={`/v2/:datasetID`}
           render={(props) => {
             const { datasetID } = props.match.params;
 

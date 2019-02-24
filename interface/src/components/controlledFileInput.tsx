@@ -18,7 +18,7 @@ class ControlledFileInput extends React.PureComponent<IControlledFileInputProps>
     const { dispatch, shouldOpen } = props;
     if (shouldOpen) {
       this.fileInput!.click();
-      dispatch(actions.setFileInput(false));
+      dispatch(actions.setFileInput({ status: false }));
     }
   };
   componentWillMount() {

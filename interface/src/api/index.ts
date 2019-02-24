@@ -2,13 +2,13 @@ const ENDPOINT = "http://localhost:5000";
 
 export const fetchDatasets = () => fetch(`${ENDPOINT}/datasets`).then((resp) => resp.json());
 export const deleteDataset = ({ _id }: { _id: string }) =>
-  fetch(`${ENDPOINT}/datasets/${_id}`, { method: "DELETE" }).then((resp) => resp.json());
+  fetch(`${ENDPOINT}/datasets/${_id}`, { method: "DELETE" });
 
 export const fetchAlphabet = () => fetch(`${ENDPOINT}/alphabet`).then((resp) => resp.json());
 export const fetchSequences = ({ _id }: { _id: string }) =>
   fetch(`${ENDPOINT}/datasets/${_id}/sequences`).then((resp) => resp.json());
 
-export const uploadDataset = ({ name, file }: { name: string; file: File }) => {
+export const submitUpload = ({ name, file }: { name: string; file: File }) => {
   const form = new FormData();
   form.append("name", name);
   form.append("file", file);

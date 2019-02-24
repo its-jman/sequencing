@@ -4,12 +4,13 @@ import { scaleBand, scaleLinear } from "d3-scale";
 import { select as d3Select } from "d3-selection";
 import { axisBottom, axisLeft } from "d3-axis";
 
-import { IAlphabetDetails, IDataset, IDispatchProps } from "src/state/models";
+import { IAlphabetState, IAppState, IDataset, IDispatchProps } from "src/state/models";
 import { actions } from "src/state/actions";
 import { ALPHABET_COLORS } from "src/page/constants";
 import { isEmptyObject } from "src/utils";
 
 import styles from "./_distribution.module.scss";
+import { connect } from "react-redux";
 
 type IData = {
   letter: string;
@@ -20,7 +21,7 @@ type IData = {
 };
 
 type IChartProps = {
-  alphabet: IAlphabetDetails;
+  alphabet: IAlphabetState;
   data: Array<IData>;
 };
 
@@ -148,7 +149,7 @@ class Chart extends PureComponent<IChartProps> {
   }
 }
 
-const calculateData = (alphabet: IAlphabetDetails, dataset: IDataset) => {
+const calculateData = (alphabet: IAlphabetState, dataset: IDataset) => {
   const out: Array<IData> = [];
   // const out: Array<{ [letter: string]: number }> = [];
   // TODO: Convert to set
@@ -179,7 +180,7 @@ const calculateData = (alphabet: IAlphabetDetails, dataset: IDataset) => {
 };
 
 type IDistributionProps = {
-  alphabet: IAlphabetDetails;
+  alphabet: IAlphabetState;
   dataset: IDataset;
 } & IDispatchProps;
 
@@ -200,4 +201,9 @@ class Distribution extends PureComponent<IDistributionProps> {
   }
 }
 
-export default Distribution;
+export default connect(
+  (state: IAppState) => ({
+    alphabet: state.data.alphabet
+  }),
+  (dispatch) => ({ dispatch })
+)(Distribution);

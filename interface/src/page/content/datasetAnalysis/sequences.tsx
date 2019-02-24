@@ -14,7 +14,7 @@ type ISequencesProps = {
 class Sequences extends PureComponent<ISequencesProps> {
   constructor(props: ISequencesProps) {
     super(props);
-    props.dispatch(actions.fetchSequences({ _id: props.dataset._id }));
+    props.dispatch(actions.fetchSequences({ id: props.dataset._id, page: 1 }));
   }
 
   render() {

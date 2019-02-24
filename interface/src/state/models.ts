@@ -2,7 +2,7 @@ import { AnyAction, Dispatch } from "redux";
 import { ThunkDispatch } from "redux-thunk";
 import { ConfirmationType, ModalType } from "src/state/actions";
 
-export type ISequence = {
+export interface ISequence {
   description: string;
   sequence: string;
   discarded?: boolean;
@@ -10,9 +10,9 @@ export type ISequence = {
     distribution: object;
     amino_count: number;
   };
-};
+}
 
-export type IDataset = {
+export interface IDataset {
   _id: string;
   selected: boolean;
   name: string;
@@ -29,62 +29,60 @@ export type IDataset = {
     sort_by: string;
     items: Array<ISequence>;
   };
-};
-
-type INetworkState<TData> = {
-  isFetching: boolean;
-  errors: object;
-  data: TData;
-};
+}
 
 // UI State
-export type IModalManager = {
+export interface IModalManager {
   modal: { type: ModalType } | null;
   confirmations: Array<{ type: ConfirmationType; params: IConfirmationParams }>;
-};
-export type IConfirmationParams = { resolve: () => void; reject: () => void };
-export type IUIState = {
+}
+export interface IConfirmationParams {
+  resolve: () => void;
+  reject: () => void;
+}
+export interface IUIState {
   title: string | null;
   modalManager: IModalManager;
   fileInput: {
     shouldOpen: boolean;
     files: Array<File | null>;
   };
-};
+}
 
-// Datasets State
-export type IDatasetsStateData = {
+export interface INetworkAction {
+  type: string;
+  status: string;
+  payload: any;
+}
+export interface INetworkState {
+  actions: Array<INetworkAction>;
+}
+export interface IDatasetsState {
   [dataset_id: string]: IDataset;
-};
-export type IDatasetsState = INetworkState<IDatasetsStateData>;
-
-// Alphabet State
-export type IAlphabetDetails = {
+}
+export interface IAlphabetState {
   [letter: string]: { abr: string; name: string; freq: number };
-};
-export type IAlphabetState = INetworkState<IAlphabetDetails>;
+}
 
-// Upload/Files state
-export type IUploadState = {
-  fileInput: HTMLInputElement | null;
-  files: Array<File | null>;
-};
-
-// App State
-export type IAppState = {
-  ui: IUIState;
+export interface IDataState {
+  network: INetworkState;
   datasets: IDatasetsState;
   alphabet: IAlphabetState;
-  upload: IUploadState;
-};
+}
+
+// App State
+export interface IAppState {
+  ui: IUIState;
+  data: IDataState;
+}
 
 // Connect Props
-export type IStateProps = {
+export interface IStateProps {
   state: IAppState;
-};
+}
 
-export type IDispatchProps = {
+export interface IDispatchProps {
   dispatch: ThunkDispatch<IAppState, {}, AnyAction>;
-};
+}
 
-export type IAppProps = IStateProps & IDispatchProps;
+export interface IAppProps extends IStateProps, IDispatchProps {}

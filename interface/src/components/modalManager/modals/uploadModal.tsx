@@ -115,7 +115,7 @@ class UploadModal extends PureComponent<IUploadModalProps & IDispatchProps> {
     if (i === files.length - 1) {
       this._cancel();
     } else {
-      dispatch(actions.cancelFile(i));
+      dispatch(actions.cancelFile({ i }));
     }
   };
   _cancel = () => {
@@ -126,15 +126,15 @@ class UploadModal extends PureComponent<IUploadModalProps & IDispatchProps> {
   _submit = (i: number) => () => {
     const { files, dispatch } = this.props;
 
-    if (this.fields.nameInput === null || this.fields.nameInput.value === "") {
+    if (this.fields.nameInput!.value === "") {
       console.error("Name input null while submitting");
     } else {
-      const name = this.fields.nameInput.value;
+      const name = this.fields.nameInput!.value;
       const file = files[i];
       if (file === null) {
         console.error("Can not upload null dataset...");
       } else {
-        dispatch(actions.submitUpload(i, { file, name }));
+        dispatch(actions.submitUpload({ file, name }));
       }
     }
   };
@@ -221,7 +221,7 @@ class UploadModal extends PureComponent<IUploadModalProps & IDispatchProps> {
 
 export default connect<IUploadModalProps, IDispatchProps, {}, IAppState>(
   (state: IAppState) => ({
-    files: state.upload.files
+    files: state.ui.fileInput.files
   }),
   (dispatch) => ({
     dispatch: dispatch

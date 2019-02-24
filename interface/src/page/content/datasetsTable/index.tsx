@@ -14,7 +14,7 @@ class DataTable extends React.PureComponent<{ datasets: IDatasetsState }> {
   render() {
     const { datasets } = this.props;
 
-    if (Object.keys(datasets.data).length === 0) {
+    if (Object.keys(datasets).length === 0) {
       return <div className={styles.noResults}>{"No datasets found. Upload above... "}</div>;
     }
 
@@ -32,7 +32,7 @@ class DataTable extends React.PureComponent<{ datasets: IDatasetsState }> {
           </thead>
 
           <tbody>
-            {Object.values(datasets.data).map((dataset, i) => (
+            {Object.values(datasets).map((dataset, i) => (
               <TableItem key={i} dataset={dataset} />
             ))}
           </tbody>
@@ -93,5 +93,5 @@ class TableItem extends React.PureComponent<{ dataset: IDataset }> {
 }
 
 export default connect((state: IAppState) => ({
-  datasets: state.datasets
+  datasets: state.data.datasets
 }))(DataTable);

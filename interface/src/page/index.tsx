@@ -1,9 +1,8 @@
 import React from "react";
 
-import styles from "./_v2.module.scss";
-
 import Query from "./query";
 import Content from "./content";
+import styles from "./_page.module.scss";
 
 export default () => (
   <div className={styles.container}>
