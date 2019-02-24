@@ -144,7 +144,7 @@ export const submitUpload = (payload: { name: string; file: File }) => (
   //   return;
   // }
 
-  dispatch(submitUploadRequest(null, req));
+  // dispatch(submitUploadRequest(null, req));
   api.submitUpload(payload).then(
     (response: { errors: string[]; dataset: IDataset | null }) => {
       if (response.errors.length > 0 || response.dataset === null) {
