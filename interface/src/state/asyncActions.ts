@@ -129,28 +129,28 @@ deleteDataset.success = deleteDatasetType.success;
 deleteDataset.failure = deleteDatasetType.failure;
 
 // ------------------------------------ Submit Upload ----------------------------------------
-// const submitUploadType = createAsyncAction(
-//   "SUBMIT_UPLOAD_REQUEST",
-//   "SUBMIT_UPLOAD_SUCCESS",
-//   "SUBMIT_UPLOAD_FAILURE"
-// )<void, { dataset: IDataset }, string[]>();
+const submitUploadType = createAsyncAction(
+  "SUBMIT_UPLOAD_REQUEST",
+  "SUBMIT_UPLOAD_SUCCESS",
+  "SUBMIT_UPLOAD_FAILURE"
+)<void, { dataset: IDataset }, string[]>();
 const submitUploadRequest = createStandardAction("SUBMIT_UPLOAD_REQUEST")<null, INetworkAction>();
 export const submitUpload = (payload: { name: string; file: File }) => (
   dispatch: IDispatchProps["dispatch"]
 ) => {
-  const errs: string[] = validateUpload();
-  if (errs.length > 0) {
-    dispatch(submitUploadType.failure(errs));
-    return;
-  }
+  // const errs: string[] = validateUpload();
+  // if (errs.length > 0) {
+  //   dispatch(submitUploadType.failure(errs));
+  //   return;
+  // }
 
   dispatch(submitUploadRequest(null, req));
   api.submitUpload(payload).then(
     (response: { errors: string[]; dataset: IDataset | null }) => {
-      if (response.errors.length > 0) {
+      if (response.errors.length > 0 || response.dataset === null) {
         dispatch(submitUploadType.failure(response.errors));
       } else {
-        dispatch(submitUploadType.success(response));
+        dispatch(submitUploadType.success({ dataset: response.dataset }));
       }
     },
     (error) => {
