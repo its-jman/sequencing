@@ -1,4 +1,5 @@
-import { createAsyncAction } from "typesafe-actions";
+import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import uuid4 from "uuid/v4";
 
 import {
   IAlphabetState,
@@ -6,23 +7,55 @@ import {
   IDataset,
   IDatasetsState,
   IDispatchProps,
-  ISequence
+  ISequence,
+  NetworkStatus
 } from "src/state/models";
 import * as api from "src/api";
 import { isEmptyObject } from "src/utils";
+
+interface INetworkStatus<TData> {
+  reqID: string;
+  reqType: string;
+  status: NetworkStatus;
+  data: TData;
+}
+
+class Request {
+  private id: string = uuid4();
+  constructor(private type: string) {}
+  private base = () => ({
+    reqID: this.id,
+    reqType: this.type
+  });
+
+  request = () => ({
+    ...this.base(),
+    status: NetworkStatus.REQUEST
+  });
+  success = () => ({
+    ...this.base(),
+    status: NetworkStatus.SUCCESS
+  });
+  failure = () => ({
+    ...this.base(),
+    status: NetworkStatus.FAILURE
+  });
+}
 
 const fetchDatasetsTypes = createAsyncAction(
   "FETCH_DATASETS_REQUEST",
   "FETCH_DATASETS_SUCCESS",
   "FETCH_DATASETS_FAILURE"
-)<void, Array<IDataset>, Error>();
+)<INetworkStatus<null>, INetworkStatus<Array<IDataset>>, INetworkStatus<Error>>();
 export const fetchDatasets = () => (dispatch: IDispatchProps["dispatch"]) => {
-  dispatch(fetchDatasetsTypes.request());
+  const req = new Request("FETCH_DATASETS");
+  dispatch(fetchDatasetsTypes.request({ ...req.request(), data: null }));
   api
     .fetchDatasets()
     .then(
-      (response) => dispatch(fetchDatasetsTypes.success(response)),
-      (error) => dispatch(fetchDatasetsTypes.failure(error))
+      (response: Array<IDataset>) =>
+        dispatch(fetchDatasetsTypes.success({ ...req.success(), data: response })),
+      (error) => dispatch(fetchDatasetsTypes.failure({ ...req.failure(), data: error }))
     );
 };
 fetchDatasets.request = fetchDatasetsTypes.request;
@@ -39,9 +72,7 @@ const fetchSequencesTypes = createAsyncAction(
   { details: IFetchSequences; response: Array<ISequence> },
   { details: IFetchSequences; error: Error }
 >();
-export const fetchSequences = (payload: IFetchSequences) => (
-  dispatch: IDispatchProps["dispatch"]
-) => {
+export const fetchSequences = (payload: IFetchSequences) => (dispatch: IDispatchProps["dispatch"]) => {
   dispatch(fetchSequencesTypes.request(payload));
   api
     .fetchSequences(payload)
@@ -86,10 +117,7 @@ export const deleteDataset = (id: string) => (dispatch: IDispatchProps["dispatch
   dispatch(deleteDatasetType.request());
   api
     .deleteDataset({ _id: id })
-    .then(
-      () => dispatch(deleteDatasetType.success()),
-      (error) => dispatch(deleteDatasetType.failure(error))
-    );
+    .then(() => dispatch(deleteDatasetType.success()), (error) => dispatch(deleteDatasetType.failure(error)));
 };
 deleteDataset.request = deleteDatasetType.request;
 deleteDataset.success = deleteDatasetType.success;
@@ -114,3 +142,11 @@ export const submitUpload = (payload: { name: string; file: File }) => (
 submitUpload.request = submitUploadType.request;
 submitUpload.success = submitUploadType.success;
 submitUpload.failure = submitUploadType.failure;
+
+export const asyncActions = {
+  fetchDatasets,
+  fetchAlphabet,
+  fetchSequences,
+  deleteDataset,
+  submitUpload
+};

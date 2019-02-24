@@ -1,6 +1,15 @@
-import { AnyAction, Dispatch } from "redux";
-import { ThunkDispatch } from "redux-thunk";
+import { AnyAction } from "redux";
+import { ThunkAction, ThunkDispatch } from "redux-thunk";
+
 import { ConfirmationType, ModalType } from "src/state/actions";
+
+export enum NetworkStatus {
+  REQUEST = "REQUEST",
+  SUCCESS = "SUCCESS",
+  FAILURE = "FAILURE"
+}
+
+export type IThunkAction<TState> = ThunkAction<void, TState, {}, AnyAction>;
 
 export interface ISequence {
   description: string;
@@ -49,10 +58,11 @@ export interface IUIState {
   };
 }
 
+// Data state
 export interface INetworkAction {
   type: string;
-  status: string;
-  payload: any;
+  reqID: string;
+  status: NetworkStatus;
 }
 export interface INetworkState {
   actions: Array<INetworkAction>;

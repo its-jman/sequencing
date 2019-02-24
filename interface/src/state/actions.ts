@@ -1,7 +1,7 @@
 import { ActionType, createStandardAction } from "typesafe-actions";
 
 import { IConfirmationParams } from "src/state/models";
-import * as asyncActions from "./asyncActions";
+import { asyncActions } from "./asyncActions";
 
 export enum ModalType {
   UPLOAD_MANAGER = "UPLOAD_MANAGER"

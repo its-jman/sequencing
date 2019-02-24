@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@types/react-router-dom": "^4.3.1",
+    "@types/uuid": "^3.4.4",
     "d3-axis": "^1.0.12",
     "d3-scale": "^2.2.2",
     "d3-selection": "^1.4.0",
@@ -22,7 +23,8 @@
     "redux-thunk": "^2.3.0",
     "tslint": "^5.12.1",
     "typesafe-actions": "^3.1.0",
-    "typescript": "3.3.1"
+    "typescript": "3.3.1",
+    "uuid": "^3.3.2"
   },
   "devDependencies": {
     "@types/d3-axis": "^1.0.12",
@@ -43,7 +45,7 @@
     "extends": "react-app"
   },
   "prettier": {
-    "printWidth": 100,
+    "printWidth": 110,
     "arrowParens": "always"
   },
   "browserslist": [

@@ -3,7 +3,7 @@ import { getType } from "typesafe-actions";
 import produce from "immer";
 
 import { actions, IActionMap } from "src/state/actions";
-import { IAppState, IDataset, IDatasetsState } from "src/state/models";
+import { IAppState, IDataset, IDatasetsState, NetworkStatus } from "src/state/models";
 
 const initialUIState: IAppState["ui"] = {
   title: null,
@@ -25,6 +25,9 @@ const initialDataState: IAppState["data"] = {
   alphabet: {}
 };
 
+const getNi = (draft: IAppState["data"], reqID: string) =>
+  draft.network.actions.findIndex((act) => act.reqID === reqID);
+
 export default combineReducers<IAppState>({
   ui: (stateRaw: IAppState["ui"] = initialUIState, action: IActionMap) => {
     return produce(stateRaw, (draft) => {
@@ -39,9 +42,7 @@ export default combineReducers<IAppState>({
               `"${modal.type}" already visible while trying to show "${action.payload.modalType}"`
             );
           } else {
-            draft.modalManager.modal = action.payload.status
-              ? { type: action.payload.modalType }
-              : null;
+            draft.modalManager.modal = action.payload.status ? { type: action.payload.modalType } : null;
           }
           break;
         case getType(actions.showConfirmation):
@@ -71,29 +72,29 @@ export default combineReducers<IAppState>({
   data: (stateRaw: IAppState["data"] = initialDataState, action: IActionMap) => {
     return produce(stateRaw, (draft) => {
       switch (action.type) {
+        // Fetch Datasets ----------------
         case getType(actions.fetchDatasets.request):
           draft.network.actions.push({
-            type: action.type.substring(0, action.type.length - 8),
-            status: "REQUEST",
-            payload: null
+            type: action.payload.reqType,
+            reqID: action.payload.reqID,
+            status: action.payload.status
           });
           break;
         case getType(actions.fetchDatasets.success):
-          draft.datasets = action.payload.reduce((mapped: IDatasetsState, item: IDataset) => {
+          draft.network.actions[getNi(draft, action.payload.reqID)].status = action.payload.status;
+
+          draft.datasets = action.payload.data.reduce((mapped: IDatasetsState, item: IDataset) => {
             mapped[item._id] = item;
             return mapped;
           }, {});
           break;
         case getType(actions.fetchDatasets.failure):
           console.error("Fetching datasets failed");
+          draft.network.actions[getNi(draft, action.payload.reqID)].status = action.payload.status;
           break;
 
+        // Fetch Alphabet -------------------
         case getType(actions.fetchAlphabet.request):
-          draft.network.actions.push({
-            type: action.type.substring(0, action.type.length - 8),
-            status: "REQUEST",
-            payload: null
-          });
           break;
         case getType(actions.fetchAlphabet.success):
           draft.alphabet = action.payload;

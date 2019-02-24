@@ -63,7 +63,6 @@ const ContentHeader = connect(
 
 class ContentBodyRaw extends React.PureComponent<RouteComponentProps> {
   render() {
-    console.log(this.props);
     return (
       <Switch>
         <Route exact={true} path={`/v2/`} component={DatasetsTable} />
