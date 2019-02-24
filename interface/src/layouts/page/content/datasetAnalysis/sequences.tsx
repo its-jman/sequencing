@@ -1,10 +1,10 @@
 import React, { PureComponent } from "react";
 
 import { IDataset, IDispatchProps } from "src/state/models";
-import { connectDispatch } from "src/state/connect";
 import { actions } from "src/state/actions";
 
 import styles from "./_analysis.module.scss";
+import { connect } from "react-redux";
 
 type ISequencesProps = {
   dataset: IDataset;
@@ -21,5 +21,7 @@ class Sequences extends PureComponent<ISequencesProps> {
   }
 }
 
-// @ts-ignore
-export default connectDispatch(Sequences);
+export default connect(
+  () => ({}),
+  (dispatch) => ({ dispatch })
+)(Sequences);

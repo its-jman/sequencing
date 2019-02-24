@@ -3,7 +3,14 @@ import "src/styles/main.scss";
 
 import React from "react";
 import Helmet from "react-helmet";
-import { RouteProps, Switch, Route, Redirect, withRouter } from "react-router-dom";
+import {
+  RouteProps,
+  Switch,
+  Route,
+  Redirect,
+  withRouter,
+  RouteComponentProps
+} from "react-router-dom";
 
 import { IAppState, IDispatchProps } from "src/state/models";
 import { actions } from "src/state/actions";
@@ -27,7 +34,7 @@ const LayoutHeader = connect((state: IAppState) => ({
   title: state.ui.title
 }))(LayoutHeaderRaw);
 
-class LayoutRaw extends React.PureComponent<IDispatchProps> {
+class LayoutRaw extends React.PureComponent<IDispatchProps & RouteComponentProps> {
   static routes: Array<RouteProps> = [
     {
       path: "/v2",
@@ -58,20 +65,16 @@ class LayoutRaw extends React.PureComponent<IDispatchProps> {
   }
 }
 
-// TODO: Here
-// @ts-ignore
 const Layout = withRouter(
-  // @ts-ignore
   connect(
     () => ({}),
     (dispatch) => ({ dispatch })
   )(LayoutRaw)
 );
 
-// TODO: Here
-export default withRouter(() => (
+export default () => (
   <>
     <LayoutHeader />
     <Layout />
   </>
-));
+);

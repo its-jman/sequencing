@@ -46,14 +46,9 @@ class DatasetAnalysis extends PureComponent<IDatasetAnalysisProps & IDispatchPro
   }
 }
 
-// TODO: Here
-// @ts-ignore
-export default withRouter(
-  // @ts-ignore
-  connect<IDatasetAnalysisProps, IDispatchProps, { datasetID: string }, IAppState>(
-    (state: IAppState, ownProps) => ({
-      dataset: state.data.datasets[ownProps.datasetID] || null
-    }),
-    (dispatch) => ({ dispatch })
-  )(DatasetAnalysis)
-);
+export default connect<IDatasetAnalysisProps, IDispatchProps, { datasetID: string }, IAppState>(
+  (state: IAppState, ownProps) => ({
+    dataset: state.data.datasets[ownProps.datasetID] || null
+  }),
+  (dispatch) => ({ dispatch })
+)(DatasetAnalysis);

@@ -91,11 +91,7 @@ class TableItem extends React.PureComponent<{ dataset: IDataset }> {
     );
   }
 }
-// TODO: Here
-// @ts-ignore
-export default withRouter(
-  // @ts-ignore
-  connect((state: IAppState) => ({
-    datasets: state.data.datasets
-  }))(DataTable)
-);
+
+export default connect((state: IAppState) => ({
+  datasets: state.data.datasets
+}))(DataTable);

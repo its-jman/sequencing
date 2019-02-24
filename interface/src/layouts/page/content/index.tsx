@@ -80,13 +80,11 @@ class ContentBodyRaw extends React.PureComponent<RouteComponentProps> {
   }
 }
 
-// TODO: Here
 const ContentBody = withRouter(ContentBodyRaw);
 
-// TODO: Here
-export default withRouter(() => (
+export default () => (
   <>
     <ContentHeader />
     <ContentBody />
   </>
-));
+);
