@@ -1,5 +1,4 @@
 import React, { PureComponent } from "react";
-import { Dispatch } from "redux";
 
 import { IDataset, IDispatchProps } from "src/state/models";
 import { connectDispatch } from "src/state/connect";

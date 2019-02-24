@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { FiArrowUp, FiBarChart2 } from "react-icons/fi";
 
 import containerStyles from "../_content.module.scss";
@@ -91,7 +91,11 @@ class TableItem extends React.PureComponent<{ dataset: IDataset }> {
     );
   }
 }
-
-export default connect((state: IAppState) => ({
-  datasets: state.data.datasets
-}))(DataTable);
+// TODO: Here
+// @ts-ignore
+export default withRouter(
+  // @ts-ignore
+  connect((state: IAppState) => ({
+    datasets: state.data.datasets
+  }))(DataTable)
+);

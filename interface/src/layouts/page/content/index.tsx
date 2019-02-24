@@ -1,4 +1,4 @@
-import React, { PureComponent } from "react";
+import React from "react";
 import { FiUpload } from "react-icons/fi";
 import { connect } from "react-redux";
 import { Route, RouteComponentProps, Switch, withRouter } from "react-router-dom";
@@ -16,7 +16,7 @@ type IContentHeaderProps = {
   canResumeUpload: boolean;
 };
 
-class ContentHeader extends React.PureComponent<IContentHeaderProps & IDispatchProps> {
+class ContentHeaderRaw extends React.PureComponent<IContentHeaderProps & IDispatchProps> {
   _uploadClick = () => {
     const { dispatch, canResumeUpload } = this.props;
 
@@ -54,15 +54,16 @@ class ContentHeader extends React.PureComponent<IContentHeaderProps & IDispatchP
   }
 }
 
-const ControlledContentHeader = connect(
+const ContentHeader = connect(
   (state: IAppState) => ({
     canResumeUpload: state.ui.fileInput.files.length > 0
   }),
   (dispatch) => ({ dispatch })
-)(ContentHeader);
+)(ContentHeaderRaw);
 
-class ContentBody extends React.PureComponent<RouteComponentProps> {
+class ContentBodyRaw extends React.PureComponent<RouteComponentProps> {
   render() {
+    console.log(this.props);
     return (
       <Switch>
         <Route exact={true} path={`/v2/`} component={DatasetsTable} />
@@ -79,18 +80,13 @@ class ContentBody extends React.PureComponent<RouteComponentProps> {
   }
 }
 
-const ControlledContentBody = withRouter(ContentBody);
+// TODO: Here
+const ContentBody = withRouter(ContentBodyRaw);
 
-class Content extends PureComponent {
-  render() {
-    return (
-      <>
-        <ControlledContentHeader />
-        <ControlledContentBody />
-      </>
-    );
-  }
-}
-
-// @ts-ignore
-export default withRouter(Content);
+// TODO: Here
+export default withRouter(() => (
+  <>
+    <ContentHeader />
+    <ContentBody />
+  </>
+));

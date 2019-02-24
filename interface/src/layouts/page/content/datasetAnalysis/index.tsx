@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { connect } from "react-redux";
 import { FiArrowLeft } from "react-icons/fi";
-import { Link, Redirect } from "react-router-dom";
+import { Link, Redirect, withRouter } from "react-router-dom";
 
 import { getClassNames } from "src/components/utils";
 import { IAppState, IDataset, IDispatchProps } from "src/state/models";
@@ -46,9 +46,14 @@ class DatasetAnalysis extends PureComponent<IDatasetAnalysisProps & IDispatchPro
   }
 }
 
-export default connect<IDatasetAnalysisProps, IDispatchProps, { datasetID: string }, IAppState>(
-  (state: IAppState, ownProps) => ({
-    dataset: state.data.datasets[ownProps.datasetID] || null
-  }),
-  (dispatch) => ({ dispatch })
-)(DatasetAnalysis);
+// TODO: Here
+// @ts-ignore
+export default withRouter(
+  // @ts-ignore
+  connect<IDatasetAnalysisProps, IDispatchProps, { datasetID: string }, IAppState>(
+    (state: IAppState, ownProps) => ({
+      dataset: state.data.datasets[ownProps.datasetID] || null
+    }),
+    (dispatch) => ({ dispatch })
+  )(DatasetAnalysis)
+);
