@@ -108,3 +108,39 @@
 .distributionCol {
   text-align: center;
 }
+
+.footer {
+  width: 100%;
+  padding: 12px;
+  background-color: $bg-2;
+}
+
+.pagination {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.pageLink {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  $size: 36px;
+  height: $size;
+  width: $size;
+
+  background-color: $bg-0;
+
+  border-right: 1px solid $gray-3;
+  &:last-child {
+    border-right: 0;
+  }
+
+  &:hover {
+    cursor: pointer;
+    background-color: $bg-4;
+    a {
+    }
+  }
+}

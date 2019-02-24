@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
-import { FiArrowUp, FiBarChart2 } from "react-icons/fi";
+import { FiArrowUp, FiBarChart2, FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 import containerStyles from "../_content.module.scss";
 import styles from "./_tableStyles.module.scss";
@@ -10,13 +10,54 @@ import Checkbox from "src/components/checkbox";
 import { getClassNames } from "src/components/utils";
 import { IAppState, IDataset, IDatasetsState } from "src/state/models";
 
-class DataTable extends React.PureComponent<{ datasets: IDatasetsState }> {
+interface IDataTableProps {
+  datasets: IDataset[];
+}
+interface IDataTableState {
+  page: number;
+  maxPages: number;
+}
+
+const PageLink = ({ children, onClick }: { children: React.ReactNode; onClick: () => void }) => (
+  <div className={styles.pageLink} onClick={onClick}>
+    {children}
+  </div>
+);
+
+class DataTable extends React.PureComponent<IDataTableProps, IDataTableState> {
+  static pageSize = 8;
+  static _getState = (props: IDataTableProps, page: number = 0) => ({
+    page: page,
+    maxPages: Math.ceil(props.datasets.length / DataTable.pageSize)
+  });
+
+  state = DataTable._getState(this.props);
+
+  static getDerivedStateFromProps(nextProps: IDataTableProps, prevState: IDataTableState) {
+    return DataTable._getState(nextProps, prevState.page);
+  }
+
+  setPage = (page: number) => {
+    if (page < 0 || page >= this.state.maxPages || page === this.state.page) {
+      console.warn(`Not setting page: ${page}`);
+      return;
+    }
+
+    this.setState({
+      ...this.state,
+      page: page
+    });
+  };
+
   render() {
     const { datasets } = this.props;
+    const { page, maxPages } = this.state;
 
-    if (Object.keys(datasets).length === 0) {
+    if (datasets.length === 0) {
       return <div className={styles.noResults}>{"No datasets found. Upload above... "}</div>;
     }
+
+    const items = datasets.slice(page * DataTable.pageSize, (page + 1) * DataTable.pageSize);
 
     return (
       <div className={containerStyles.contentPanel}>
@@ -32,10 +73,32 @@ class DataTable extends React.PureComponent<{ datasets: IDatasetsState }> {
           </thead>
 
           <tbody>
-            {Object.values(datasets).map((dataset, i) => (
+            {items.map((dataset, i) => (
               <TableItem key={i} dataset={dataset} />
             ))}
           </tbody>
+
+          {maxPages > 1 && (
+            <tfoot>
+              <tr>
+                <td colSpan={15} className={styles.footer}>
+                  <div className={styles.pagination}>
+                    <PageLink onClick={() => this.setPage(page - 1)}>
+                      <FiChevronLeft size={12} />
+                    </PageLink>
+                    {new Array(maxPages).fill(null).map((_, i) => (
+                      <PageLink key={i} onClick={() => this.setPage(i)}>
+                        {i + 1}
+                      </PageLink>
+                    ))}
+                    <PageLink onClick={() => this.setPage(page + 1)}>
+                      <FiChevronRight size={12} />
+                    </PageLink>
+                  </div>
+                </td>
+              </tr>
+            </tfoot>
+          )}
         </table>
       </div>
     );
@@ -93,5 +156,5 @@ class TableItem extends React.PureComponent<{ dataset: IDataset }> {
 }
 
 export default connect((state: IAppState) => ({
-  datasets: state.data.datasets
+  datasets: Object.values(state.data.datasets)
 }))(DataTable);
