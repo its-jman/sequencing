@@ -5,8 +5,8 @@ export const deleteDataset = ({ _id }: { _id: string }) =>
   fetch(`${ENDPOINT}/datasets/${_id}`, { method: "DELETE" });
 
 export const fetchAlphabet = () => fetch(`${ENDPOINT}/alphabet`).then((resp) => resp.json());
-export const fetchSequences = ({ _id }: { _id: string }) =>
-  fetch(`${ENDPOINT}/datasets/${_id}/sequences`).then((resp) => resp.json());
+export const fetchSequences = (payload: { id: string }) =>
+  fetch(`${ENDPOINT}/datasets/${payload.id}/sequences`).then((resp) => resp.json());
 
 export const submitUpload = ({ name, file }: { name: string; file: File }) => {
   const form = new FormData();

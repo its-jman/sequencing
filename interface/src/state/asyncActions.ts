@@ -2,12 +2,14 @@ import { createAsyncAction } from "typesafe-actions";
 
 import {
   IAlphabetState,
+  IAppState,
   IDataset,
   IDatasetsState,
   IDispatchProps,
   ISequence
 } from "src/state/models";
 import * as api from "src/api";
+import { isEmptyObject } from "src/utils";
 
 const fetchDatasetsTypes = createAsyncAction(
   "FETCH_DATASETS_REQUEST",
@@ -42,7 +44,7 @@ export const fetchSequences = (payload: IFetchSequences) => (
 ) => {
   dispatch(fetchSequencesTypes.request(payload));
   api
-    .fetchDatasets()
+    .fetchSequences(payload)
     .then(
       (response) => dispatch(fetchSequencesTypes.success({ details: payload, response })),
       (error) => dispatch(fetchSequencesTypes.failure({ details: payload, error }))
@@ -57,10 +59,15 @@ const fetchAlphabetTypes = createAsyncAction(
   "FETCH_ALPHABET_SUCCESS",
   "FETCH_ALPHABET_FAILURE"
 )<void, IAlphabetState, Error>();
-export const fetchAlphabet = () => (dispatch: IDispatchProps["dispatch"]) => {
+export const fetchAlphabet = () => (dispatch: IDispatchProps["dispatch"], getState: any) => {
+  const state: IAppState = getState();
+  if (!isEmptyObject(state.data.alphabet)) {
+    return;
+  }
+
   dispatch(fetchAlphabetTypes.request());
   api
-    .fetchDatasets()
+    .fetchAlphabet()
     .then(
       (response) => dispatch(fetchAlphabetTypes.success(response)),
       (error) => dispatch(fetchAlphabetTypes.failure(error))

@@ -87,31 +87,25 @@ export default combineReducers<IAppState>({
         case getType(actions.fetchDatasets.failure):
           console.error("Fetching datasets failed");
           break;
+
+        case getType(actions.fetchAlphabet.request):
+          draft.network.actions.push({
+            type: action.type.substring(0, action.type.length - 8),
+            status: "REQUEST",
+            payload: null
+          });
+          break;
+        case getType(actions.fetchAlphabet.success):
+          draft.alphabet = action.payload;
+          break;
+        case getType(actions.fetchAlphabet.failure):
+          console.error("Fetching alphabet failed");
+          break;
       }
     });
   }
   // datasets: (stateRaw: IDatasetsState = initialNetworkState, action: IActionMap) => {
-  //   return produce(stateRaw, (draft) => {
-  //     switch (action.type) {
-  //       case getType(actions.fetchDatasets.request):
-  //         break;
-  //       case getType(actions.fetchDatasets.success):
-  //         break;
-  //       case getType(actions.fetchDatasets.failure):
-  //         break;
-  //       // case ActionTypes.LOAD_DATASETS:
-  //       //   return networkReducer(state, action, {
-  //       //     initialState: initialNetworkState,
-  //       //     clearData: true,
-  //       //     transformResponse: (response: any) =>
-  //       //       response.reduce((state: IDatasetsStateData, item: IDataset) => {
-  //       //         state[item._id] = item;
-  //       //         return state;
-  //       //       }, {})
-  //       //   });
   //       // case ActionTypes.SUBMIT_UPLOAD:
-  //       //   // TODO: HERE
-  //       //   const a = action as AnyAction;
   //       //   switch (a.status) {
   //       //     case NetworkStatus.SUCCESS:
   //       //       return {
@@ -128,14 +122,6 @@ export default combineReducers<IAppState>({
   //   });
   // },
   // alphabet: (stateRaw: IAlphabetState = initialNetworkState, action: IActionMap) => {
-  //   return produce(stateRaw, (draft) => {
-  //     switch (action.type) {
-  //       case getType(actions.fetchAlphabet.request):
-  //         break;
-  //       case getType(actions.fetchAlphabet.success):
-  //         break;
-  //       case getType(actions.fetchAlphabet.failure):
-  //         break;
   //       // case ActionTypes.FETCH_ALPHABET:
   //       //   return networkReducer(state, action, {
   //       //     initialState: initialNetworkState,
