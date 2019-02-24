@@ -18,12 +18,6 @@ interface IDataTableState {
   maxPages: number;
 }
 
-const PageLink = ({ children, onClick }: { children: React.ReactNode; onClick: () => void }) => (
-  <div className={styles.pageLink} onClick={onClick}>
-    {children}
-  </div>
-);
-
 class DataTable extends React.PureComponent<IDataTableProps, IDataTableState> {
   static pageSize = 8;
   static _getState = (props: IDataTableProps, page: number = 0) => ({
@@ -58,7 +52,6 @@ class DataTable extends React.PureComponent<IDataTableProps, IDataTableState> {
     }
 
     const items = datasets.slice(page * DataTable.pageSize, (page + 1) * DataTable.pageSize);
-
     return (
       <div className={containerStyles.contentPanel}>
         <table className={styles.table}>
@@ -73,8 +66,8 @@ class DataTable extends React.PureComponent<IDataTableProps, IDataTableState> {
           </thead>
 
           <tbody>
-            {items.map((dataset, i) => (
-              <TableItem key={i} dataset={dataset} />
+            {items.map((dataset) => (
+              <TableItem key={dataset._id} dataset={dataset} />
             ))}
           </tbody>
 
@@ -83,17 +76,17 @@ class DataTable extends React.PureComponent<IDataTableProps, IDataTableState> {
               <tr>
                 <td colSpan={15} className={styles.footer}>
                   <div className={styles.pagination}>
-                    <PageLink onClick={() => this.setPage(page - 1)}>
+                    <div className={styles.pageLink} onClick={() => this.setPage(page - 1)}>
                       <FiChevronLeft size={12} />
-                    </PageLink>
+                    </div>
                     {new Array(maxPages).fill(null).map((_, i) => (
-                      <PageLink key={i} onClick={() => this.setPage(i)}>
+                      <div key={i} className={styles.pageLink} onClick={() => this.setPage(i)}>
                         {i + 1}
-                      </PageLink>
+                      </div>
                     ))}
-                    <PageLink onClick={() => this.setPage(page + 1)}>
+                    <div className={styles.pageLink} onClick={() => this.setPage(page + 1)}>
                       <FiChevronRight size={12} />
-                    </PageLink>
+                    </div>
                   </div>
                 </td>
               </tr>
