@@ -4,6 +4,7 @@ import { ThunkAction, ThunkDispatch } from "redux-thunk";
 import { ConfirmationType, ModalType } from "src/state/actions";
 
 export enum NetworkStatus {
+  UNSENT = "UNSENT",
   REQUEST = "REQUEST",
   SUCCESS = "SUCCESS",
   FAILURE = "FAILURE"

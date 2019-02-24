@@ -1,4 +1,4 @@
-import { createAsyncAction, createStandardAction } from "typesafe-actions";
+import { createAsyncAction, createStandardAction, createAction } from "typesafe-actions";
 import uuid4 from "uuid/v4";
 
 import {
@@ -7,6 +7,7 @@ import {
   IDataset,
   IDatasetsState,
   IDispatchProps,
+  INetworkAction,
   ISequence,
   NetworkStatus
 } from "src/state/models";
@@ -42,6 +43,7 @@ class Request {
   });
 }
 
+// ------------------------------------ Fetch Datasets ---------------------------------------
 const fetchDatasetsTypes = createAsyncAction(
   "FETCH_DATASETS_REQUEST",
   "FETCH_DATASETS_SUCCESS",
@@ -62,6 +64,7 @@ fetchDatasets.request = fetchDatasetsTypes.request;
 fetchDatasets.success = fetchDatasetsTypes.success;
 fetchDatasets.failure = fetchDatasetsTypes.failure;
 
+// --------------------------------------- Fetch Sequences -----------------------------------
 type IFetchSequences = { id: string; page: number };
 const fetchSequencesTypes = createAsyncAction(
   "FETCH_SEQUENCES_REQUEST",
@@ -85,6 +88,7 @@ fetchSequences.request = fetchSequencesTypes.request;
 fetchSequences.success = fetchSequencesTypes.success;
 fetchSequences.failure = fetchSequencesTypes.failure;
 
+// -------------------------------------- Fetch Alphabet -------------------------------------
 const fetchAlphabetTypes = createAsyncAction(
   "FETCH_ALPHABET_REQUEST",
   "FETCH_ALPHABET_SUCCESS",
@@ -108,6 +112,7 @@ fetchAlphabet.request = fetchAlphabetTypes.request;
 fetchAlphabet.success = fetchAlphabetTypes.success;
 fetchAlphabet.failure = fetchAlphabetTypes.failure;
 
+// ------------------------------------- Delete Dataset --------------------------------------
 const deleteDatasetType = createAsyncAction(
   "DELETE_DATASET_REQUEST",
   "DELETE_DATASET_SUCCESS",
@@ -123,21 +128,37 @@ deleteDataset.request = deleteDatasetType.request;
 deleteDataset.success = deleteDatasetType.success;
 deleteDataset.failure = deleteDatasetType.failure;
 
-const submitUploadType = createAsyncAction(
-  "SUBMIT_UPLOAD_REQUEST",
-  "SUBMIT_UPLOAD_SUCCESS",
-  "SUBMIT_UPLOAD_FAILURE"
-)<void, { dataset: IDataset }, Error>();
+// ------------------------------------ Submit Upload ----------------------------------------
+// const submitUploadType = createAsyncAction(
+//   "SUBMIT_UPLOAD_REQUEST",
+//   "SUBMIT_UPLOAD_SUCCESS",
+//   "SUBMIT_UPLOAD_FAILURE"
+// )<void, { dataset: IDataset }, string[]>();
+const submitUploadRequest = createStandardAction("SUBMIT_UPLOAD_REQUEST")<null, INetworkAction>();
 export const submitUpload = (payload: { name: string; file: File }) => (
   dispatch: IDispatchProps["dispatch"]
 ) => {
-  dispatch(submitUploadType.request());
-  api
-    .submitUpload(payload)
-    .then(
-      (response) => dispatch(submitUploadType.success(response)),
-      (error) => dispatch(submitUploadType.failure(error))
-    );
+  const errs: string[] = validateUpload();
+  if (errs.length > 0) {
+    dispatch(submitUploadType.failure(errs));
+    return;
+  }
+
+  dispatch(submitUploadRequest(null, req));
+  api.submitUpload(payload).then(
+    (response: { errors: string[]; dataset: IDataset | null }) => {
+      if (response.errors.length > 0) {
+        dispatch(submitUploadType.failure(response.errors));
+      } else {
+        dispatch(submitUploadType.success(response));
+      }
+    },
+    (error) => {
+      console.error("Submit upload failed with error");
+      console.error(error);
+      dispatch(submitUploadType.failure(error));
+    }
+  );
 };
 submitUpload.request = submitUploadType.request;
 submitUpload.success = submitUploadType.success;

@@ -45,6 +45,7 @@ export default combineReducers<IAppState>({
             draft.modalManager.modal = action.payload.status ? { type: action.payload.modalType } : null;
           }
           break;
+        // Confirmations
         case getType(actions.showConfirmation):
           draft.modalManager.confirmations.push({
             type: action.payload.confirmationType,
@@ -56,14 +57,20 @@ export default combineReducers<IAppState>({
             (conf) => conf.type !== action.payload.confirmationType
           );
           break;
-        case getType(actions.selectFiles):
-          draft.fileInput.files = action.payload;
-          break;
+        // File Management
         case getType(actions.setFileInput):
           draft.fileInput.shouldOpen = action.payload.status;
           break;
+        case getType(actions.selectFiles):
+          draft.fileInput.files = action.payload;
+          break;
+        case getType(actions.submitUpload.request):
+          break;
+        case getType(actions.submitUpload.success):
+          break;
+        case getType(actions.submitUpload.failure):
+          break;
         case getType(actions.cancelFile):
-          // TODO: Improve this to maintain file for re-reference
           draft.fileInput.files[action.payload.i] = null;
           break;
       }
