@@ -77,11 +77,8 @@ def _remove_unnecessary_son_fields(son):
         # Remove field
         if key in c.REMOVED_FIELDS:
             son.pop(key)
-        print("HERE")
-        print(key)
-        if key in c.RENAMED_FIELDS:
-            print(key)
-            son[c.RENAMED_FIELDS[key]] = son.pop(key)
+        # if key in c.RENAMED_FIELDS:
+        #     son[c.RENAMED_FIELDS[key]] = son.pop(key)
         # Iterate recursively for any nested attributes
         elif isinstance(val, bson.son.SON):
             _remove_unnecessary_son_fields(val)

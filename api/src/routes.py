@@ -29,7 +29,6 @@ class DatasetsView(MethodView):
         }
         """
         engine = data.engine.get_engine()
-        print(type(engine.get_datasets()[0]))
         return jsonify(
             list(map(lambda x: data.utils.convert_model(x), engine.get_datasets()))
         )
