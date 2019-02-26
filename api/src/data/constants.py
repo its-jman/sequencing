@@ -1,4 +1,5 @@
 REMOVED_FIELDS = ["_cls"]
+RENAMED_FIELDS = {"_id": "id"}
 
 ALPHABET = {
     "A": {"name": "Alanine", "abr": "Ala", "freq": 0.074},

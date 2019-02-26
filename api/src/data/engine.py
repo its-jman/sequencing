@@ -21,8 +21,8 @@ class DataEngine:
             username="myuser",
             password="mypass",
             authSource="admin",
-            socketTimeoutMS=6000,
-            connectTimeoutMS=6000,
+            socketTimeoutMS=3000,
+            connectTimeoutMS=3000,
         )
 
         self.db = self.client.get_database(DataEngine.mongo_db_name)
@@ -36,8 +36,8 @@ class DataEngine:
         return dataset_id
 
     def get_datasets(self, page=0, page_size=100):
-        offset = page * page_size
-        cursor = self._datasets.find().skip(offset).limit(page_size)
+        # offset = page * page_size
+        cursor = self._datasets.find()  # .skip(offset).limit(page_size)
         return list(cursor)
 
     def get_dataset_records(self, dataset_id, page, page_size):

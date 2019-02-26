@@ -1,6 +1,7 @@
 import bson
 from collections import Counter
 from flask.json import JSONEncoder
+from pymodm import MongoModel
 
 from data import constants as c
 
@@ -76,17 +77,25 @@ def _remove_unnecessary_son_fields(son):
         # Remove field
         if key in c.REMOVED_FIELDS:
             son.pop(key)
+        print("HERE")
+        print(key)
+        if key in c.RENAMED_FIELDS:
+            print(key)
+            son[c.RENAMED_FIELDS[key]] = son.pop(key)
         # Iterate recursively for any nested attributes
         elif isinstance(val, bson.son.SON):
             _remove_unnecessary_son_fields(val)
 
 
 def convert_model(model):
-    # Validate
-    model.full_clean()
+    if type(model) == MongoModel:
+        # Validate
+        model.full_clean()
+        # Convert to regular object, and remove unnecessary fields.
+        son = model.to_son()
+    else:
+        son = model
 
-    # Convert to regular object, and remove unnecessary fields.
-    son = model.to_son()
     _remove_unnecessary_son_fields(son)
 
     return son

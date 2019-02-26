@@ -16,7 +16,7 @@ bp = Blueprint("datasets", __name__)
 
 # @bp.before_request
 # def sleep_more():
-#     time.sleep(750)
+#     time.sleep(4)
 
 
 class DatasetsView(MethodView):
@@ -29,7 +29,10 @@ class DatasetsView(MethodView):
         }
         """
         engine = data.engine.get_engine()
-        return jsonify(engine.get_datasets())
+        print(type(engine.get_datasets()[0]))
+        return jsonify(
+            list(map(lambda x: data.utils.convert_model(x), engine.get_datasets()))
+        )
 
     @staticmethod
     def post():
