@@ -85,10 +85,10 @@ def _remove_unnecessary_son_fields(son):
 
 
 def convert_model(model):
-    if type(model) == MongoModel:
+    if issubclass(model.__class__, MongoModel):
         # Validate
         model.full_clean()
-        # Convert to regular object, and remove unnecessary fields.
+        # Convert to regular object
         son = model.to_son()
     else:
         son = model
