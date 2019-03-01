@@ -1,10 +1,10 @@
 import React, { PureComponent } from "react";
 
 import { IDataset, IDispatchProps } from "src/state/models";
-import { actions } from "src/state/actions";
 
 import styles from "./_analysis.module.scss";
 import { connect } from "react-redux";
+import { actions } from "src/state/actions";
 
 type ISequencesProps = {
   dataset: IDataset;

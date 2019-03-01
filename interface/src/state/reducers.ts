@@ -3,7 +3,8 @@ import { getType } from "typesafe-actions";
 import produce from "immer";
 
 import { actions, IActionMap } from "src/state/actions";
-import { IAppState, IDataset, IDatasetsState, NetworkStatus } from "src/state/models";
+import { networkActions } from "src/state/actions/network";
+import { IAppState, IDataset, NetworkStatus } from "src/state/models";
 
 const initialUIState: IAppState["ui"] = {
   title: null,
@@ -11,23 +12,22 @@ const initialUIState: IAppState["ui"] = {
     modal: null,
     confirmations: []
   },
-  fileInput: {
-    shouldOpen: false,
-    files: []
+  uploadManager: {
+    shouldOpenFI: false,
+    upload: null
   }
 };
 
 const initialDataState: IAppState["data"] = {
   network: {
-    actions: []
+    datasets: NetworkStatus.UNSENT,
+    alphabet: NetworkStatus.UNSENT
   },
   datasets: {},
   alphabet: {}
 };
 
-const getNi = (draft: IAppState["data"], reqID: string) =>
-  draft.network.actions.findIndex((act) => act.reqID === reqID);
-
+/* tslint:disable:switch-default */
 export default combineReducers<IAppState>({
   ui: (stateRaw: IAppState["ui"] = initialUIState, action: IActionMap) => {
     return produce(stateRaw, (draft) => {
@@ -42,10 +42,11 @@ export default combineReducers<IAppState>({
               `"${modal.type}" already visible while trying to show "${action.payload.modalType}"`
             );
           } else {
-            draft.modalManager.modal = action.payload.status ? { type: action.payload.modalType } : null;
+            draft.modalManager.modal = action.payload.status
+              ? { type: action.payload.modalType }
+              : null;
           }
           break;
-        // Confirmations
         case getType(actions.showConfirmation):
           draft.modalManager.confirmations.push({
             type: action.payload.confirmationType,
@@ -58,20 +59,61 @@ export default combineReducers<IAppState>({
           );
           break;
         // File Management
-        case getType(actions.setFileInput):
-          draft.fileInput.shouldOpen = action.payload.status;
+        case getType(actions.popupFileInput):
+          draft.uploadManager.shouldOpenFI = action.payload.status;
           break;
-        case getType(actions.selectFiles):
-          draft.fileInput.files = action.payload;
+        case getType(actions.selectFile):
+          if (action.payload === null) {
+            draft.uploadManager.upload = null;
+          } else {
+            draft.uploadManager.upload = {
+              file: action.payload,
+              status: NetworkStatus.UNSENT,
+              name: "",
+              errors: []
+            };
+          }
           break;
-        case getType(actions.submitUpload.request):
+        case getType(networkActions.submitUploadRequest):
+          if (draft.uploadManager.upload === null) {
+            console.warn("Trying to submit null upload");
+          } else {
+            draft.uploadManager.upload.status = NetworkStatus.REQUEST;
+          }
           break;
-        case getType(actions.submitUpload.success):
+        case getType(networkActions.submitUploadSuccess):
+          if (draft.uploadManager.upload === null) {
+            console.warn("Trying to submit null upload (success)");
+          } else {
+            draft.uploadManager.upload.status = NetworkStatus.SUCCESS;
+          }
           break;
-        case getType(actions.submitUpload.failure):
+        case getType(networkActions.submitUploadFailure):
+          if (draft.uploadManager.upload === null) {
+            console.warn("Trying to submit null upload (failure)");
+          } else {
+            draft.uploadManager.upload.status = NetworkStatus.FAILURE;
+            draft.uploadManager.upload.errors = action.payload.errors;
+          }
           break;
-        case getType(actions.cancelFile):
-          draft.fileInput.files[action.payload.i] = null;
+        case getType(actions.skipFile):
+          if (draft.uploadManager.upload === null) {
+            console.warn("Trying to skip null upload");
+          } else {
+            draft.uploadManager.upload.ignored = true;
+          }
+          break;
+        case getType(actions.modifyUpload):
+          if (draft.uploadManager.upload === null) {
+            console.warn("Trying to modify null upload");
+          } else {
+            draft.uploadManager.upload.status = NetworkStatus.UNSENT;
+            draft.uploadManager.upload = {
+              ...draft.uploadManager.upload,
+              ...action.payload.modifications
+            };
+            // draft.uploadManager.uploads[action.payload.i].errors = [];
+          }
           break;
       }
     });
@@ -79,34 +121,35 @@ export default combineReducers<IAppState>({
   data: (stateRaw: IAppState["data"] = initialDataState, action: IActionMap) => {
     return produce(stateRaw, (draft) => {
       switch (action.type) {
-        // Fetch Datasets ----------------
-        case getType(actions.fetchDatasets.request):
-          draft.network.actions.push({
-            type: action.payload.reqType,
-            reqID: action.payload.reqID,
-            status: action.payload.status
-          });
+        // ------------------------------------ Fetch Datasets ---------------------------------------
+        case getType(networkActions.fetchDatasetsRequest):
+          draft.network.datasets = NetworkStatus.REQUEST;
           break;
-        case getType(actions.fetchDatasets.success):
-          draft.network.actions[getNi(draft, action.payload.reqID)].status = action.payload.status;
+        case getType(networkActions.fetchDatasetsSuccess):
+          draft.network.datasets = NetworkStatus.SUCCESS;
+          draft.datasets = action.payload.reduce(
+            (mapped: IAppState["data"]["datasets"], item: IDataset) => {
+              mapped[item._id] = item;
 
-          draft.datasets = action.payload.data.reduce((mapped: IDatasetsState, item: IDataset) => {
-            mapped[item._id] = item;
-            return mapped;
-          }, {});
+              return mapped;
+            },
+            {}
+          );
           break;
-        case getType(actions.fetchDatasets.failure):
+        case getType(networkActions.fetchDatasetsFailure):
+          draft.network.datasets = NetworkStatus.FAILURE;
           console.error("Fetching datasets failed");
-          draft.network.actions[getNi(draft, action.payload.reqID)].status = action.payload.status;
           break;
-
-        // Fetch Alphabet -------------------
-        case getType(actions.fetchAlphabet.request):
+        // ------------------------------------ Fetch Alphabet ---------------------------------------
+        case getType(networkActions.fetchAlphabetRequest):
+          draft.network.alphabet = NetworkStatus.REQUEST;
           break;
-        case getType(actions.fetchAlphabet.success):
+        case getType(networkActions.fetchAlphabetSuccess):
+          draft.network.alphabet = NetworkStatus.SUCCESS;
           draft.alphabet = action.payload;
           break;
-        case getType(actions.fetchAlphabet.failure):
+        case getType(networkActions.fetchAlphabetFailure):
+          draft.network.alphabet = NetworkStatus.FAILURE;
           console.error("Fetching alphabet failed");
           break;
       }
@@ -120,7 +163,7 @@ export default combineReducers<IAppState>({
   //       //         ...state,
   //       //         data: {
   //       //           ...state.data,
-  //       //           [a.response.dataset._id]: a.response.dataset
+  //       //           [a.response.dataset.id]: a.response.dataset
   //       //         }
   //       //       };
   //       //     default:
@@ -141,12 +184,12 @@ export default combineReducers<IAppState>({
   // }
   // upload: (state: IUploadState = initialUploadState, action: IActionMap) => {
   //   switch (action.type) {
-  //     case getType(actions.setFileInput):
+  //     case getType(basicActions.popupFileInput):
   //       return {
   //         ...state,
-  //         fileInput: action.payload
+  //         uploadManager: action.payload
   //       };
-  //     case getType(actions.selectFiles):
+  //     case getType(basicActions.selectFile):
   //       if (state.files.length > 0 && action.payload.length > 0) {
   //         console.warn("Setting files while files already exist. Old state will be cleared");
   //       }
@@ -155,7 +198,7 @@ export default combineReducers<IAppState>({
   //         ...state,
   //         files: action.payload
   //       };
-  //     case getType(actions.cancelFile):
+  //     case getType(basicActions.skipFile):
   //       return {
   //         ...state,
   //         files: [
@@ -187,3 +230,4 @@ export default combineReducers<IAppState>({
   //   }
   // }
 });
+/* tslint:enable:switch-default */

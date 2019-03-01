@@ -4,7 +4,11 @@
     "downlevelIteration": true,
     "target": "es5",
     "module": "esnext",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": false,
     "jsx": "preserve",
     "noEmit": true,
@@ -24,6 +28,8 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "include": ["src"],
+  "include": [
+    "src"
+  ],
   "extends": "./tsconfig.paths.json"
 }

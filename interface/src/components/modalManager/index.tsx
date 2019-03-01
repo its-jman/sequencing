@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 import Modal from "src/components/modal";
 import { IAppState, IConfirmationParams, IModalManager } from "src/state/models";
-import { ModalType, ConfirmationType } from "src/state/actions";
+import { ModalType, ConfirmationType } from "src/state/constants";
 
 import UploadModal from "./modals/uploadModal";
 import ClearUpload from "./confirmations/clearUpload";

@@ -3,14 +3,14 @@ import { FiUpload } from "react-icons/fi";
 import { connect } from "react-redux";
 import { Route, RouteComponentProps, Switch, withRouter } from "react-router-dom";
 
-import { actions } from "src/state/actions";
-import { ConfirmationType, ModalType } from "src/state/actions";
-import { IAppState, IDispatchProps } from "src/state/models";
+import { IAppState, IDispatchProps, NetworkStatus } from "src/state/models";
 import ControlledFileInput from "src/components/controlledFileInput";
 
 import styles from "./_content.module.scss";
 import DatasetsTable from "./datasetsTable";
 import DatasetAnalysis from "./datasetAnalysis";
+import { actions } from "src/state/actions";
+import { ConfirmationType, ModalType } from "src/state/constants";
 
 type IContentHeaderProps = {
   canResumeUpload: boolean;
@@ -26,8 +26,8 @@ class ContentHeaderRaw extends React.PureComponent<IContentHeaderProps & IDispat
       };
 
       const reject = () => {
-        dispatch(actions.selectFiles([]));
-        dispatch(actions.setFileInput({ status: true }));
+        dispatch(actions.selectFile(null));
+        dispatch(actions.popupFileInput({ status: true }));
       };
 
       dispatch(
@@ -37,7 +37,7 @@ class ContentHeaderRaw extends React.PureComponent<IContentHeaderProps & IDispat
         })
       );
     } else {
-      dispatch(actions.setFileInput({ status: true }));
+      dispatch(actions.popupFileInput({ status: true }));
     }
   };
 
@@ -56,7 +56,10 @@ class ContentHeaderRaw extends React.PureComponent<IContentHeaderProps & IDispat
 
 const ContentHeader = connect(
   (state: IAppState) => ({
-    canResumeUpload: state.ui.fileInput.files.length > 0
+    canResumeUpload:
+      state.ui.uploadManager.upload !== null &&
+      // Filter by if there are uploads that aren't successful
+      state.ui.uploadManager.upload.status !== NetworkStatus.SUCCESS
   }),
   (dispatch) => ({ dispatch })
 )(ContentHeaderRaw);

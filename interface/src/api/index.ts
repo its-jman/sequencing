@@ -1,17 +1,19 @@
+import { IUpload } from "src/state/models";
+
 const ENDPOINT = "http://localhost:5000";
 
 export const fetchDatasets = () => fetch(`${ENDPOINT}/datasets`).then((resp) => resp.json());
-export const deleteDataset = ({ _id }: { _id: string }) =>
-  fetch(`${ENDPOINT}/datasets/${_id}`, { method: "DELETE" });
+export const deleteDataset = ({ id }: { id: string }) =>
+  fetch(`${ENDPOINT}/datasets/${id}`, { method: "DELETE" });
 
 export const fetchAlphabet = () => fetch(`${ENDPOINT}/alphabet`).then((resp) => resp.json());
 export const fetchSequences = (payload: { id: string }) =>
   fetch(`${ENDPOINT}/datasets/${payload.id}/sequences`).then((resp) => resp.json());
 
-export const submitUpload = ({ name, file }: { name: string; file: File }) => {
+export const submitUpload = (upload: IUpload) => {
   const form = new FormData();
-  form.append("name", name);
-  form.append("file", file);
+  form.append("name", upload.name);
+  form.append("file", upload.file);
 
   return fetch(`${ENDPOINT}/datasets`, {
     method: "POST",

@@ -6,11 +6,12 @@ import { select as d3Select } from "d3-selection";
 import { axisBottom, axisLeft } from "d3-axis";
 
 import { IAlphabetState, IAppState, IDataset, IDispatchProps } from "src/state/models";
-import { actions } from "src/state/actions";
+import { basicActions } from "src/state/actions/actions";
 import { ALPHABET_COLORS } from "src/layouts/page/constants";
-import { isEmptyObject } from "src/utils";
+import { isEmpty } from "src/utils";
 
 import styles from "./_distribution.module.scss";
+import { actions } from "src/state/actions";
 
 type IData = {
   letter: string;
@@ -22,7 +23,7 @@ type IData = {
 
 type IChartProps = {
   alphabet: IAlphabetState;
-  data: Array<IData>;
+  data: IData[];
 };
 
 class DistributionTip extends PureComponent<{ data: IData }> {
@@ -59,7 +60,7 @@ class Chart extends PureComponent<IChartProps> {
   }
 
   componentDidUpdate() {
-    console.log("UPDATING");
+    console.warn("UPDATING DISTRIBUTION GRAPH");
     this._createChart();
   }
 
@@ -134,7 +135,7 @@ class Chart extends PureComponent<IChartProps> {
       })
       .attr("fill", (d) => ALPHABET_COLORS[d.letter]);
     // .on("mouseover", tip.show)
-    // .on("mouseout", tip.hide);
+    // .on("mouseout", tip.hideModal);
   };
 
   render() {
@@ -150,7 +151,7 @@ class Chart extends PureComponent<IChartProps> {
 }
 
 const calculateData = (alphabet: IAlphabetState, dataset: IDataset) => {
-  const out: Array<IData> = [];
+  const out: IData[] = [];
   // const out: Array<{ [letter: string]: number }> = [];
   // TODO: Convert to set
   for (const letter of Object.keys(alphabet)) {
@@ -192,7 +193,7 @@ class Distribution extends PureComponent<IDistributionProps> {
 
   render() {
     const { dataset, alphabet } = this.props;
-    if (isEmptyObject(dataset) || isEmptyObject(alphabet)) {
+    if (isEmpty(dataset) || isEmpty(alphabet)) {
       return null;
     }
 

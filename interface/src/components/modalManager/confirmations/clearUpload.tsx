@@ -3,13 +3,13 @@ import { connect } from "react-redux";
 
 import styles from "./_ClearUpload.module.scss";
 import { IConfirmationParams, IDispatchProps } from "src/state/models";
-import { actions } from "src/state/actions";
-import { ConfirmationType } from "src/state/actions";
+import { basicActions } from "src/state/actions/actions";
+import { ConfirmationType } from "src/state/constants";
 
 class ClearUpload extends PureComponent<IConfirmationParams & IDispatchProps> {
   _onClick = (fn: () => void) => () => {
     this.props.dispatch(
-      actions.clearConfirmation({ confirmationType: ConfirmationType.RESUME_UPLOAD })
+      basicActions.clearConfirmation({ confirmationType: ConfirmationType.RESUME_UPLOAD })
     );
     fn();
   };

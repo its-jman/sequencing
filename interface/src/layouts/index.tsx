@@ -3,6 +3,7 @@ import "src/styles/main.scss";
 
 import React from "react";
 import Helmet from "react-helmet";
+import { connect } from "react-redux";
 import {
   RouteProps,
   Switch,
@@ -13,19 +14,20 @@ import {
 } from "react-router-dom";
 
 import { IAppState, IDispatchProps } from "src/state/models";
-import { actions } from "src/state/actions";
 import ModalManager from "src/components/modalManager";
 
 import App from "./page";
-import { connect } from "react-redux";
+import { actions } from "src/state/actions";
 
 class LayoutHeaderRaw extends React.PureComponent<{ title: IAppState["ui"]["title"] }> {
   render() {
     const { title } = this.props;
     return (
-      <Helmet>
-        <title>{title ? `${title} | sequencing` : "sequencing"}</title>
-      </Helmet>
+      <>
+        <Helmet>
+          <title>{title ? `${title} | sequencing` : "sequencing"}</title>
+        </Helmet>
+      </>
     );
   }
 }
@@ -35,7 +37,7 @@ const LayoutHeader = connect((state: IAppState) => ({
 }))(LayoutHeaderRaw);
 
 class LayoutRaw extends React.PureComponent<IDispatchProps & RouteComponentProps> {
-  static routes: Array<RouteProps> = [
+  static routes: RouteProps[] = [
     {
       path: "/v2",
       component: App
@@ -68,7 +70,7 @@ class LayoutRaw extends React.PureComponent<IDispatchProps & RouteComponentProps
 const Layout = withRouter(
   connect(
     () => ({}),
-    (dispatch) => ({ dispatch })
+    (dispatch: any) => ({ dispatch })
   )(LayoutRaw)
 );
 

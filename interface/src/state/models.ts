@@ -1,7 +1,7 @@
 import { AnyAction } from "redux";
 import { ThunkAction, ThunkDispatch } from "redux-thunk";
 
-import { ConfirmationType, ModalType } from "src/state/actions";
+import { ConfirmationType, ModalType } from "src/state/constants";
 
 export enum NetworkStatus {
   UNSENT = "UNSENT",
@@ -9,8 +9,6 @@ export enum NetworkStatus {
   SUCCESS = "SUCCESS",
   FAILURE = "FAILURE"
 }
-
-export type IThunkAction<TState> = ThunkAction<void, TState, {}, AnyAction>;
 
 export interface ISequence {
   description: string;
@@ -37,7 +35,7 @@ export interface IDataset {
   sequences?: {
     page: number;
     sort_by: string;
-    items: Array<ISequence>;
+    items: ISequence[];
   };
 }
 
@@ -50,27 +48,31 @@ export interface IConfirmationParams {
   resolve: () => void;
   reject: () => void;
 }
+export interface IUpload {
+  file: File;
+  status: NetworkStatus;
+  name: string;
+  errors: string[];
+  ignored?: boolean;
+}
 export interface IUIState {
   title: string | null;
   modalManager: IModalManager;
-  fileInput: {
-    shouldOpen: boolean;
-    files: Array<File | null>;
+  uploadManager: {
+    shouldOpenFI: boolean;
+    upload: IUpload | null;
   };
 }
 
-// Data state
-export interface INetworkAction {
-  type: string;
-  reqID: string;
-  status: NetworkStatus;
-}
 export interface INetworkState {
-  actions: Array<INetworkAction>;
+  datasets: NetworkStatus;
+  alphabet: NetworkStatus;
 }
+
 export interface IDatasetsState {
-  [dataset_id: string]: IDataset;
+  [id: string]: IDataset;
 }
+
 export interface IAlphabetState {
   [letter: string]: { abr: string; name: string; freq: number };
 }
