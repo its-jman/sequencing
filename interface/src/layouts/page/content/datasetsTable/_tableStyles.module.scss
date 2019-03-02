@@ -7,7 +7,7 @@
 }
 
 .header {
-  background-color: $bg-2;
+  background-color: $grey-2;
 
   & th {
     height: 45px;
@@ -24,13 +24,13 @@
 }
 
 .row {
-  border-bottom: 1px solid $bg-3;
+  border-bottom: 1px solid $grey-3;
   &:last-child {
     border-bottom: 0;
   }
 
   &:hover {
-    background-color: $bg-1;
+    background-color: $grey-1;
   }
 }
 
@@ -112,7 +112,7 @@
 .footer {
   width: 100%;
   padding: 12px;
-  background-color: $bg-2;
+  background-color: $grey-2;
 }
 
 .pagination {
@@ -130,16 +130,16 @@
   height: $size;
   width: $size;
 
-  background-color: $bg-0;
+  background-color: $grey-0;
 
-  border-right: 1px solid $gray-3;
+  border-right: 1px solid $grey-3;
   &:last-child {
     border-right: 0;
   }
 
   &:hover {
     cursor: pointer;
-    background-color: $bg-4;
+    background-color: $grey-4;
     a {
     }
   }

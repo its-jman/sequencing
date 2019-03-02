@@ -9,6 +9,7 @@ import { IAppState, IDataset, IDispatchProps } from "src/state/models";
 import containerStyles from "../_content.module.scss";
 import Distribution from "../distribution";
 import styles from "./_analysis.module.scss";
+import Sequences from "src/layouts/page/content/datasetAnalysis/sequences";
 
 type IDatasetAnalysisProps = {
   dataset: IDataset | null;
@@ -40,6 +41,7 @@ class DatasetAnalysis extends PureComponent<IDatasetAnalysisProps & IDispatchPro
 
         <div className={styles.content}>
           <Distribution dataset={dataset} />
+          <Sequences id={dataset._id} />
         </div>
       </div>
     );

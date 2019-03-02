@@ -1,6 +1,6 @@
 @import "../../../styles/globals/all";
 
-$iconColor: darken($bg-5, 30%);
+$iconColor: darken($grey-5, 30%);
 $borderRadius: 8px;
 
 .positioningContainer {
@@ -17,7 +17,7 @@ $borderRadius: 8px;
   left: 50%;
   transform: translate(-50%, 0);
 
-  background-color: $bg-0;
+  background-color: $grey-0;
   border-radius: $borderRadius $borderRadius 0 0;
   padding: 12px;
   display: flex;
@@ -33,7 +33,7 @@ $borderRadius: 8px;
   overflow: hidden;
 }
 
-$headerBg: $bg-2;
+$headerBg: $grey-2;
 .header {
   display: flex;
   flex-direction: column;
@@ -71,12 +71,12 @@ $headerBg: $bg-2;
   justify-content: flex-start;
   min-height: 240px;
   padding: 18px;
-  background-color: $bg-0;
+  background-color: $grey-0;
 }
 
 .footerContainer {
   padding: 0 12px 12px 12px;
-  background-color: $gray-2;
+  background-color: $grey-2;
 
   .footer {
     display: flex;
@@ -134,7 +134,7 @@ $inputWidth: 325px;
     }
 
     &:focus {
-      background-color: $bg-0;
+      background-color: $grey-0;
     }
   }
 
@@ -219,10 +219,10 @@ $inputWidth: 325px;
 
 .secondaryButton {
   background-color: inherit;
-  color: $gray-9;
+  color: $grey-9;
 
   &:active {
-    box-shadow: inset 0 2px 8px 0 $gray-5;
+    box-shadow: inset 0 2px 8px 0 $grey-5;
     //color: darken($gray-9, .2);
   }
 }

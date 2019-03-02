@@ -10,12 +10,14 @@ $borderRadius: 8px;
 }
 
 .body {
-  background-color: $bg-0;
+  // TODO: HERE
+  //background-color: $bg-0;
+  background-color: $grey-0;
   padding: 16px;
 }
 
 .footer {
-  background-color: $bg-3;
+  background-color: $grey-3;
   padding: 8px;
   display: flex;
   justify-content: flex-end;
@@ -34,7 +36,7 @@ $borderRadius: 8px;
   //background-color: $red-1;
   background-color: inherit;
   //color: $red-7;
-  color: $gray-7;
+  color: $grey-7;
   //border: 1.5px solid $red-5;
 }
 

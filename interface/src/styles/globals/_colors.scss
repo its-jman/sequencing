@@ -32,27 +32,53 @@ $theme: map-get($themes, neutral);
 
 $pc-1: #9aa9f1;
 
-$bg-0: #fff;
-$bg-1: map_get($theme, bg-1);
-$bg-2: map_get($theme, bg-2);
-$bg-3: map_get($theme, bg-3);
-$bg-4: map_get($theme, bg-4);
-$bg-5: map_get($theme, bg-5);
+//$bg-0: #fff;
+//$bg-1: map_get($theme, bg-1);
+//$bg-2: map_get($theme, bg-2);
+//$bg-3: map_get($theme, bg-3);
+//$bg-4: map_get($theme, bg-4);
+//$bg-5: map_get($theme, bg-5);
 
 $text-1: map_get($theme, text-1);
 $text-2: map_get($theme, text-2);
 
-$gray-0: #f8f9fa;
-$gray-1: #f1f3f5;
-$gray-2: #e9ecee;
-$gray-3: #dee2e6;
-$gray-4: #cfd4da;
-$gray-5: #adb5bd;
-$gray-6: #868e96;
-$gray-7: #495057;
-$gray-8: #343a40;
-$gray-9: #21252a;
+// Grey's - Color group 1
+//$grey-0: hsl(210, 17%, 98%);
+//$grey-1: hsl(210, 17%, 95%);
+//$grey-2: hsl(204, 13%, 92%);
+//$grey-3: hsl(210, 14%, 89%);
+//$grey-4: hsl(213, 13%, 83%);
+//$grey-5: hsl(210, 11%, 71%);
+//$grey-6: hsl(210, 07%, 56%);
+//$grey-7: hsl(210, 09%, 31%);
+//$grey-8: hsl(210, 10%, 23%);
+//$grey-9: hsl(213, 12%, 15%);
 
+// Greys - Color group 1 (de-saturated)
+//$grey-0: hsl(210, 07%, 98%);
+//$grey-1: hsl(210, 07%, 95%);
+//$grey-2: hsl(204, 03%, 92%);
+//$grey-3: hsl(210, 04%, 89%);
+//$grey-4: hsl(213, 03%, 83%);
+//$grey-5: hsl(210, 01%, 71%);
+//$grey-6: hsl(210, 00%, 56%);
+//$grey-7: hsl(210, 04%, 31%);
+//$grey-8: hsl(210, 06%, 23%);
+//$grey-9: hsl(213, 08%, 15%);
+
+// Greys - Color group 1 (pure grey)
+$grey-0: hsl(0, 0%, 98%);
+$grey-1: hsl(0, 0%, 95%);
+$grey-2: hsl(0, 0%, 92%);
+$grey-3: hsl(0, 0%, 89%);
+$grey-4: hsl(0, 0%, 83%);
+$grey-5: hsl(0, 0%, 71%);
+$grey-6: hsl(0, 0%, 56%);
+$grey-7: hsl(0, 0%, 31%);
+$grey-8: hsl(0, 0%, 23%);
+$grey-9: hsl(0, 0%, 15%);
+
+// Greys - Color group 2 ------------------
 //$gry2-1: #F8F9FA;
 //$gry2-2: #E1E7EC;
 //$gry2-3: #CFD6DE;
