@@ -29,9 +29,7 @@ class DatasetsView(MethodView):
         }
         """
         engine = data.engine.get_engine()
-        return jsonify(
-            list(map(lambda x: data.utils.convert_model(x), engine.get_datasets()))
-        )
+        return jsonify(engine.get_datasets())
 
     @staticmethod
     def post():
@@ -63,9 +61,7 @@ class DatasetsView(MethodView):
                 user_filename=input_file.filename,
                 path=tmp_path,
             )
-            return jsonify(
-                {"errors": upload_errors, "dataset": data.utils.convert_model(dataset)}
-            )
+            return jsonify({"errors": upload_errors, "dataset": dataset})
         finally:
             os.remove(tmp_path)
 
@@ -134,9 +130,7 @@ def clear():
         if dataset_id is not None:
             engine.delete_dataset(dataset_id)
 
-    datasets = engine.get_datasets()
-    out = json_util.loads(json_util.dumps(datasets))
-    return jsonify(out)
+    return jsonify(engine.get_datasets())
 
 
 @bp.route("/create")

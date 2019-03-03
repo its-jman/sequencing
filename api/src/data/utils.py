@@ -10,6 +10,8 @@ class MongoEncoder(JSONEncoder):
     def default(self, obj):
         if isinstance(obj, bson.ObjectId):
             return str(obj)
+        elif issubclass(obj.__class__, MongoModel):
+            return convert_model(obj)
         return super().default(obj)
 
 
