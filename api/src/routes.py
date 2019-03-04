@@ -99,8 +99,8 @@ def dataset_sequences_view(dataset_id):
     page_size = request.args.get("page_size", 100, int)
 
     engine = data.engine.get_engine()
-    records = engine.get_dataset_records(dataset_id, page, page_size)
-    return jsonify(records)
+    response = engine.get_dataset_records(dataset_id, page, page_size)
+    return jsonify(response)
 
 
 bp.add_url_rule(

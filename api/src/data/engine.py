@@ -46,7 +46,8 @@ class DataEngine:
 
         offset = page * page_size
         cursor = records_collection.find().skip(offset).limit(page_size)
-        return list(cursor)
+        items = list(cursor)
+        return {"page": page, "page_size": page_size, "items": items}
 
     def delete_dataset(self, dataset_id):
         dataset = self._datasets.find_one_and_delete({"_id": dataset_id})
@@ -57,7 +58,9 @@ class DataEngine:
     def _create_record(raw_record):
         seq = str(raw_record.seq)
 
-        record = Record(description=raw_record.description, sequence=seq)
+        record = Record(
+            id=raw_record.id, description=raw_record.description, sequence=seq
+        )
         if not utils.validate_record(record):
             record.discarded = True
         else:
