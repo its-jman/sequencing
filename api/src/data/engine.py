@@ -45,7 +45,9 @@ class DataEngine:
         records_collection = self.db.get_collection(records_cname)
 
         offset = page * page_size
-        cursor = records_collection.find().skip(offset).limit(page_size).sort("id", 1)
+        cursor = (
+            records_collection.find().skip(offset).limit(page_size)
+        )  # .sort("id", 1)
         items = list(cursor)
         return {"page": page, "page_size": page_size, "items": items}
 
