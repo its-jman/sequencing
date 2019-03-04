@@ -79,7 +79,9 @@ const useRenderPagination = (props: ISequencesProps) => {
     let isLoading = false;
     for (let i = begPage; i <= endPage; i++) {
       if (network[i] !== NetworkStatus.SUCCESS) {
-        dispatch(actions.fetchSequences({ id, page: i }));
+        if (network[i] !== NetworkStatus.REQUEST) {
+          dispatch(actions.fetchSequences({ id, page: i }));
+        }
         if (!isLoading) isLoading = true;
       }
     }
