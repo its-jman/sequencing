@@ -102,8 +102,8 @@ const useRenderPagination = (props: ISequencesProps) => {
         const endPageLocalI = i === endPage ? endLocalI : SEQUENCES_PAGE_SIZE;
         sequences.push(...page.slice(begPageLocalI, endPageLocalI + 1));
       }
-      setSequences(sequences);
     }
+    setSequences(sequences);
   }, [id, network, page]);
 
   return {
