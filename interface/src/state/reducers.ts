@@ -21,10 +21,12 @@ const initialUIState: IAppState["ui"] = {
 const initialDataState: IAppState["data"] = {
   network: {
     datasets: NetworkStatus.UNSENT,
-    alphabet: NetworkStatus.UNSENT
+    alphabet: NetworkStatus.UNSENT,
+    sequences: {}
   },
   datasets: {},
-  alphabet: {}
+  alphabet: {},
+  sequences: {}
 };
 
 /* tslint:disable:switch-default */
@@ -140,6 +142,9 @@ export default combineReducers<IAppState>({
           draft.network.datasets = NetworkStatus.FAILURE;
           console.error("Fetching datasets failed");
           break;
+        case getType(networkActions.submitUploadSuccess):
+          draft.datasets[action.payload.dataset._id] = action.payload.dataset;
+          break;
         // ------------------------------------ Fetch Alphabet ---------------------------------------
         case getType(networkActions.fetchAlphabetRequest):
           draft.network.alphabet = NetworkStatus.REQUEST;
@@ -151,6 +156,41 @@ export default combineReducers<IAppState>({
         case getType(networkActions.fetchAlphabetFailure):
           draft.network.alphabet = NetworkStatus.FAILURE;
           console.error("Fetching alphabet failed");
+          break;
+        // ------------------------------------ Fetch Alphabet ---------------------------------------
+        case getType(networkActions.fetchSequencesRequest):
+          if (!(action.payload.id in draft.network.sequences)) {
+            draft.network.sequences[action.payload.id] = {};
+          }
+          draft.network.sequences[action.payload.id][action.payload.page] = NetworkStatus.REQUEST;
+          break;
+        case getType(networkActions.fetchSequencesSuccess):
+          if (
+            !(action.payload.id in draft.network.sequences) ||
+            draft.network.sequences[action.payload.id][action.payload.page] !==
+              NetworkStatus.REQUEST
+          ) {
+            console.error("Trying to set (success) for request that is not sent.");
+          } else {
+            draft.network.sequences[action.payload.id][action.payload.page] = NetworkStatus.SUCCESS;
+
+            if (!(action.payload.id in draft.sequences)) {
+              draft.sequences[action.payload.id] = {};
+            }
+            draft.sequences[action.payload.id][action.payload.page] = action.payload.sequences;
+          }
+          break;
+        case getType(networkActions.fetchSequencesFailure):
+          if (
+            !(action.payload.id in draft.network.sequences) ||
+            draft.network.sequences[action.payload.id][action.payload.page] !==
+              NetworkStatus.REQUEST
+          ) {
+            console.error("Trying to set (failure) for request that is not sent. ");
+          } else {
+            draft.network.sequences[action.payload.id][action.payload.page] = NetworkStatus.FAILURE;
+            console.warn("Fetch sequences failure: " + action.payload.error);
+          }
           break;
       }
     });

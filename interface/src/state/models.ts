@@ -10,7 +10,15 @@ export enum NetworkStatus {
   FAILURE = "FAILURE"
 }
 
+export const SEQUENCES_PAGE_SIZE = 40;
+
+export interface IPaginatedSequences {
+  [page: number]: ISequence[];
+}
+
 export interface ISequence {
+  _id: string;
+  id: string;
   description: string;
   sequence: string;
   discarded?: boolean;
@@ -67,6 +75,11 @@ export interface IUIState {
 export interface INetworkState {
   datasets: NetworkStatus;
   alphabet: NetworkStatus;
+  sequences: {
+    [id: string]: {
+      [page: number]: NetworkStatus;
+    };
+  };
 }
 
 export interface IDatasetsState {
@@ -77,10 +90,15 @@ export interface IAlphabetState {
   [letter: string]: { abr: string; name: string; freq: number };
 }
 
+export interface ISequencesState {
+  [id: string]: IPaginatedSequences;
+}
+
 export interface IDataState {
   network: INetworkState;
   datasets: IDatasetsState;
   alphabet: IAlphabetState;
+  sequences: ISequencesState;
 }
 
 // App State

@@ -4,7 +4,8 @@ import {
   IDataset,
   ISequence,
   IUpload,
-  NetworkStatus
+  NetworkStatus,
+  SEQUENCES_PAGE_SIZE
 } from "src/state/models";
 import * as api from "src/api";
 import { isEmpty } from "src/utils";
@@ -38,15 +39,38 @@ const deleteDataset = (id: string): IThunkAction => (dispatch) => {
     );
 };
 
-const fetchSequences = (payload: { id: string; page: number }): IThunkAction => (dispatch) => {
+const fetchSequences = (payload: { id: string; page: number }): IThunkAction => (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+  const network = state.data.network.sequences[payload.id];
+  if (
+    network &&
+    (network[payload.page] === NetworkStatus.SUCCESS ||
+      network[payload.page] === NetworkStatus.REQUEST)
+  ) {
+    console.warn("Trying to fetch sequences that already exist");
+    return;
+  }
+
   dispatch(na.fetchSequencesRequest(payload));
-  api
-    .fetchSequences(payload)
-    .then(
-      (response: { items: ISequence[] }) =>
-        dispatch(na.fetchSequencesSuccess({ ...payload, sequences: response.items })),
-      (error) => dispatch(na.fetchSequencesFailure({ ...payload, error }))
-    );
+  api.fetchSequences(payload).then(
+    (response: { page: number; page_size: number; items: ISequence[] }) => {
+      const dataset = state.data.datasets[payload.id];
+      const expected = Math.min(
+        SEQUENCES_PAGE_SIZE,
+        dataset.analysis.record_count - payload.page * SEQUENCES_PAGE_SIZE
+      );
+
+      if (response.items.length !== expected) {
+        console.warn("Fetch sequences page size does not match the expected size");
+      }
+
+      dispatch(na.fetchSequencesSuccess({ ...payload, sequences: response.items }));
+    },
+    (error) => dispatch(na.fetchSequencesFailure({ ...payload, error }))
+  );
 };
 
 const fetchAlphabet = (): IThunkAction => (dispatch, getState) => {
