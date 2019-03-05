@@ -42,7 +42,7 @@ $pc-1: #9aa9f1;
 $text-1: map_get($theme, text-1);
 $text-2: map_get($theme, text-2);
 
-// Grey's - Color group 1
+// Grey's - Color group 1 (Too blue)
 //$grey-0: hsl(210, 17%, 98%);
 //$grey-1: hsl(210, 17%, 95%);
 //$grey-2: hsl(204, 13%, 92%);
@@ -66,7 +66,28 @@ $text-2: map_get($theme, text-2);
 //$grey-8: hsl(210, 06%, 23%);
 //$grey-9: hsl(213, 08%, 15%);
 
-// Greys - Color group 1 (pure grey)
+// Greys - Color group 2 ------------------
+//$gry2-1: #F8F9FA;
+//$gry2-2: #E1E7EC;
+//$gry2-3: #CFD6DE;
+//$gry2-4: #B8C4CE;
+//$gry2-5: #8895A7;
+//$gry2-6: #5F6B7A;
+//$gry2-7: #212934;
+
+// Greys - Color group 4 (too blue)
+//$grey-0: #102A43;
+//$grey-1: #243BB3;
+//$grey-2: #334E68;
+//$grey-3: #486581;
+//$grey-4: #486581;
+//$grey-5: #627D98;
+//$grey-6: #829AB1;
+//$grey-7: #9FB3C8;
+//$grey-8: #BCCCDC;
+//$grey-9: #D9E2EC;
+
+// Greys - Color group 3 (pure grey)
 $grey-0: hsl(0, 0%, 98%);
 $grey-1: hsl(0, 0%, 95%);
 $grey-2: hsl(0, 0%, 92%);
@@ -78,22 +99,35 @@ $grey-7: hsl(0, 0%, 31%);
 $grey-8: hsl(0, 0%, 23%);
 $grey-9: hsl(0, 0%, 15%);
 
-// Greys - Color group 2 ------------------
-//$gry2-1: #F8F9FA;
-//$gry2-2: #E1E7EC;
-//$gry2-3: #CFD6DE;
-//$gry2-4: #B8C4CE;
-//$gry2-5: #8895A7;
-//$gry2-6: #5F6B7A;
-//$gry2-7: #212934;
+// Unnecessary - Duplicated teal
+//$cyan-0: #044E54;
+//$cyan-1: #0A6C74;
+//$cyan-2: #0E7C89;
+//$cyan-3: #14919B;
+//$cyan-4: #2CB1BC;
+//$cyan-5: #38BEC9;
+//$cyan-6: #54D1DB;
+//$cyan-7: #87EAF2;
+//$cyan-8: #BEF8FD;
+//$cyan-9: #E0FCFF;
 
-$blu-1: #eff8ff;
-$blu-2: #aad4f5;
-$blu-3: #63a2d8;
-$blu-4: #3183c8;
-$blu-5: #2368a2;
-$blu-6: #1a4971;
-$blu-7: #12283a;
+// Unnecessary - Duplicated blue
+//$indigo-0: #19216C;
+//$indigo-1: #2D3A8C;
+//$indigo-2: #35469C;
+//$indigo-3: #4055A8;
+//$indigo-4: #4C63B6;
+//$indigo-5: #647ACB;
+//$indigo-6: #7893DB;
+//$indigo-7: #98AEEB;
+
+$blue-1: #eff8ff;
+$blue-2: #aad4f5;
+$blue-3: #63a2d8;
+$blue-4: #3183c8;
+$blue-5: #2368a2;
+$blue-6: #1a4971;
+$blue-7: #12283a;
 
 $teal-1: #e7fffe;
 $teal-2: #a8eeeb;
@@ -119,12 +153,12 @@ $ylw-5: #caa53d;
 $ylw-6: #8c6d1f;
 $ylw-7: #5c4813;
 
-$grn-1: #e3fcec;
-$grn-2: #a8eec1;
-$grn-3: #74d99f;
-$grn-4: #38c172;
-$grn-5: #249d57;
-$grn-6: #187741;
-$grn-7: #155239;
+$green-1: #e3fcec;
+$green-2: #a8eec1;
+$green-3: #74d99f;
+$green-4: #38c172;
+$green-5: #249d57;
+$green-6: #187741;
+$green-7: #155239;
 
 $link-color: transparentize($text-1, $text-transparency);
