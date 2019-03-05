@@ -69,7 +69,7 @@
 
   .datasetColDetails {
     display: inline-block;
-    line-height: 1.15;
+    line-height: 1.35;
 
     &:hover {
       cursor: pointer;
@@ -98,6 +98,23 @@
 }
 
 .infoCol {
+  .recordCount {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    .recordCountIcon {
+      margin-right: 6px;
+      color: $grey-5;
+    }
+    .recordCountNumber {
+      font-weight: bold;
+      margin-right: 4px;
+    }
+    .recordCountText {
+      font-weight: lighter;
+    }
+  }
 }
 
 .queryCol {

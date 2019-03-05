@@ -23,7 +23,7 @@ type IData = {
 
 type IChartProps = {
   alphabet: IAlphabetState;
-  data: IData[];
+  dataset: IDataset;
 };
 
 class DistributionTip extends PureComponent<{ data: IData }> {
@@ -52,6 +52,7 @@ class Chart extends PureComponent<IChartProps> {
     left: 0 + Chart.margin,
     right: Chart.margin + Chart.width
   };
+  _created = false;
 
   node: SVGSVGElement | null = null;
 
@@ -65,8 +66,16 @@ class Chart extends PureComponent<IChartProps> {
   }
 
   _createChart = () => {
+    const { alphabet, dataset } = this.props;
+
     if (this.node === null) throw new Error("Failed creating svg.");
-    const { alphabet, data } = this.props;
+    if (this._created || isEmpty(alphabet) || isEmpty(dataset)) {
+      console.warn("Not charting graph yet... Alphabet/Data seems to be empty. ");
+      return;
+    }
+
+    const data = calculateData(alphabet, dataset);
+    this._created = true;
     const fullAlphabet = new Set<string>([...Object.keys(alphabet), ".", "*"]);
 
     const dataMax = Math.max(...data.map((d) => d.percentDiff));
@@ -186,19 +195,14 @@ type IDistributionProps = {
 } & IDispatchProps;
 
 class Distribution extends PureComponent<IDistributionProps> {
-  constructor(props: IDistributionProps) {
-    super(props);
+  componentWillMount() {
     this.props.dispatch(actions.fetchAlphabet());
   }
 
   render() {
     const { dataset, alphabet } = this.props;
-    if (isEmpty(dataset) || isEmpty(alphabet)) {
-      return null;
-    }
 
-    const out = calculateData(alphabet, dataset);
-    return <Chart alphabet={alphabet} data={out} />;
+    return <Chart alphabet={alphabet} dataset={dataset} />;
   }
 }
 

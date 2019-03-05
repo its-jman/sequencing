@@ -51,6 +51,7 @@ class LayoutRaw extends React.PureComponent<IDispatchProps & RouteComponentProps
 
   componentDidMount() {
     this.props.dispatch(actions.fetchDatasets());
+    this.props.dispatch(actions.fetchAlphabet());
   }
 
   render() {

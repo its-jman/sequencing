@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
-import { FiArrowUp, FiBarChart2, FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { FiArrowUp, FiBarChart2, FiChevronLeft, FiChevronRight, FiDisc } from "react-icons/fi";
 
 import containerStyles from "../_content.module.scss";
 import styles from "./_tableStyles.module.scss";
@@ -121,8 +121,12 @@ class TableItem extends React.PureComponent<{ dataset: IDataset }> {
 
         <td className={styles.col}>
           <div className={styles.infoCol}>
-            <div>{`${dataset.analysis.record_count} records`}</div>
-            <div>{`${dataset.analysis.discarded_count} discarded`}</div>
+            <div className={styles.recordCount}>
+              <FiDisc className={styles.recordCountIcon} size={24} />
+              <span className={styles.recordCountNumber}>{dataset.analysis.record_count}</span>
+              <span className={styles.recordCountText}>{"records"}</span>
+            </div>
+            {/*<div>{`${dataset.analysis.discarded_count} discarded`}</div>*/}
           </div>
         </td>
 
