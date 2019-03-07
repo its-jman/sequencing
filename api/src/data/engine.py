@@ -168,12 +168,12 @@ class DataEngine:
                     bw.insert(
                         pymongo.UpdateOne(
                             {"_id": record["_id"]},
-                            {"$set": {f"queries.{query['_id']}": matches}},
+                            {"$set": {f"queries.{query['_id']}": {"matches": matches}}},
                         )
                     )
         self._datasets.update_one(
             {"_id": dataset["_id"]},
-            {"$set": {f"queries.{query['_id']}": total_matches}},
+            {"$set": {f"queries.{query['_id']}": {"total_matches": total_matches}}},
         )
 
         return total_matches
