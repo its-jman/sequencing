@@ -1,4 +1,4 @@
-from pymodm import MongoModel, EmbeddedMongoModel, EmbeddedDocumentField, fields
+from pymodm import MongoModel, EmbeddedMongoModel, fields
 
 
 class DatasetAnalysis(EmbeddedMongoModel):
@@ -14,7 +14,8 @@ class Dataset(MongoModel):
     user_filename = fields.CharField(required=True)
     upload_time = fields.DateTimeField(required=True)
 
-    analysis = EmbeddedDocumentField(DatasetAnalysis, required=True)
+    analysis = fields.EmbeddedDocumentField(DatasetAnalysis, required=True)
+    queries = fields.DictField(blank=True)
 
 
 class RecordAnalysis(EmbeddedMongoModel):
@@ -28,4 +29,10 @@ class Record(MongoModel):
     sequence = fields.CharField(required=True)
     discarded = fields.BooleanField(required=False)
 
-    analysis = EmbeddedDocumentField(RecordAnalysis)
+    analysis = fields.EmbeddedDocumentField(RecordAnalysis)
+    queries = fields.DictField(blank=True)
+
+
+class Query(MongoModel):
+    raw_pattern = fields.CharField(required=True)
+    pattern = fields.CharField(required=True)

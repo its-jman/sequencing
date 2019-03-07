@@ -36,10 +36,3 @@ export const useKeydownHandler = (keydownMap: { [keyCode: number]: () => void })
     };
   }, []);
 };
-
-export function* range(start: number, end: number) {
-  if (start > end) throw new Error("range(start, end): Start > End");
-  for (let i = start; i <= end; i++) {
-    yield i;
-  }
-}

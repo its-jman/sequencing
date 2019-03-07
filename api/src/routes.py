@@ -1,7 +1,10 @@
+import json
 import os
 import time
 import uuid
 import tempfile
+
+import bson
 from bson import json_util
 from datetime import datetime
 from flask import Blueprint, jsonify, request
@@ -79,7 +82,20 @@ class DatasetView(MethodView):
         return "", 204
 
 
-@bp.route("/datasets/<string:dataset_id>/sequences")
+bp.add_url_rule(
+    "/datasets",
+    view_func=DatasetsView.as_view("datasets_view"),
+    methods=["GET", "POST"],
+)
+
+bp.add_url_rule(
+    "/datasets/<string:dataset_id>",
+    view_func=DatasetView.as_view("dataset_view"),
+    methods=["DELETE"],
+)
+
+
+@bp.route("/datasets/<string:dataset_id>/sequences", methods=["GET"])
 def dataset_sequences_view(dataset_id):
     """
 
@@ -103,38 +119,55 @@ def dataset_sequences_view(dataset_id):
     return jsonify(response)
 
 
-bp.add_url_rule(
-    "/datasets",
-    view_func=DatasetsView.as_view("datasets_view"),
-    methods=["GET", "POST"],
+@bp.route("/query", methods=["POST"])
+def create_query():
+    body = request.get_json(force=True)
+
+    raw_pattern = body.get("raw_pattern", None)
+    if raw_pattern is None:
+        return jsonify({"errors": ["missing_raw_pattern"]})
+
+    engine = data.engine.get_engine()
+    query_id, errors = engine.build_query(raw_pattern)
+    if query_id is None and len(errors) > 0:
+        errors.append("creation_failure")
+    return jsonify({"errors": errors, "query_id": query_id})
+
+
+@bp.route("/query/<string:query_id>/datasets/<string:dataset_id>", methods=["GET"])
+def query_dataset(query_id, dataset_id):
+    query_id = bson.objectid.ObjectId(query_id)
+    dataset_id = bson.objectid.ObjectId(dataset_id)
+
+    engine = data.engine.get_engine()
+    match_analysis = engine.query_dataset(query_id, dataset_id)
+    return jsonify({"match_analysis": match_analysis})
+
+
+@bp.route(
+    "/query/<string:query_id>/datasets/<string:dataset_id>/sequences", methods=["GET"]
 )
-
-bp.add_url_rule(
-    "/datasets/<string:dataset_id>",
-    view_func=DatasetView.as_view("dataset_view"),
-    methods=["DELETE"],
-)
+def query_dataset_sequences(query_id, dataset_id):
+    pass
 
 
-@bp.route("/alphabet")
+@bp.route("/alphabet", methods=["GET"])
 def alphabet():
     return jsonify(data.constants.ALPHABET)
 
 
-@bp.route("/clear")
+@bp.route("/clear", methods=["GET"])
 def clear():
     engine = data.engine.get_engine()
-    datasets = engine.get_datasets()
-    for d in datasets:
-        dataset_id = d.get("_id", None)
-        if dataset_id is not None:
-            engine.delete_dataset(dataset_id)
+    cnames = engine.db.collection_names()
+    for cname in cnames:
+        engine.db.drop_collection(cname)
 
     return jsonify(engine.get_datasets())
 
 
-@bp.route("/create")
-def upload():
+@bp.route("/create", methods=["GET"])
+def auto_upload():
     engine = data.engine.get_engine()
 
     engine.create_dataset(

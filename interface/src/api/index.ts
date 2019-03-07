@@ -25,3 +25,12 @@ export const submitUpload = (upload: IUpload) => {
     body: form
   }).then((resp) => resp.json());
 };
+
+export const createQuery = (rawPattern: string) =>
+  fetch(`${ENDPOINT}/query`, {
+    method: "POST",
+    body: JSON.stringify({ raw_pattern: rawPattern })
+  }).then((resp) => resp.json());
+
+export const queryDataset = (queryId: string, datasetId: string) =>
+  fetch(`${ENDPOINT}/query/${queryId}/datasets/${datasetId}`).then((resp) => resp.json());

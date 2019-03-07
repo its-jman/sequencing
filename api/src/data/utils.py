@@ -1,3 +1,5 @@
+import re
+
 import bson
 from collections import Counter
 from flask.json import JSONEncoder
@@ -71,7 +73,42 @@ def get_sequence_distribution(seq):
 
 
 def get_sequence_amino_count(seq):
+    """
+    This do any necessary processing of a sequence, such as ignoring the START/STOP codons and excluding special
+    characters from the rest of the sequence
+
+    :param seq:
+    :return:
+    """
     return len(seq)
+
+
+def convert_raw_pattern(raw_pattern):
+    if raw_pattern is None:
+        return None
+
+    raw_pattern = raw_pattern.replace("X", "[A-Z]")
+    raw_pattern = re.sub(r"(\d+)-(\d+)", r"{\1,\2}", raw_pattern)
+    # Replace numbers in string as long as they have not already been put in curly braces (by previous regexp)
+    raw_pattern = re.sub(r"(\d+)(?![\d,]*})", r"{\1}", raw_pattern)
+
+    return raw_pattern
+
+
+def compile_regex(pattern):
+    if pattern is None:
+        return None
+    try:
+        out = re.compile(pattern)
+    except re.error:
+        out = None
+    return out
+
+
+def get_sequence_matches(query_re, sequence):
+    matches = list(query_re.finditer(sequence))
+    mapped_matches = list(map(lambda m: [m.span()[0], m.span()[1]], matches))
+    return mapped_matches
 
 
 def _remove_unnecessary_son_fields(son):

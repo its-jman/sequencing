@@ -14,7 +14,7 @@ import { actions } from "src/state/actions";
 
 import styles from "./_sequences.module.scss";
 import { getClassNames } from "src/components/utils";
-import { isEmpty, range } from "src/utils";
+import { isEmpty } from "src/utils";
 
 type ISequencesProps = {
   id: string;
