@@ -114,7 +114,7 @@ export default combineReducers<IAppState>({
               ...draft.uploadManager.upload,
               ...action.payload.modifications
             };
-            // draft.uploadManager.uploads[action.payload.i].errors = [];
+            // draft.uploadManager.upload.errors = [];
           }
           break;
       }

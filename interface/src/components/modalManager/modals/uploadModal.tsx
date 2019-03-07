@@ -269,7 +269,5 @@ export default connect<{ upload: IUpload | null }, IDispatchProps, {}, IAppState
   (state: IAppState) => ({
     upload: state.ui.uploadManager.upload
   }),
-  (dispatch) => ({
-    dispatch: dispatch
-  })
+  (dispatch) => ({ dispatch })
 )(UploadModal2);

@@ -157,14 +157,15 @@ class DataEngine:
         with utils.BulkWriter(records.bulk_write) as bw:
             for record in records.find():
                 matches = utils.get_sequence_matches(query_re, record["sequence"])
-                total_matches += len(matches)
 
-                bw.insert(
-                    pymongo.UpdateOne(
-                        {"_id": record["_id"]},
-                        {"$set": {f"queries.{query['_id']}": matches}},
+                if len(matches) > 0:
+                    total_matches += len(matches)
+                    bw.insert(
+                        pymongo.UpdateOne(
+                            {"_id": record["_id"]},
+                            {"$set": {f"queries.{query['_id']}": matches}},
+                        )
                     )
-                )
         self._datasets.update_one(
             {"_id": dataset["_id"]},
             {"$set": {f"queries.{query['_id']}": total_matches}},
@@ -190,6 +191,32 @@ class DataEngine:
             cached_match_analysis = self._build_query_for_dataset(query, dataset)
 
         return cached_match_analysis
+
+    def query_dataset_sequences(self, query_id, dataset_id, page, page_size):
+        query = self._queries.find_one({"_id": query_id})
+        dataset = self._datasets.find_one({"_id": dataset_id})
+
+        errors = []
+        if not query:
+            errors.append("invalid_query")
+        if not dataset:
+            errors.append("invalid_dataset")
+        if len(errors) > 0:
+            return errors
+
+        if not dataset["queries"].get(str(query_id), None):
+            self._build_query_for_dataset(query, dataset)
+
+        records_collection = self.db.get_collection(str(dataset_id))
+        # total matches
+        offset = page * page_size
+        cursor = (
+            records_collection.find({f"queries.{query_id}": {"$exists": True}})
+            .skip(offset)
+            .limit(page_size)
+        )  # .sort("id", 1)
+        items = list(cursor)
+        return {"page": page, "page_size": page_size, "items": items}
 
 
 def get_engine():
