@@ -119,7 +119,14 @@ def dataset_sequences_view(dataset_id):
     return jsonify(response)
 
 
-@bp.route("/query", methods=["POST"])
+@bp.route("/queries", methods=["GET"])
+def get_queries():
+    engine = data.engine.get_engine()
+    queries = engine.query_dataset_sequences()
+    return jsonify(queries)
+
+
+@bp.route("/queries", methods=["POST"])
 def create_query():
     body = request.get_json(force=True)
 
@@ -134,7 +141,7 @@ def create_query():
     return jsonify({"errors": errors, "query_id": query_id})
 
 
-@bp.route("/query/<string:query_id>/datasets/<string:dataset_id>", methods=["GET"])
+@bp.route("/queries/<string:query_id>/datasets/<string:dataset_id>", methods=["GET"])
 def query_dataset(query_id, dataset_id):
     query_id = bson.objectid.ObjectId(query_id)
     dataset_id = bson.objectid.ObjectId(dataset_id)
@@ -145,7 +152,7 @@ def query_dataset(query_id, dataset_id):
 
 
 @bp.route(
-    "/query/<string:query_id>/datasets/<string:dataset_id>/sequences", methods=["GET"]
+    "/queries/<string:query_id>/datasets/<string:dataset_id>/sequences", methods=["GET"]
 )
 def query_dataset_sequences(query_id, dataset_id):
     page = request.args.get("page", 0, int)

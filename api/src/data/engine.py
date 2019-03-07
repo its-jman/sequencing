@@ -130,6 +130,9 @@ class DataEngine:
 
         return errors, dataset
 
+    def get_queries(self):
+        return list(self._queries.find())
+
     def build_query(self, raw_pattern):
         raw_pattern = raw_pattern.upper()
         raw_pattern_re = utils.compile_regex(raw_pattern)
