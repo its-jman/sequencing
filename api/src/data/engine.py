@@ -41,7 +41,9 @@ class DataEngine:
 
     def get_datasets(self, page=0, page_size=100):
         # offset = page * page_size
-        cursor = self._datasets.find()  # .skip(offset).limit(page_size)
+        cursor = self._datasets.find(
+            {}, {"queries": 0}
+        )  # .skip(offset).limit(page_size)
         return list(cursor)
 
     def get_dataset_records(self, dataset_id, page, page_size):
@@ -50,7 +52,7 @@ class DataEngine:
 
         offset = page * page_size
         cursor = (
-            records_collection.find().skip(offset).limit(page_size)
+            records_collection.find({}, {"queries": 0}).skip(offset).limit(page_size)
         )  # .sort("id", 1)
         items = list(cursor)
         return {"page": page, "page_size": page_size, "items": items}
