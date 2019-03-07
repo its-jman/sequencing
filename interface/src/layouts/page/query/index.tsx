@@ -19,7 +19,7 @@ const QuerySelection = ({ datasetId }: { datasetId: string }) => {
             } else {
               api.createQuery(rawPattern).then((resp) => {
                 api
-                  .queryDataset(resp.query_id, datasetId)
+                  .queryDatasetSequences(resp.query_id, datasetId)
                   .then((resp) => {
                     console.log("RESP");
                     console.log(resp);

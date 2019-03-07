@@ -202,7 +202,7 @@ class DataEngine:
         if not dataset:
             errors.append("invalid_dataset")
         if len(errors) > 0:
-            return errors
+            return {"errors": errors}
 
         if not dataset["queries"].get(str(query_id), None):
             self._build_query_for_dataset(query, dataset)
@@ -216,7 +216,7 @@ class DataEngine:
             .limit(page_size)
         )  # .sort("id", 1)
         items = list(cursor)
-        return {"page": page, "page_size": page_size, "items": items}
+        return {"page": page, "page_size": page_size, "items": items, "errors": []}
 
 
 def get_engine():

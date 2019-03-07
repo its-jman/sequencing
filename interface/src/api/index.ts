@@ -34,3 +34,6 @@ export const createQuery = (rawPattern: string) =>
 
 export const queryDataset = (queryId: string, datasetId: string) =>
   fetch(`${ENDPOINT}/query/${queryId}/datasets/${datasetId}`).then((resp) => resp.json());
+
+export const queryDatasetSequences = (queryId: string, datasetId: string) =>
+  fetch(`${ENDPOINT}/query/${queryId}/datasets/${datasetId}/sequences`).then((resp) => resp.json());

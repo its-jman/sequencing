@@ -155,10 +155,10 @@ def query_dataset_sequences(query_id, dataset_id):
     dataset_id = bson.objectid.ObjectId(dataset_id)
 
     engine = data.engine.get_engine()
-    match_analysis = engine.query_dataset_sequences(
+    result = engine.query_dataset_sequences(
         query_id=query_id, dataset_id=dataset_id, page=page, page_size=page_size
     )
-    return jsonify({"match_analysis": match_analysis})
+    return jsonify(result)
 
 
 @bp.route("/alphabet", methods=["GET"])
