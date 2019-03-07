@@ -123,7 +123,7 @@ def dataset_sequences_view(dataset_id):
 def get_queries():
     engine = data.engine.get_engine()
     queries = engine.query_dataset_sequences()
-    return jsonify(queries)
+    return jsonify({"items": queries})
 
 
 @bp.route("/queries", methods=["POST"])
