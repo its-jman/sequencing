@@ -81,7 +81,7 @@ class DataEngine:
             mongo_filter[f"queries.{qid}"] = {"$exists": True}
             projection[f"queries.{str(qid)}"] = 1
         if desc_filter is not None:
-            mongo_filter["$text"] = {"$search": f"{desc_filter}"}
+            mongo_filter["$text"] = {"$search": f'"{desc_filter}"'}
             # projection["description"] = {"$meta": "textScore"}
 
         offset = page * page_size
