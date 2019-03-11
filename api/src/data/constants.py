@@ -1,5 +1,5 @@
 REMOVED_FIELDS = ["_cls"]
-RENAMED_FIELDS = {"_id": "id"}
+RENAMED_FIELDS = {"_id": "seq_id"}
 
 ALPHABET = {
     "A": {"name": "Alanine", "abr": "Ala", "freq": 0.074},

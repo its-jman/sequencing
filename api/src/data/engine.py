@@ -17,6 +17,23 @@ class DataEngine:
     mongo_db_name = "sequencing"
     datasets_cname = "datasets"
     queries_cname = "queries"
+    dataset_projection = {
+        "name": 1,
+        "data_format": 1,
+        "user_filename": 1,
+        "upload_time": 1,
+        "analysis": 1,
+        "queries": 1,
+    }
+
+    sequences_projection = {
+        "seq_id": 1,
+        "description": 1,
+        "sequence": 1,
+        "discarded": 1,
+        "analysis": 1,
+        "queries": 1,
+    }
 
     def __init__(self):
         self.client = MongoClient(
@@ -46,42 +63,49 @@ class DataEngine:
         )  # .skip(offset).limit(page_size)
         return list(cursor)
 
-    def get_dataset_records(self, dataset_id, page, page_size):
+    def get_dataset_records(
+        self, dataset_id, page, page_size, qid=None, desc_filter=None
+    ):
         records_cname = str(dataset_id)
         records_collection = self.db.get_collection(records_cname)
 
+        mongo_filter = {}
+        # projection = {"queries": 0}
+        projection = {**DataEngine.sequences_projection}
+        projection.pop("queries")
+        if qid is not None:
+            dataset = self._datasets.find_one({"_id": dataset_id})
+            if not dataset["queries"].get(str(qid), None):
+                query = self._queries.find_one({"_id": qid})
+                self._build_query_for_dataset(query, dataset)
+            mongo_filter[f"queries.{qid}"] = {"$exists": True}
+            projection[f"queries.{str(qid)}"] = 1
+        if desc_filter is not None:
+            mongo_filter["$text"] = {"$search": f"{desc_filter}"}
+            # projection["description"] = {"$meta": "textScore"}
+
         offset = page * page_size
         cursor = (
-            records_collection.find({}, {"queries": 0}).skip(offset).limit(page_size)
-        )  # .sort("id", 1)
+            records_collection.find(mongo_filter, projection)
+            .skip(offset)
+            .limit(page_size)
+        )  # .sort("seq_id", 1)
         items = list(cursor)
-        return {"page": page, "page_size": page_size, "items": items}
+        return {
+            "page": page,
+            "page_size": page_size,
+            "items": items,
+            "total_count": cursor.count(),
+        }
 
     def delete_dataset(self, dataset_id):
         dataset = self._datasets.find_one_and_delete({"_id": dataset_id})
         self.db.drop_collection(str(dataset_id))
         return dataset
 
-    @staticmethod
-    def _create_record(raw_record):
-        seq = str(raw_record.seq)
-
-        record = models.Record(
-            id=raw_record.id, description=raw_record.description, sequence=seq
-        )
-        if not utils.validate_record(record):
-            record.discarded = True
-        else:
-            record.analysis = models.RecordAnalysis(
-                distribution=utils.get_sequence_distribution(seq),
-                amino_count=utils.get_sequence_amino_count(seq),
-            )
-            record.queries = {}
-
-        return record
-
     def _create_and_insert_records(self, records_cname, records_iterator):
         records_collection = self.db.get_collection(records_cname)
+        records_collection.create_index([("description", pymongo.TEXT)])
         analysis = {
             "discarded_count": 0,
             "record_count": 0,
@@ -91,7 +115,7 @@ class DataEngine:
 
         with utils.BulkWriter(records_collection.insert_many) as bw:
             for raw_record in records_iterator:
-                record = self._create_record(raw_record)
+                record = utils.convert_raw_record(raw_record)
                 bw.insert(utils.convert_model(record))
 
                 if record.discarded or not record.analysis:
@@ -147,11 +171,12 @@ class DataEngine:
 
         preexisting = self._queries.find_one({"pattern": pattern})
         if preexisting is not None:
-            return preexisting["_id"], ["duplicate_pattern"]
+            return preexisting, ["duplicate_pattern"]
 
         query = models.Query(raw_pattern=raw_pattern, pattern=pattern)
-        inserted = self._queries.insert_one(utils.convert_model(query))
-        return inserted.inserted_id, []
+        query_out = utils.convert_model(query)
+        inserted = self._queries.insert_one(query_out)
+        return query_out, []
 
     def _build_query_for_dataset(self, query, dataset):
         query_re = utils.compile_regex(query["pattern"])
@@ -197,31 +222,31 @@ class DataEngine:
 
         return cached_match_analysis
 
-    def query_dataset_sequences(self, query_id, dataset_id, page, page_size):
-        query = self._queries.find_one({"_id": query_id})
-        dataset = self._datasets.find_one({"_id": dataset_id})
-
-        errors = []
-        if not query:
-            errors.append("invalid_query")
-        if not dataset:
-            errors.append("invalid_dataset")
-        if len(errors) > 0:
-            return {"errors": errors}
-
-        if not dataset["queries"].get(str(query_id), None):
-            self._build_query_for_dataset(query, dataset)
-
-        records_collection = self.db.get_collection(str(dataset_id))
-        # total matches
-        offset = page * page_size
-        cursor = (
-            records_collection.find({f"queries.{query_id}": {"$exists": True}})
-            .skip(offset)
-            .limit(page_size)
-        )  # .sort("id", 1)
-        items = list(cursor)
-        return {"page": page, "page_size": page_size, "items": items, "errors": []}
+    # def query_dataset_sequences(self, query_id, dataset_id, page, page_size):
+    #     query = self._queries.find_one({"_id": query_id})
+    #     dataset = self._datasets.find_one({"_id": dataset_id})
+    #
+    #     errors = []
+    #     if not query:
+    #         errors.append("invalid_query")
+    #     if not dataset:
+    #         errors.append("invalid_dataset")
+    #     if len(errors) > 0:
+    #         return {"errors": errors}
+    #
+    #     if not dataset["queries"].get(str(query_id), None):
+    #         self._build_query_for_dataset(query, dataset)
+    #
+    #     records_collection = self.db.get_collection(str(dataset_id))
+    #     # total matches
+    #     offset = page * page_size
+    #     cursor = (
+    #         records_collection.find({f"queries.{query_id}": {"$exists": True}})
+    #         .skip(offset)
+    #         .limit(page_size)
+    #     )  # .sort("seq_id", 1)
+    #     items = list(cursor)
+    #     return {"page": page, "page_size": page_size, "items": items, "errors": []}
 
 
 def get_engine():

@@ -5,7 +5,7 @@ from collections import Counter
 from flask.json import JSONEncoder
 from pymodm import MongoModel
 
-from data import constants as c
+from data import models, constants as c
 
 
 class MongoEncoder(JSONEncoder):
@@ -81,6 +81,24 @@ def get_sequence_amino_count(seq):
     :return:
     """
     return len(seq)
+
+
+def convert_raw_record(raw_record):
+    seq = str(raw_record.seq)
+
+    record = models.Record(
+        seq_id=raw_record.id, description=raw_record.description, sequence=seq
+    )
+    if not validate_record(record):
+        record.discarded = True
+    else:
+        record.analysis = models.RecordAnalysis(
+            distribution=get_sequence_distribution(seq),
+            amino_count=get_sequence_amino_count(seq),
+        )
+        record.queries = {}
+
+    return record
 
 
 def convert_raw_pattern(raw_pattern):

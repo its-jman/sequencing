@@ -28,7 +28,8 @@ class DatasetsView(MethodView):
         """
 
         :return: {
-            dataset_id: Dataset(...)
+            dataset_id: Dataset(...),
+            qid
         }
         """
         engine = data.engine.get_engine()
@@ -51,7 +52,7 @@ class DatasetsView(MethodView):
 
         file_errors = data.utils.validate_file(input_file)
         if file_errors:
-            return jsonify({"errors": file_errors, "id": None})
+            return jsonify({"errors": file_errors, "seq_id": None})
 
         tmp_path = os.path.join(tempfile.gettempdir(), uuid.uuid4().hex)
         try:
@@ -99,13 +100,17 @@ bp.add_url_rule(
 def dataset_sequences_view(dataset_id):
     """
 
+    :query_string_param page: page to return
+    :query_string_param page_size: page size to calculate offset by
+    :query_string_param qid: query seq_id
+    :query_string_param filter: string that must be contained in the description
     :param dataset_id:
     :return: {
         "pagination": {
             page=0
             page_size=100
         },
-        "dataset_id": id,
+        "dataset_id": seq_id,
         "records": [
             Record(...)
         ]
@@ -114,8 +119,14 @@ def dataset_sequences_view(dataset_id):
     page = request.args.get("page", 0, int)
     page_size = request.args.get("page_size", 100, int)
 
+    qid = request.args.get("qid", None, str)
+    desc_filter = request.args.get("filter", None, str)
+
+    dataset_id = bson.objectid.ObjectId(dataset_id)
+    qid = bson.objectid.ObjectId(qid)
+
     engine = data.engine.get_engine()
-    response = engine.get_dataset_records(dataset_id, page, page_size)
+    response = engine.get_dataset_records(dataset_id, page, page_size, qid, desc_filter)
     return jsonify(response)
 
 
@@ -135,10 +146,10 @@ def create_query():
         return jsonify({"errors": ["missing_raw_pattern"]})
 
     engine = data.engine.get_engine()
-    query_id, errors = engine.build_query(raw_pattern)
-    if query_id is None and len(errors) > 0:
+    query, errors = engine.build_query(raw_pattern)
+    if query is None and len(errors) > 0:
         errors.append("creation_failure")
-    return jsonify({"errors": errors, "query_id": query_id})
+    return jsonify({"errors": errors, "query": query})
 
 
 @bp.route("/queries/<string:query_id>/datasets/<string:dataset_id>", methods=["GET"])
@@ -151,21 +162,21 @@ def query_dataset(query_id, dataset_id):
     return jsonify({"match_analysis": match_analysis})
 
 
-@bp.route(
-    "/queries/<string:query_id>/datasets/<string:dataset_id>/sequences", methods=["GET"]
-)
-def query_dataset_sequences(query_id, dataset_id):
-    page = request.args.get("page", 0, int)
-    page_size = request.args.get("page_size", 100, int)
-
-    query_id = bson.objectid.ObjectId(query_id)
-    dataset_id = bson.objectid.ObjectId(dataset_id)
-
-    engine = data.engine.get_engine()
-    result = engine.query_dataset_sequences(
-        query_id=query_id, dataset_id=dataset_id, page=page, page_size=page_size
-    )
-    return jsonify(result)
+# @bp.route(
+#     "/queries/<string:query_id>/datasets/<string:dataset_id>/sequences", methods=["GET"]
+# )
+# def query_dataset_sequences(query_id, dataset_id):
+#     page = request.args.get("page", 0, int)
+#     page_size = request.args.get("page_size", 100, int)
+#
+#     query_id = bson.objectid.ObjectId(query_id)
+#     dataset_id = bson.objectid.ObjectId(dataset_id)
+#
+#     engine = data.engine.get_engine()
+#     result = engine.query_dataset_sequences(
+#         query_id=query_id, dataset_id=dataset_id, page=page, page_size=page_size
+#     )
+#     return jsonify(result)
 
 
 @bp.route("/alphabet", methods=["GET"])

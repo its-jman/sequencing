@@ -24,7 +24,7 @@ class RecordAnalysis(EmbeddedMongoModel):
 
 
 class Record(MongoModel):
-    id = fields.CharField(required=True)
+    seq_id = fields.CharField(required=True)
     description = fields.CharField(required=True)
     sequence = fields.CharField(required=True)
     discarded = fields.BooleanField(required=False)
