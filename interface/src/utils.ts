@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { IDataset, IDatasetsState } from "src/state/models";
 
 export const isEmpty = (obj: object | any[] | string | undefined | null): boolean => {
   if (obj === null || obj === undefined || obj === "") {
@@ -35,4 +36,11 @@ export const useKeydownHandler = (keydownMap: { [keyCode: number]: () => void })
       document.removeEventListener("keydown", handler, false);
     };
   }, []);
+};
+
+export const arrayToObject = <T extends { _id: string }>(inp: T[], key: keyof T = "_id") => {
+  return inp.reduce((mapped: { [key: string]: T }, item: T) => {
+    mapped[item._id] = item;
+    return mapped;
+  }, {});
 };

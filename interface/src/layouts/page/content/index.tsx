@@ -59,7 +59,7 @@ const ContentHeader = connect(
     canResumeUpload:
       state.ui.uploadManager.upload !== null &&
       // Filter by if there are uploads that aren't successful
-      state.ui.uploadManager.upload.status !== NetworkStatus.SUCCESS
+      state.ui.uploadManager.upload.networkStatus !== NetworkStatus.SUCCESS
   }),
   (dispatch) => ({ dispatch })
 )(ContentHeaderRaw);

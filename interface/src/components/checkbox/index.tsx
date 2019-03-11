@@ -50,7 +50,7 @@ class Checkbox extends React.PureComponent<ICheckboxProps> {
 //   render() {
 //     return (
 //       <div className="pretty p-icon">
-//         <input type="checkbox" id={"asdf"} checked={this.state.checked} onChange={this._onChange} />
+//         <input type="checkbox" datasetId={"asdf"} checked={this.state.checked} onChange={this._onChange} />
 //         <div className="state">
 //           <i className="icon mdi mdi-check" />
 //           <label htmlFor={"asdf"}>{"MyLabel"}</label>

@@ -41,7 +41,7 @@ class DatasetAnalysis extends PureComponent<IDatasetAnalysisProps & IDispatchPro
 
         <div className={styles.content}>
           <Distribution dataset={dataset} />
-          <Sequences id={dataset._id} />
+          <Sequences datasetId={dataset._id} />
         </div>
       </div>
     );
@@ -50,7 +50,7 @@ class DatasetAnalysis extends PureComponent<IDatasetAnalysisProps & IDispatchPro
 
 export default connect<IDatasetAnalysisProps, IDispatchProps, { datasetID: string }, IAppState>(
   (state: IAppState, ownProps) => ({
-    dataset: state.data.datasets[ownProps.datasetID] || null
+    dataset: state.data.datasets.datasets[ownProps.datasetID] || null
   }),
   (dispatch) => ({ dispatch })
 )(DatasetAnalysis);

@@ -153,5 +153,5 @@ class TableItem extends React.PureComponent<{ dataset: IDataset }> {
 }
 
 export default connect((state: IAppState) => ({
-  datasets: Object.values(state.data.datasets)
+  datasets: Object.values(state.data.datasets.datasets)
 }))(DataTable);

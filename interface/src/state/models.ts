@@ -12,9 +12,20 @@ export enum NetworkStatus {
 
 export const SEQUENCES_PAGE_SIZE = 40;
 
-export interface IPaginatedSequences {
-  [page: number]: ISequence[];
+export interface IQuery {
+  _id: string;
+  raw_pattern: string;
+  pattern: string;
 }
+
+export type IMatch = [number, number];
+export type ISequenceQueryAnalysis = {
+  matches: IMatch[];
+};
+
+export type IDatasetQueryAnalysis = {
+  total_matches: number;
+};
 
 export interface ISequence {
   _id: string;
@@ -48,72 +59,111 @@ export interface IDataset {
 }
 
 // UI State
-export interface IModalManager {
+export type IModalManager = {
   modal: { type: ModalType } | null;
   confirmations: Array<{ type: ConfirmationType; params: IConfirmationParams }>;
-}
-export interface IConfirmationParams {
+};
+export type IConfirmationParams = {
   resolve: () => void;
   reject: () => void;
-}
-export interface IUpload {
+};
+export type IUpload = {
   file: File;
-  status: NetworkStatus;
+  networkStatus: NetworkStatus;
   name: string;
   errors: string[];
   ignored?: boolean;
-}
-export interface IUIState {
+};
+export type IUIState = {
   title: string | null;
+  queryId: string | null;
   modalManager: IModalManager;
   uploadManager: {
     shouldOpenFI: boolean;
     upload: IUpload | null;
   };
-}
+};
 
-export interface INetworkState {
-  datasets: NetworkStatus;
-  alphabet: NetworkStatus;
-  sequences: {
-    [id: string]: {
-      [page: number]: NetworkStatus;
+// export type INetworkState = {
+//   datasets: NetworkStatus;
+//   alphabet: NetworkStatus;
+//   sequences: {
+//     datasetId: string;
+//     queryId: string;
+//     filter: string;
+//     pages: {
+//       [page: number]: NetworkStatus;
+//     };
+//   };
+// };
+
+export type IDatasetsState = {
+  networkStatus: NetworkStatus;
+  datasets: {
+    [id: string]: IDataset;
+  };
+};
+
+export type IAlphabetState = {
+  networkStatus: NetworkStatus;
+  alphabet: {
+    [letter: string]: { abr: string; name: string; freq: number };
+  };
+};
+
+export type ISequencesParams = {
+  datasetId: string | null;
+  queryId: string | null;
+  filter: string | null;
+};
+
+export type ISequencesState = ISequencesParams & {
+  networkStatus: {
+    [page: number]: NetworkStatus;
+  };
+  pages: {
+    [page: number]: ISequence[];
+  };
+};
+
+export type IQueriesState = {
+  history: {
+    networkStatus: NetworkStatus;
+    items: IQuery[];
+  };
+  creationNetworkStatus: {
+    [rawPattern: string]: NetworkStatus;
+  };
+  resultsNetworkStatus: {
+    [queryId: string]: NetworkStatus;
+  };
+  queries: {
+    [queryId: string]: {
+      [datasetId: string]: IDatasetQueryAnalysis;
     };
   };
-}
+};
 
-export interface IDatasetsState {
-  [id: string]: IDataset;
-}
-
-export interface IAlphabetState {
-  [letter: string]: { abr: string; name: string; freq: number };
-}
-
-export interface ISequencesState {
-  [id: string]: IPaginatedSequences;
-}
-
-export interface IDataState {
-  network: INetworkState;
-  datasets: IDatasetsState;
+export type IDataState = {
   alphabet: IAlphabetState;
+  datasets: IDatasetsState;
   sequences: ISequencesState;
-}
+  queries: IQueriesState;
+};
 
 // App State
-export interface IAppState {
+export type IAppState = {
   ui: IUIState;
   data: IDataState;
-}
+};
 
 // Connect Props
-export interface IStateProps {
+export type IStateProps = {
   state: IAppState;
-}
+};
 
-export interface IDispatchProps {
+export type IDispatchProps = {
   dispatch: ThunkDispatch<IAppState, {}, AnyAction>;
-}
+};
 
-export interface IAppProps extends IStateProps, IDispatchProps {}
+export type IAppProps = IStateProps & IDispatchProps;

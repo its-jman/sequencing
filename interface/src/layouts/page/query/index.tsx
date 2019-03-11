@@ -18,8 +18,15 @@ const QuerySelection = ({ datasetId }: { datasetId: string }) => {
               console.error("No Datasets!!!!!");
             } else {
               api.createQuery(rawPattern).then((resp) => {
+                console.log("RESP111");
+                console.log(resp);
                 api
-                  .queryDatasetSequences(resp.query_id, datasetId)
+                  .fetchSequences({
+                    datasetId,
+                    page: 0,
+                    queryId: resp.query._id,
+                    filter: "protein localization"
+                  })
                   .then((resp) => {
                     console.log("RESP");
                     console.log(resp);
@@ -28,7 +35,6 @@ const QuerySelection = ({ datasetId }: { datasetId: string }) => {
                     console.log("ERR");
                     console.log(err);
                   });
-                resp.query_id;
               });
             }
           }
@@ -42,5 +48,5 @@ const QuerySelection = ({ datasetId }: { datasetId: string }) => {
 };
 
 export default connect((state: IAppState) => ({
-  datasetId: Object.keys(state.data.datasets)[0]
+  datasetId: Object.keys(state.data.datasets.datasets)[0]
 }))(QuerySelection);

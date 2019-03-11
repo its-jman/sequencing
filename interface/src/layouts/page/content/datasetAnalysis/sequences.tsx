@@ -1,27 +1,32 @@
-import React, { Dispatch, PureComponent, SetStateAction, useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { connect } from "react-redux";
 
 import {
   IAppState,
   IDispatchProps,
-  INetworkState,
-  IPaginatedSequences,
   ISequence,
+  ISequencesState,
   NetworkStatus,
   SEQUENCES_PAGE_SIZE
 } from "src/state/models";
-import { actions } from "src/state/actions";
 
 import styles from "./_sequences.module.scss";
 import { getClassNames } from "src/components/utils";
+import { actions } from "src/state/actions";
 import { isEmpty } from "src/utils";
+import { paramsMatch } from "src/state/reducers/data/sequences";
 
-type ISequencesProps = {
-  id: string;
-  paginatedSequences: IPaginatedSequences;
-  network: INetworkState["sequences"]["id"];
+type IStateProps = {
+  sequencesState: ISequencesState;
   totalSequences: number;
-} & IDispatchProps;
+  queryId: string | null;
+};
+
+type IOwnProps = {
+  datasetId: string;
+};
+
+type ISequencesProps = IOwnProps & IStateProps & IDispatchProps;
 
 const RENDERED_PAGE_SIZE = 8;
 
@@ -67,24 +72,11 @@ const usePagination = (maxPage: number, initialPage: number = 0): [number, (p: n
   return [page, setPage];
 };
 
-const useRenderPagination = (props: ISequencesProps) => {
-  const { id, network, paginatedSequences, totalSequences, dispatch } = props;
-
-  const maxPage = Math.ceil(totalSequences / RENDERED_PAGE_SIZE) - 1;
-  const [page, setPage] = usePagination(maxPage);
+const useRenderPagination = (
+  props: ISequencesProps & { queryId: string | null; filter: string | null }
+) => {
+  /*const [networkSequences, setNetworkSequences] = useState<{ [number: number]: ISequence[] }>({});
   const [sequences, setSequences] = useState<ISequence[]>([]);
-
-  useEffect(() => {
-    const [begPage, endPage] = getBegEndPage(page);
-    let isLoading = false;
-    for (let i = begPage; i <= endPage; i++) {
-      if (network[i] !== NetworkStatus.SUCCESS) {
-        if (network[i] !== NetworkStatus.REQUEST) {
-          dispatch(actions.fetchSequences({ id, page: i }));
-        }
-        if (!isLoading) isLoading = true;
-      }
-    }
 
     let sequences: ISequence[] = [];
     if (!isLoading) {
@@ -95,7 +87,7 @@ const useRenderPagination = (props: ISequencesProps) => {
       const endLocalI = endI % SEQUENCES_PAGE_SIZE;
 
       for (let i = begPage; i <= endPage; i++) {
-        const page = paginatedSequences[i];
+        const page = sequencesState[i];
         if (isEmpty(page)) {
           throw new Error("Page is empty... Unknown...?");
         }
@@ -106,23 +98,82 @@ const useRenderPagination = (props: ISequencesProps) => {
       }
     }
     setSequences(sequences);
-  }, [id, network, page]);
+  }, [datasetId, network, page]);*/
+  const { datasetId, queryId, filter, sequencesState, totalSequences, dispatch } = props;
+
+  const maxPage = Math.ceil(totalSequences / RENDERED_PAGE_SIZE) - 1;
+  const [page, setPage] = usePagination(maxPage);
+
+  const [begPage, endPage] = getBegEndPage(page);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const matches = paramsMatch(sequencesState, { queryId, filter, datasetId });
+    let isLoading = false;
+    for (let i = begPage; i <= endPage; i++) {
+      // Unsent, Request, or Failure
+      if (!matches || sequencesState.networkStatus[i] !== NetworkStatus.SUCCESS) {
+        isLoading = true;
+        const act = () =>
+          dispatch(actions.fetchSequences({ datasetId, page: i, queryId: null, filter: null }));
+
+        if (sequencesState.networkStatus[i] === NetworkStatus.FAILURE) {
+          setTimeout(act, 10000);
+        } else if (
+          sequencesState.networkStatus[i] === NetworkStatus.UNSENT ||
+          isEmpty(sequencesState.networkStatus[i]) ||
+          !matches
+        ) {
+          act();
+        }
+        // else: NetworkStatus === Request -> Nothing to do.
+      }
+    }
+    setLoading(isLoading);
+  });
+
+  let sequences: ISequence[] = [];
+  if (!loading) {
+    const [begI, endI] = getBegEndI(page);
+    const [begPage, endPage] = getBegEndPage(page);
+
+    const begLocalI = begI % SEQUENCES_PAGE_SIZE;
+    const endLocalI = endI % SEQUENCES_PAGE_SIZE;
+
+    for (let i = begPage; i <= endPage; i++) {
+      const page = sequencesState.pages[i];
+      if (isEmpty(page)) {
+        console.error("Page is empty... Failure.");
+        sequences = [];
+        break;
+        // throw new Error("Page is empty... Unknown...?");
+      }
+
+      const begPageLocalI = i === begPage ? begLocalI : 0;
+      const endPageLocalI = i === endPage ? endLocalI : SEQUENCES_PAGE_SIZE;
+      sequences.push(...page.slice(begPageLocalI, endPageLocalI + 1));
+    }
+  }
 
   return {
-    sequences,
     page,
     setPage,
+    sequences,
     maxPage
   };
 };
 
 const SequencesList = (props: ISequencesProps) => {
-  const { id, network, paginatedSequences, totalSequences, dispatch } = props;
+  const { datasetId, sequencesState, totalSequences, queryId, dispatch } = props;
 
   const [open, setOpen] = useState(false);
+  const [filter, setFilter] = useState("");
   const [selection, setSelection] = useState("");
 
-  const { sequences, page, setPage, maxPage } = useRenderPagination(props);
+  const { page, setPage, maxPage, sequences } = useRenderPagination({
+    ...props,
+    queryId,
+    filter: null
+  });
 
   return (
     <div className={styles.container}>
@@ -152,20 +203,12 @@ const SequencesList = (props: ISequencesProps) => {
   );
 };
 
-export default connect<
-  {
-    paginatedSequences: IPaginatedSequences;
-    network: INetworkState["sequences"]["id"];
-    totalSequences: number;
-  },
-  IDispatchProps,
-  { id: string },
-  IAppState
->(
+export default connect<IStateProps, IDispatchProps, IOwnProps, IAppState>(
   (state, ownProps) => ({
-    paginatedSequences: state.data.sequences[ownProps.id] || {},
-    network: state.data.network.sequences[ownProps.id] || {},
-    totalSequences: state.data.datasets[ownProps.id].analysis.record_count
+    sequencesState: state.data.sequences,
+    network: state.data.sequences.networkStatus,
+    totalSequences: state.data.datasets.datasets[ownProps.datasetId].analysis.record_count,
+    queryId: state.ui.queryId
   }),
   (dispatch) => ({ dispatch })
 )(SequencesList);

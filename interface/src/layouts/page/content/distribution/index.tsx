@@ -69,14 +69,14 @@ class Chart extends PureComponent<IChartProps> {
     const { alphabet, dataset } = this.props;
 
     if (this.node === null) throw new Error("Failed creating svg.");
-    if (this._created || isEmpty(alphabet) || isEmpty(dataset)) {
+    if (this._created || isEmpty(alphabet.alphabet) || isEmpty(dataset)) {
       console.warn("Not charting graph yet... Alphabet/Data seems to be empty. ");
       return;
     }
 
     const data = calculateData(alphabet, dataset);
     this._created = true;
-    const fullAlphabet = new Set<string>([...Object.keys(alphabet), ".", "*"]);
+    const fullAlphabet = new Set<string>([...Object.keys(alphabet.alphabet), ".", "*"]);
 
     const dataMax = Math.max(...data.map((d) => d.percentDiff));
     const dataMin = Math.min(...data.map((d) => d.percentDiff));
@@ -163,8 +163,8 @@ const calculateData = (alphabet: IAlphabetState, dataset: IDataset) => {
   const out: IData[] = [];
   // const out: Array<{ [letter: string]: number }> = [];
   // TODO: Convert to set
-  for (const letter of Object.keys(alphabet)) {
-    const details = alphabet[letter];
+  for (const letter of Object.keys(alphabet.alphabet)) {
+    const details = alphabet.alphabet[letter];
     if (!details.freq) continue;
 
     // expectedRaw: 1200; expected: 0.075
