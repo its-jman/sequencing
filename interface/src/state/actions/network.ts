@@ -8,15 +8,16 @@ import {
   IQuery,
   ISequence,
   ISequenceQueryAnalysis,
-  ISequencesParams,
+  ISequencesFilter,
   NetworkStatus
 } from "src/state/models";
+import { IFetchSequencesResponse } from "src/api/models";
 
-// export type IFetchSequencesParams = ISequencesParams & {
+// export type IFetchSequencesParams = ISequencesFilter & {
 //   datasetId: string;
 // };
 
-export type IFetchSequences = ISequencesParams & {
+export type IFetchSequencesParams = ISequencesFilter & {
   page: number;
 };
 
@@ -38,9 +39,9 @@ export const networkActions = {
   fetchQueriesFailure: csa("FETCH_QUERIES_FAILURE")(),
 
   // --------------------------------------- Fetch Sequences -----------------------------------
-  fetchSequencesRequest: csa("FETCH_SEQUENCES_REQUEST")<{ params: IFetchSequences }>(),
-  fetchSequencesSuccess: csa("FETCH_SEQUENCES_SUCCESS")<{ params: IFetchSequences; items: ISequence[] }>(),
-  fetchSequencesFailure: csa("FETCH_SEQUENCES_FAILURE")<{ params: IFetchSequences; errors: string[] }>(),
+  fetchSequencesRequest: csa("FETCH_SEQUENCES_REQUEST")<{ params: IFetchSequencesParams }>(),
+  fetchSequencesSuccess: csa("FETCH_SEQUENCES_SUCCESS")<{ params: IFetchSequencesParams; response: IFetchSequencesResponse }>(),
+  fetchSequencesFailure: csa("FETCH_SEQUENCES_FAILURE")<{ params: IFetchSequencesParams; errors: string[] }>(),
 
   // ------------------------------------- Delete Dataset --------------------------------------
   deleteDatasetRequest: csa("DELETE_DATASET_REQUEST")<{ id: string }>(),

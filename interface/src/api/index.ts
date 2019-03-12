@@ -1,6 +1,14 @@
-import { IAlphabetState, IDataset, IQuery, IUpload, SEQUENCES_PAGE_SIZE } from "src/state/models";
+import {
+  IAlphabetState,
+  IDataset,
+  IQuery,
+  ISequence,
+  IUpload,
+  NETWORK_PAGE_SIZE
+} from "src/state/models";
 import { isEmpty } from "src/utils";
-import { IFetchSequences } from "src/state/actions/network";
+import { IFetchSequencesParams } from "src/state/actions/network";
+import { IFetchSequencesResponse } from "src/api/models";
 
 const ENDPOINT = "http://localhost:5000";
 const esc = encodeURIComponent;
@@ -22,16 +30,18 @@ export const deleteDataset = ({ id }: { id: string }) =>
 export const fetchAlphabet = () =>
   fetch(`${ENDPOINT}/alphabet`).then((resp): Promise<IAlphabetState["alphabet"]> => resp.json());
 
-export const fetchSequences = ({ datasetId, page, queryId, filter }: IFetchSequences) => {
+export const fetchSequences = ({ datasetId, page, queryId, filter }: IFetchSequencesParams) => {
   let url = `${ENDPOINT}/datasets/${datasetId}/sequences`;
   const queryParams: IQueryString = {
     page: `${page}`,
-    page_size: `${SEQUENCES_PAGE_SIZE}`
+    page_size: `${NETWORK_PAGE_SIZE}`
   };
   if (queryId !== null) queryParams["qid"] = queryId;
   if (filter !== null) queryParams["filter"] = filter;
 
-  return fetch(withParams(url, queryParams)).then((resp) => resp.json());
+  return fetch(withParams(url, queryParams)).then(
+    (resp): Promise<IFetchSequencesResponse> => resp.json()
+  );
 };
 
 export const submitUpload = (upload: IUpload) => {

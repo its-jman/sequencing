@@ -44,3 +44,10 @@ export const arrayToObject = <T extends { _id: string }>(inp: T[], key: keyof T 
     return mapped;
   }, {});
 };
+
+export const range = (beg: number, end: number): number[] => {
+  if (beg < end) [beg, end] = [end, beg];
+  const len = end - beg + 1;
+
+  return new Array(len).fill(undefined).map((_, i) => beg + i);
+};

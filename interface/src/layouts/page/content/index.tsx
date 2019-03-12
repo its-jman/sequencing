@@ -45,6 +45,18 @@ class ContentHeaderRaw extends React.PureComponent<IContentHeaderProps & IDispat
     return (
       <div className={styles.header}>
         <ControlledFileInput />
+        <button
+          className={`btn btn-2`}
+          style={{ marginRight: 12 }}
+          onClick={() => {
+            fetch("http://localhost:5000/clear").then((resp) => {
+              console.warn("Clearing data...");
+              console.warn(resp);
+            });
+          }}
+        >
+          Clear All
+        </button>
         <button className={`btn btn-2`} onClick={this._uploadClick}>
           <FiUpload className={styles.uploadIcon} />
           <span>{" Upload"}</span>

@@ -1,7 +1,7 @@
 import produce from "immer";
 import { getType } from "typesafe-actions";
 
-import { ISequencesParams, ISequencesState, NetworkStatus } from "src/state/models";
+import { ISequencesFilter, ISequencesState, NetworkStatus } from "src/state/models";
 import { IActionMap } from "src/state/actions";
 import { networkActions } from "src/state/actions/network";
 
@@ -10,11 +10,12 @@ const is: ISequencesState = {
   queryId: null,
   filter: null,
 
+  total_count: -1,
   networkStatus: {},
   pages: {}
 };
 
-export const paramsMatch = (params: ISequencesParams, draft: ISequencesParams) =>
+export const paramsMatch = (params: ISequencesFilter, draft: ISequencesFilter) =>
   params.datasetId === draft.datasetId &&
   params.filter === draft.filter &&
   params.queryId === draft.queryId;
@@ -36,6 +37,7 @@ export default (stateRaw: ISequencesState = is, action: IActionMap) => {
           draft.queryId = params.queryId;
           draft.filter = params.filter;
 
+          draft.total_count = -1;
           draft.networkStatus = {};
           draft.pages = {};
         }
@@ -64,7 +66,15 @@ export default (stateRaw: ISequencesState = is, action: IActionMap) => {
             );
           } else {
             draft.networkStatus[params.page] = NetworkStatus.SUCCESS;
-            draft.pages[params.page] = action.payload.items;
+            draft.pages[params.page] = action.payload.response.items;
+
+            if (
+              draft.total_count !== -1 &&
+              draft.total_count !== action.payload.response.total_count
+            ) {
+              console.error("UNEXPECTED TOTAL COUNT RECIEVED. Proceeding as if nothing happened..");
+            }
+            draft.total_count = action.payload.response.total_count;
           }
         }
         break;

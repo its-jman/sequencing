@@ -10,7 +10,7 @@ export enum NetworkStatus {
   FAILURE = "FAILURE"
 }
 
-export const SEQUENCES_PAGE_SIZE = 40;
+export const NETWORK_PAGE_SIZE = 40;
 
 export interface IQuery {
   _id: string;
@@ -29,7 +29,7 @@ export type IDatasetQueryAnalysis = {
 
 export interface ISequence {
   _id: string;
-  id: string;
+  seq_id: string;
   description: string;
   sequence: string;
   discarded?: boolean;
@@ -111,13 +111,14 @@ export type IAlphabetState = {
   };
 };
 
-export type ISequencesParams = {
+export type ISequencesFilter = {
   datasetId: string | null;
   queryId: string | null;
   filter: string | null;
 };
 
-export type ISequencesState = ISequencesParams & {
+export type ISequencesState = ISequencesFilter & {
+  total_count: number;
   networkStatus: {
     [page: number]: NetworkStatus;
   };

@@ -1,7 +1,7 @@
-import { ISequence, IUpload, NetworkStatus, SEQUENCES_PAGE_SIZE } from "src/state/models";
+import { ISequence, IUpload, NetworkStatus, NETWORK_PAGE_SIZE } from "src/state/models";
 import * as api from "src/api";
 import { isEmpty } from "src/utils";
-import { IFetchSequences, networkActions as na } from "src/state/actions/network";
+import { IFetchSequencesParams, networkActions as na } from "src/state/actions/network";
 import { actions, IThunkAction } from "src/state/actions";
 import { ModalType } from "src/state/constants";
 import { paramsMatch } from "src/state/reducers/data/sequences";
@@ -34,9 +34,9 @@ const deleteDataset = (id: string): IThunkAction => (dispatch) => {
     );
 };
 
-const fetchSequences = (params: IFetchSequences): IThunkAction => (dispatch, getState) => {
+const fetchSequences = (params: IFetchSequencesParams): IThunkAction => (dispatch, getState) => {
   const { datasetId, filter, page, queryId } = params;
-  const { sequences: state, datasets } = getState().data;
+  const { sequences: state } = getState().data;
 
   if (datasetId === null) {
     console.error("datasetId is null when trying to fetch sequences. Returning.");
@@ -54,18 +54,19 @@ const fetchSequences = (params: IFetchSequences): IThunkAction => (dispatch, get
 
   dispatch(na.fetchSequencesRequest({ params }));
   api.fetchSequences(params).then(
-    (response: { page: number; page_size: number; items: ISequence[] }) => {
-      const dataset = datasets.datasets[datasetId];
-      const expected = Math.min(
-        SEQUENCES_PAGE_SIZE,
-        dataset.analysis.record_count - page * SEQUENCES_PAGE_SIZE
-      );
+    (response) => {
+      // let expected = NETWORK_PAGE_SIZE;
+      // const maxPage = Math.ceil(response.total_count / NETWORK_PAGE_SIZE) - 1;
+      // if (page === maxPage) {
+      //   expected = response.total_count % NETWORK_PAGE_SIZE;
+      // }
+      const expected = Math.min(NETWORK_PAGE_SIZE, response.total_count - page * NETWORK_PAGE_SIZE);
 
       if (response.items.length !== expected) {
         console.warn("Fetch sequences page size does not match the expected size");
       }
 
-      dispatch(na.fetchSequencesSuccess({ params, items: response.items }));
+      dispatch(na.fetchSequencesSuccess({ params, response }));
     },
     (error) => {
       console.error("fetchSequences error");
