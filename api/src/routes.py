@@ -104,6 +104,7 @@ def dataset_sequences_view(dataset_id):
     :query_string_param page_size: page size to calculate offset by
     :query_string_param qid: query seq_id
     :query_string_param filter: string that must be contained in the description
+    :query_string_param excluded: projection keys to exclude from response
     :param dataset_id:
     :return: {
         "pagination": {
@@ -121,12 +122,18 @@ def dataset_sequences_view(dataset_id):
 
     qid = request.args.get("qid", None, str)
     desc_filter = request.args.get("filter", None, str)
+    excluded = request.args.get("excluded", None, str)
 
     dataset_id = bson.objectid.ObjectId(dataset_id)
-    qid = bson.objectid.ObjectId(qid)
+    if qid is not None:
+        qid = bson.objectid.ObjectId(qid)
+    if excluded is not None and isinstance(excluded, str):
+        excluded = excluded.split(",")
 
     engine = data.engine.get_engine()
-    response = engine.get_dataset_records(dataset_id, page, page_size, qid, desc_filter)
+    response = engine.get_dataset_records(
+        dataset_id, page, page_size, qid, desc_filter, excluded
+    )
     return jsonify(response)
 
 

@@ -64,7 +64,7 @@ class DataEngine:
         return list(cursor)
 
     def get_dataset_records(
-        self, dataset_id, page, page_size, qid=None, desc_filter=None
+        self, dataset_id, page, page_size, qid=None, desc_filter=None, excluded=None
     ):
         records_cname = str(dataset_id)
         records_collection = self.db.get_collection(records_cname)
@@ -83,6 +83,16 @@ class DataEngine:
         if desc_filter is not None:
             mongo_filter["$text"] = {"$search": f'"{desc_filter}"'}
             # projection["description"] = {"$meta": "textScore"}
+        # This should be the last item that manages the projection
+        if excluded is not None:
+            if isinstance(excluded, list) and all(
+                isinstance(item, str) for item in excluded
+            ):
+                for exclude in excluded:
+                    if exclude in projection:
+                        projection.pop(exclude)
+            else:
+                print("Invalid excluded tag")
 
         offset = page * page_size
         cursor = (
@@ -94,8 +104,8 @@ class DataEngine:
         return {
             "page": page,
             "page_size": page_size,
-            "items": items,
             "total_count": cursor.count(),
+            "items": items,
         }
 
     def delete_dataset(self, dataset_id):
