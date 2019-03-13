@@ -81,9 +81,9 @@ class DataEngine:
             mongo_filter[f"queries.{qid}"] = {"$exists": True}
             projection[f"queries.{str(qid)}"] = 1
         if desc_filter is not None:
-            mongo_filter["$text"] = {"$search": f'"{desc_filter}"'}
-            # projection["description"] = {"$meta": "textScore"}
-        # This should be the last item that manages the projection
+            mongo_filter["$text"] = {"$search": desc_filter}
+            projection["match_score"] = {"$meta": "textScore"}
+        # This should be the last statement that manages the projection
         if excluded is not None:
             if isinstance(excluded, list) and all(
                 isinstance(item, str) for item in excluded
