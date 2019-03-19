@@ -118,15 +118,19 @@ class DataEngine:
         records_collection = self.db.get_collection(records_cname)
 
         offset = page * page_size
-        cursor = (
-            records_collection.find(mongo_filter, projection)
-            .skip(offset)
-            .limit(page_size)
-            .sort("seq_id", 1)
-            .collation({"locale": "en_US", "numericOrdering": True})
-        )
+        cursor = records_collection.find(mongo_filter, projection)
 
-        items = list(cursor)
+        if page_size == 0:
+            items = []
+        else:
+            cursor = (
+                cursor.skip(offset)
+                .limit(page_size)
+                .sort("seq_id", 1)
+                .collation({"locale": "en_US", "numericOrdering": True})
+            )
+            items = list(cursor)
+
         return {
             "page": page,
             "page_size": page_size,
