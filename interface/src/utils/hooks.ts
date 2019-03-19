@@ -30,13 +30,8 @@ export const usePagination = (
   const setPage = (p: number): void => {
     if (p < 0 || p > maxPage) {
       console.warn(`Invalid page: ${p}`);
-    } else if (p !== page) {
-      setPageRaw(p);
     } else {
-      console.groupCollapsed("Pages are equal... Ignoring.");
-      console.log("Old: ", page);
-      console.log("New: ", p);
-      console.groupEnd();
+      setPageRaw(p);
     }
   };
 

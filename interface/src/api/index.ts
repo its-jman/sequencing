@@ -29,12 +29,16 @@ const deleteDataset = ({ id }: { id: string }) =>
 const fetchAlphabet = () =>
   fetch(`${ENDPOINT}/alphabet`).then((resp): Promise<IAlphabet> => resp.json());
 
-const fetchSequences = (datasetId: string, page: number, filter: IFilter) => {
+const fetchSequences = (
+  datasetId: string,
+  page: number,
+  filter: IFilter,
+  pageSize: number = DATASETS_NETWORK_PAGE_SIZE
+) => {
   let url = `${ENDPOINT}/datasets/${datasetId}/sequences`;
-  const PAGE_SIZE = DATASETS_NETWORK_PAGE_SIZE;
   const queryParams: IQueryString = {
     page: `${page}`,
-    page_size: `${PAGE_SIZE}`
+    page_size: `${pageSize}`
   };
   if (filter.queryId !== null) queryParams["qid"] = filter.queryId;
   if (filter.descFilter !== null) queryParams["filter"] = filter.descFilter;
@@ -42,15 +46,21 @@ const fetchSequences = (datasetId: string, page: number, filter: IFilter) => {
   return fetch(withParams(url, queryParams))
     .then((resp): Promise<IFetchSequencesResponse> => resp.json())
     .then((response) => {
-      let expected = PAGE_SIZE;
-      const maxPage = Math.ceil(response.total_count / PAGE_SIZE) - 1;
+      let expected = pageSize;
+      const maxPage = Math.ceil(response.total_count / pageSize) - 1;
       if (page === maxPage) {
-        expected = response.total_count % PAGE_SIZE;
+        expected = response.total_count % pageSize;
       }
       // const expected = Math.min(NETWORK_PAGE_SIZE, response.total_count - page * NETWORK_PAGE_SIZE);
 
       if (response.items.length !== expected) {
-        console.warn("Fetch dsMap page size does not match the expected size");
+        console.groupCollapsed(
+          "%cfetchSequences: Page size does not match expected size",
+          "color: #E6C78A; background-color: #332B00; font-size: 12px; font-weight: lighter; padding: 3px; border: 1px solid #E6C78A"
+        );
+        console.log("Expected: ", expected);
+        console.log("Actual: ", response.items.length);
+        console.groupEnd();
       }
       return response;
     });

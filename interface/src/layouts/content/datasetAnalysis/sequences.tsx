@@ -14,12 +14,12 @@ type IOwnProps = {
 
 const RENDERED_PAGE_SIZE = 8;
 
-const useNetworkPagination = ({ datasetId }: IOwnProps) => {
+const useNetworkPagination = (datasetId: string) => {
   const sequencesStore = useContext(SequencesContext);
   const dsCache = sequencesStore.getDSCache(datasetId);
 
   const maxRenderedPage =
-    dsCache.totalCount !== null ? Math.ceil(dsCache.totalCount / RENDERED_PAGE_SIZE) - 1 : -1;
+    dsCache.totalCount !== null ? Math.ceil(dsCache.totalCount / RENDERED_PAGE_SIZE) - 1 : 0;
   const [renderedPage, setRenderedPage] = usePagination(maxRenderedPage);
 
   const start = renderedPage * RENDERED_PAGE_SIZE;
@@ -36,27 +36,22 @@ const useNetworkPagination = ({ datasetId }: IOwnProps) => {
   };
 };
 
-export const Sequences = observer<IOwnProps>((props) => {
+export const Sequences = observer<IOwnProps>(({ datasetId }) => {
   const uiStore = useContext(UIContext);
   const [open, setOpen] = useState(false);
   const [selection, setSelection] = useState("");
-  const { page, setPage, maxPage, loading, sequences } = useNetworkPagination(props);
+  const { page, setPage, maxPage, loading, sequences } = useNetworkPagination(datasetId);
 
   // This should never rerender.
   useEffect(() => {
+    // prettier-ignore
     const disposer = reaction(
       () => uiStore.filter,
-      () => {
-        setPage(0);
-      },
-      {
-        name: ""
-      }
+      () => { setPage(0); },
+      { name: "setFilter:resetSequencesPage" }
     );
 
-    return () => {
-      disposer();
-    };
+    return () => disposer();
   }, []);
 
   return (

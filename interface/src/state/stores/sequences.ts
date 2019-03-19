@@ -19,6 +19,24 @@ class DatasetSequencesCache {
   constructor(private readonly datasetId: string, private readonly uiStore: UIStore) {
     this.datasetId = datasetId;
     this.uiStore = uiStore;
+
+    (async () => {
+      // for (let i = 0; i < 3; i++) {
+      await this._fetchItemCount();
+      // if (this.totalCount !== null) break;
+      // }
+    })();
+  }
+
+  @action private async _fetchItemCount() {
+    try {
+      if (this.totalCount !== null) return;
+      const response = await api.fetchSequences(this.datasetId, 0, this.uiStore.filter, 0);
+
+      if (this.totalCount === null) {
+        this.totalCount = response.total_count;
+      }
+    } catch {}
   }
 
   private _calcPages({ start, end }: IListIndexes): number[] {
