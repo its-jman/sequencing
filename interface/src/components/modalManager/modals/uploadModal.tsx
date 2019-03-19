@@ -1,17 +1,18 @@
-import React, { ChangeEvent, useRef, useState } from "react";
+import React, { ChangeEvent, useCallback, useContext, useRef, useState } from "react";
 import { FiEdit, FiX } from "react-icons/fi";
-import { connect } from "react-redux";
+import { observer } from "mobx-react-lite";
+
+import { ModalType } from "src/state/constants";
+import { getClassNames } from "src/utils";
+import { useKeydownHandler } from "src/utils";
+import { UIContext } from "src/state/stores/ui";
 
 import styles from "./_UploadModal.module.scss";
 
-import { IAppState, IDispatchProps, IUpload, NetworkStatus } from "src/state/models";
-import { ModalType } from "src/state/constants";
-import { getClassNames } from "src/components/utils";
-import { actions } from "src/state/actions";
-import { useKeydownHandler } from "src/utils";
-
-type IDispatch = IDispatchProps["dispatch"];
-
+/**
+ * TODO: This should be changed to show a list of files that are being uploaded.
+ *    List should be clickable (set ci), and cancelable.
+ */
 const MultiSelectionHeader = (props: { ci: number; total: number }) => {
   const { ci, total } = props;
 
@@ -61,25 +62,24 @@ const ModalFooter = (props: {
   );
 };
 
-const UploadModal = (props: { upload: IUpload | null } & IDispatchProps) => {
-  const { upload, dispatch } = props;
-  if (upload === null) {
-    console.warn("Attempted to process a null upload, closing upload manager");
-    dispatch(actions.setModal({ modalType: ModalType.UPLOAD_MANAGER, status: false }));
+export const UploadModal = observer(() => {
+  const uiStore = useContext(UIContext);
+  const [ci, setCi] = useState(0);
+  const nameInput = useRef<HTMLInputElement>(null);
+
+  if (uiStore.uploads === null) {
+    console.warn("Trying to show uploads manager with no valid uploads. Hiding... ");
+    uiStore.hideModal(ModalType.UPLOAD_MANAGER);
     return null;
   }
 
-  const [ci, setCi] = useState(0);
-  const fields = {
-    name: useRef<HTMLInputElement>(null)
-  };
-
-  const hideModal = () => {
+  const upload = uiStore.uploads[ci];
+  const hideModal = useCallback(() => {
     // if (is NOT modified, or confirm you want to close...)
     if (upload.name === "" || window.confirm("Changes you made may not be saved.")) {
-      dispatch(actions.setModal({ modalType: ModalType.UPLOAD_MANAGER, status: false }));
+      uiStore.hideModal(ModalType.UPLOAD_MANAGER);
     }
-  };
+  }, [upload]);
 
   useKeydownHandler({
     27: hideModal
@@ -88,7 +88,7 @@ const UploadModal = (props: { upload: IUpload | null } & IDispatchProps) => {
   return (
     <div className={styles.positioningContainer}>
       <div className={styles.container}>
-        <MultiSelectionHeader ci={ci} total={1} />
+        <MultiSelectionHeader ci={ci} total={uiStore.uploads.length} />
 
         {/* Header */}
         <div className={styles.header}>
@@ -97,9 +97,7 @@ const UploadModal = (props: { upload: IUpload | null } & IDispatchProps) => {
             <div className={styles.headerRight}>
               <button
                 className={styles.formReset}
-                onClick={() => {
-                  dispatch(actions.modifyUpload({ i: ci, modifications: { name: "" } }));
-                }}
+                onClick={() => uiStore.modifyUpload(ci, { name: "" })}
               >
                 {"Reset Form"}
               </button>
@@ -110,8 +108,8 @@ const UploadModal = (props: { upload: IUpload | null } & IDispatchProps) => {
             <FiEdit
               className={styles.nameInputIcon}
               onClick={() => {
-                fields.name.current!.focus();
-                fields.name.current!.select();
+                nameInput.current!.focus();
+                nameInput.current!.select();
               }}
             />
             <input
@@ -120,11 +118,9 @@ const UploadModal = (props: { upload: IUpload | null } & IDispatchProps) => {
               placeholder="Dataset name... "
               value={upload.name}
               onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                dispatch(
-                  actions.modifyUpload({ i: ci, modifications: { name: event.target.value } })
-                );
+                uiStore.modifyUpload(ci, { name: event.target.value });
               }}
-              ref={fields.name}
+              ref={nameInput}
             />
           </div>
         </div>
@@ -143,20 +139,11 @@ const UploadModal = (props: { upload: IUpload | null } & IDispatchProps) => {
 
         {/* Footer */}
         <ModalFooter
-          skipOne={ci >= 1 ? () => dispatch(actions.skipFile({ i: ci })) : undefined}
+          skipOne={ci >= 1 ? () => uiStore.modifyUpload(ci, { ignored: true }) : undefined}
           hideModal={hideModal}
-          submit={() => {
-            dispatch(actions.submitUpload(ci));
-          }}
+          submit={() => uiStore.submitUpload(ci)}
         />
       </div>
     </div>
   );
-};
-
-export default connect<{ upload: IUpload | null }, IDispatchProps, {}, IAppState>(
-  (state: IAppState) => ({
-    upload: state.ui.uploadManager.upload
-  }),
-  (dispatch) => ({ dispatch })
-)(UploadModal);
+});

@@ -1,7 +1,4 @@
-import { AnyAction } from "redux";
-import { ThunkAction, ThunkDispatch } from "redux-thunk";
-
-import { ConfirmationType, ModalType } from "src/state/constants";
+export const DATASETS_NETWORK_PAGE_SIZE = 40;
 
 export enum NetworkStatus {
   UNSENT = "UNSENT",
@@ -10,12 +7,9 @@ export enum NetworkStatus {
   FAILURE = "FAILURE"
 }
 
-export const NETWORK_PAGE_SIZE = 40;
-
 export interface IQuery {
   _id: string;
   raw_pattern: string;
-  pattern: string;
 }
 
 export type IMatch = [number, number];
@@ -33,6 +27,7 @@ export interface ISequence {
   description: string;
   sequence: string;
   discarded?: boolean;
+  match_score?: number;
   analysis: {
     distribution: object;
     amino_count: number;
@@ -44,7 +39,7 @@ export interface IDataset {
   selected: boolean;
   name: string;
   user_filename: string;
-  upload_time: string;
+  upload_time: Date;
   analysis: {
     distribution: { [letter: string]: number };
     record_count: number;
@@ -58,113 +53,19 @@ export interface IDataset {
   };
 }
 
-// UI State
-export type IModalManager = {
-  modal: { type: ModalType } | null;
-  confirmations: Array<{ type: ConfirmationType; params: IConfirmationParams }>;
-};
-export type IConfirmationParams = {
-  resolve: () => void;
-  reject: () => void;
-};
 export type IUpload = {
   file: File;
-  networkStatus: NetworkStatus;
+  ns: NetworkStatus;
   name: string;
   errors: string[];
   ignored?: boolean;
 };
-export type IUIState = {
-  title: string | null;
+
+type IAlphabetLetter = { abr: string; name: string; freq: number };
+export type IAlphabet = { [letter: string]: IAlphabetLetter };
+
+// HERE
+export type IFilter = {
   queryId: string | null;
-  modalManager: IModalManager;
-  uploadManager: {
-    shouldOpenFI: boolean;
-    upload: IUpload | null;
-  };
+  descFilter: string | null;
 };
-
-// export type INetworkState = {
-//   datasets: NetworkStatus;
-//   alphabet: NetworkStatus;
-//   sequences: {
-//     datasetId: string;
-//     queryId: string;
-//     filter: string;
-//     pages: {
-//       [page: number]: NetworkStatus;
-//     };
-//   };
-// };
-
-export type IDatasetsState = {
-  networkStatus: NetworkStatus;
-  datasets: {
-    [id: string]: IDataset;
-  };
-};
-
-export type IAlphabetState = {
-  networkStatus: NetworkStatus;
-  alphabet: {
-    [letter: string]: { abr: string; name: string; freq: number };
-  };
-};
-
-export type ISequencesFilter = {
-  datasetId: string | null;
-  queryId: string | null;
-  filter: string | null;
-};
-
-export type ISequencesState = ISequencesFilter & {
-  total_count: number;
-  networkStatus: {
-    [page: number]: NetworkStatus;
-  };
-  pages: {
-    [page: number]: ISequence[];
-  };
-};
-
-export type IQueriesState = {
-  history: {
-    networkStatus: NetworkStatus;
-    items: IQuery[];
-  };
-  creationNetworkStatus: {
-    [rawPattern: string]: NetworkStatus;
-  };
-  resultsNetworkStatus: {
-    [queryId: string]: NetworkStatus;
-  };
-  queries: {
-    [queryId: string]: {
-      [datasetId: string]: IDatasetQueryAnalysis;
-    };
-  };
-};
-
-export type IDataState = {
-  alphabet: IAlphabetState;
-  datasets: IDatasetsState;
-  sequences: ISequencesState;
-  queries: IQueriesState;
-};
-
-// App State
-export type IAppState = {
-  ui: IUIState;
-  data: IDataState;
-};
-
-// Connect Props
-export type IStateProps = {
-  state: IAppState;
-};
-
-export type IDispatchProps = {
-  dispatch: ThunkDispatch<IAppState, {}, AnyAction>;
-};
-
-export type IAppProps = IStateProps & IDispatchProps;

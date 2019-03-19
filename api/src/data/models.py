@@ -35,4 +35,3 @@ class Record(MongoModel):
 
 class Query(MongoModel):
     raw_pattern = fields.CharField(required=True)
-    pattern = fields.CharField(required=True)

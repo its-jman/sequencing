@@ -1,0 +1,32 @@
+@import "../../styles/globals/all";
+
+.sidebarLabel {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+.inputContainer {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  .input {
+    width: 100%;
+    padding: 8px 24px 8px 12px;
+
+    letter-spacing: 1.5px;
+    //font-size: larger;
+    font-weight: lighter;
+  }
+  .inputClear {
+    position: absolute;
+    right: 4px;
+
+    color: $grey-6;
+    &:hover {
+      color: $grey-7;
+      cursor: pointer;
+    }
+  }
+}

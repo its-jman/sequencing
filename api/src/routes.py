@@ -1,10 +1,10 @@
 import json
 import os
+import random
 import time
 import uuid
 import tempfile
 
-import bson
 from bson import json_util
 from datetime import datetime
 from flask import Blueprint, jsonify, request
@@ -19,7 +19,7 @@ bp = Blueprint("datasets", __name__)
 
 # @bp.before_request
 # def sleep_more():
-#     time.sleep(4)
+#     time.sleep(random.randint(1, 4))
 
 
 class DatasetsView(MethodView):
@@ -120,19 +120,21 @@ def dataset_sequences_view(dataset_id):
     page = request.args.get("page", 0, int)
     page_size = request.args.get("page_size", 100, int)
 
-    qid = request.args.get("qid", None, str)
+    query_id = request.args.get("qid", None, str)
     desc_filter = request.args.get("filter", None, str)
     excluded = request.args.get("excluded", None, str)
 
-    dataset_id = bson.objectid.ObjectId(dataset_id)
-    if qid is not None:
-        qid = bson.objectid.ObjectId(qid)
-    if excluded is not None and isinstance(excluded, str):
+    if excluded is not None:
         excluded = excluded.split(",")
 
     engine = data.engine.get_engine()
     response = engine.get_dataset_records(
-        dataset_id, page, page_size, qid, desc_filter, excluded
+        dataset_id=dataset_id,
+        page=page,
+        page_size=page_size,
+        query_id=query_id,
+        desc_filter=desc_filter,
+        excluded_fields=excluded,
     )
     return jsonify(response)
 
@@ -140,30 +142,27 @@ def dataset_sequences_view(dataset_id):
 @bp.route("/queries", methods=["GET"])
 def get_queries():
     engine = data.engine.get_engine()
-    queries = engine.query_dataset_sequences()
-    return jsonify({"items": queries})
+    queries = engine.get_queries()
+    return jsonify(queries)
 
 
 @bp.route("/queries", methods=["POST"])
 def create_query():
     body = request.get_json(force=True)
 
-    raw_pattern = body.get("raw_pattern", None)
+    raw_pattern = body.get("pattern", None)
     if raw_pattern is None:
-        return jsonify({"errors": ["missing_raw_pattern"]})
+        return jsonify({"errors": ["missing_pattern"]})
 
     engine = data.engine.get_engine()
-    query, errors = engine.build_query(raw_pattern)
-    if query is None and len(errors) > 0:
+    query, errors = engine.get_query(raw_pattern)
+    if query is None and len(errors) == 0:
         errors.append("creation_failure")
     return jsonify({"errors": errors, "query": query})
 
 
 @bp.route("/queries/<string:query_id>/datasets/<string:dataset_id>", methods=["GET"])
 def query_dataset(query_id, dataset_id):
-    query_id = bson.objectid.ObjectId(query_id)
-    dataset_id = bson.objectid.ObjectId(dataset_id)
-
     engine = data.engine.get_engine()
     match_analysis = engine.query_dataset(query_id, dataset_id)
     return jsonify({"match_analysis": match_analysis})
@@ -209,7 +208,7 @@ def auto_upload():
         name="My Dataset",
         data_format="fasta",
         user_filename="test.fast",
-        path="../demo/some.fasta",
+        path="../demo/all.fasta",
     )
 
     datasets = engine.get_datasets()

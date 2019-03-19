@@ -4,7 +4,7 @@ import { IconType } from "react-icons/lib";
 
 import styles from "./_iconButton.module.scss";
 import { FiBarChart2 } from "react-icons/fi";
-import { getClassNames } from "src/components/utils";
+import { getClassNames } from "src/utils";
 
 type IIconButtonProps = {
   className?: string;

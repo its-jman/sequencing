@@ -2,7 +2,7 @@ import React from "react";
 import { FiCheck } from "react-icons/fi";
 
 import styles from "./_checkbox.module.scss";
-import { getClassNames } from "src/components/utils";
+import { getClassNames } from "src/utils";
 
 type ICheckboxProps = {
   className?: string;

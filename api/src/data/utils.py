@@ -102,7 +102,12 @@ def convert_raw_record(raw_record):
 
 
 def convert_raw_pattern(raw_pattern):
-    if raw_pattern is None:
+    raw_pattern = raw_pattern.upper()
+    if (
+        raw_pattern is None
+        or not isinstance(raw_pattern, str)
+        or not re.match(r"^[A-Z0-9{},]{2,120}$", raw_pattern)
+    ):
         return None
 
     raw_pattern = raw_pattern.replace("X", "[A-Z]")
@@ -116,6 +121,7 @@ def convert_raw_pattern(raw_pattern):
 def compile_regex(pattern):
     if pattern is None:
         return None
+
     try:
         out = re.compile(pattern)
     except re.error:

@@ -1,0 +1,138 @@
+@import "../../../styles/globals/all";
+
+.noResults {
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+.header {
+  background-color: $grey-2;
+
+  & th {
+    height: 45px;
+
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+  }
+}
+
+.table {
+  border-collapse: collapse;
+
+  flex-grow: 1;
+}
+
+.row {
+  border-bottom: 1px solid $grey-3;
+  &:last-child {
+    border-bottom: 0;
+  }
+
+  &:hover {
+    background-color: $grey-1;
+  }
+}
+
+.col {
+  padding: 10px 52px 10px 0;
+}
+
+.colSpace {
+  padding-left: 14px;
+  padding-right: 14px;
+}
+
+.controlCol {
+  align-items: center;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.datasetCol {
+  align-items: center;
+  display: flex;
+  max-width: 150px;
+  overflow: hidden;
+  //background-color: lightblue;
+
+  white-space: nowrap;
+  width: 150px;
+
+  .datasetColCheckbox {
+    display: inline-block;
+  }
+
+  .datasetColExpander {
+    display: inline-block;
+  }
+
+  .datasetColDetails {
+    display: inline-block;
+    line-height: 1.35;
+
+    &:hover {
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .datasetColName {
+      font-size: larger;
+      font-weight: bold;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 150px;
+    }
+
+    .datasetColFilename {
+      font-weight: lighter;
+
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      width: 150px;
+    }
+  }
+}
+
+.infoCol {
+  .recordCount {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    .recordCountIcon {
+      margin-right: 6px;
+      color: $grey-5;
+    }
+    .recordCountNumber {
+      font-weight: bold;
+      margin-right: 4px;
+    }
+    .recordCountText {
+      font-weight: lighter;
+    }
+  }
+}
+
+.queryCol {
+  align-items: center;
+  display: flex;
+}
+
+.distributionCol {
+  padding: 0 8px;
+  text-align: center;
+}
+
+.footer {
+  width: 100%;
+  padding: 12px;
+  background-color: $grey-2;
+}
+
+.leftHeader {
+  text-align: left;
+}

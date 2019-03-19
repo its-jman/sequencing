@@ -1,61 +1,44 @@
-import React, { ChangeEvent } from "react";
-import { connect } from "react-redux";
+import React, { ChangeEvent, useContext, useEffect, useRef } from "react";
+import { observer } from "mobx-react-lite";
 
-import { IAppState, IDispatchProps } from "src/state/models";
 import { ModalType } from "src/state/constants";
-import { actions } from "src/state/actions";
-import { isEmpty } from "src/utils";
+import { UIContext } from "src/state/stores/ui";
 
-type IControlledFileInputProps = { shouldOpen: boolean } & IDispatchProps;
+export const ControlledFileInput = observer(() => {
+  const uiStore = useContext(UIContext);
+  const fileInput = useRef<HTMLInputElement>(null);
 
-class ControlledFileInput extends React.PureComponent<IControlledFileInputProps> {
-  fileInput: HTMLInputElement | null = null;
-  _onChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (!this.fileInput!.files) {
-      console.warn("File Input files is null");
-      return;
+  useEffect(() => {
+    if (uiStore.shouldOpenFI) {
+      fileInput.current!.click();
+      uiStore.popupFileInput(false);
     }
+  });
 
-    const file = this.fileInput!.files[0];
-    // `File` is a custom object which is not enumerable through traditional Object means.
-    if (file === null || file === undefined || file.name.length === 0) {
-      console.warn('File is "empty"');
-      console.log(file);
-    } else {
-      const { dispatch } = this.props;
-      dispatch(actions.selectFile(this.fileInput!.files[0]));
-      dispatch(actions.setModal({ modalType: ModalType.UPLOAD_MANAGER, status: true }));
-    }
-  };
+  return (
+    <input
+      type="file"
+      style={{ display: "none" }}
+      /* Permenamtly resets value to "" to prevent null responses when the same file is selected twice */
+      value={""}
+      multiple={false}
+      ref={fileInput}
+      onChange={(event: ChangeEvent<HTMLInputElement>) => {
+        if (!fileInput.current!.files) {
+          console.warn("File Input files is null");
+          return;
+        }
 
-  _tryOpen = (props: IControlledFileInputProps) => {
-    const { dispatch, shouldOpen } = props;
-    if (shouldOpen) {
-      this.fileInput!.click();
-      dispatch(actions.popupFileInput({ status: false }));
-    }
-  };
-  componentWillMount() {
-    this._tryOpen(this.props);
-  }
-  componentWillUpdate(nextProps: Readonly<IControlledFileInputProps>) {
-    this._tryOpen(nextProps);
-  }
-
-  render() {
-    return (
-      <input
-        type="file"
-        style={{ display: "none" }}
-        value={""}
-        onChange={this._onChange}
-        multiple={false}
-        ref={(inp) => (this.fileInput = inp)}
-      />
-    );
-  }
-}
-
-export default connect((state: IAppState) => ({
-  shouldOpen: state.ui.uploadManager.shouldOpenFI
-}))(ControlledFileInput);
+        const file = fileInput.current!.files[0];
+        // `File` is a custom object which is not enumerable through traditional Object means.
+        if (file === null || file === undefined || file.name.length === 0) {
+          console.warn('File is "empty"');
+          console.log(file);
+        } else {
+          uiStore.setUploads([file]);
+          uiStore.showModal(ModalType.UPLOAD_MANAGER);
+        }
+      }}
+    />
+  );
+});

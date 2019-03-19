@@ -1,16 +1,36 @@
 import React from "react";
+import * as mobx from "mobx";
 import ReactDOM from "react-dom";
-import { Provider } from "react-redux";
-import { BrowserRouter } from "react-router-dom";
+import MobxDevtools, { configureDevtool } from "mobx-react-devtools";
 
-import { default as App } from "src/layouts";
-import { store } from "src/state";
+import { App } from "./app";
+
+mobx.configure({ enforceActions: "always", computedRequiresReaction: true });
+
+mobx.spy((event) => {
+  if (event.type === "action") {
+    console.groupCollapsed(`%cRunning "${event.name}": `, "color: #3183c8");
+    console.log("Args: ", event.arguments);
+    console.log("Event: ", event);
+    console.groupEnd();
+    // console.log(`${event.name} with args: ${JSON.stringify(event.arguments)}`);
+  }
+});
+
+// configureDevtool({
+//   logFilter: (event) => {
+//     if (event.type === "action") {
+//       // console.log(`${event.name} with args: ${JSON.stringify(event.arguments)}`);
+//       return true;
+//     }
+//     return false;
+//   }
+// });
 
 ReactDOM.render(
-  <Provider store={store}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </Provider>,
+  <>
+    <MobxDevtools />
+    <App />
+  </>,
   document.getElementById("root")
 );

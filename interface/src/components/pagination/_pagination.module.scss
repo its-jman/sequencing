@@ -1,0 +1,31 @@
+@import "../../styles/globals/all";
+
+.pagination {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.pageLink {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  $size: 36px;
+  height: $size;
+  width: $size;
+
+  background-color: $grey-0;
+
+  border-right: 1px solid $grey-3;
+  &:last-child {
+    border-right: 0;
+  }
+
+  &:hover {
+    cursor: pointer;
+    background-color: $grey-4;
+    a {
+    }
+  }
+}
