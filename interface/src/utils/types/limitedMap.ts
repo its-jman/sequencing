@@ -40,14 +40,14 @@ export class LimitedObservableMap<TKey, TVal> {
     if (maxSize < 1) throw new Error("Invalid maxSize");
   }
 
-  private _removeOldest() {
+  @action("limitedMap._removeOldest") private _removeOldest() {
     for (const [k, v] of this.map) {
       this.map.delete(k);
       break;
     }
   }
 
-  get(key: TKey): TVal | undefined {
+  @action("limitedMap.get") get(key: TKey): TVal | undefined {
     const val = this.map.get(key);
     if (val !== undefined) {
       if (this.top !== key) {
@@ -60,7 +60,7 @@ export class LimitedObservableMap<TKey, TVal> {
     return val;
   }
 
-  set(key: TKey, val: TVal): this {
+  @action("limitedMap.set") set(key: TKey, val: TVal): this {
     this.map.set(key, val);
     if (this.map.size > this.maxSize) {
       this._removeOldest();

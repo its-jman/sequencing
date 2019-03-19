@@ -1,4 +1,4 @@
-import { action, autorun, observable, reaction, runInAction } from "mobx";
+import { action, autorun, computed, IComputedValue, observable, reaction, runInAction } from "mobx";
 
 import { api } from "src/api";
 import { DATASETS_NETWORK_PAGE_SIZE, ISequence, NetworkStatus } from "src/state/models";
@@ -95,20 +95,13 @@ class DatasetSequencesCache {
       let page = this.pages.get(pageI);
       if (page === undefined) {
         page = observable({ i: pageI, ns: NetworkStatus.UNSENT, items: [] });
-        runInAction("getSequences.setUndefinedPage", () => {
-          if (page === undefined) throw new Error("getSequences.autorun: Page is undef...?");
-          this.pages.set(pageI, page);
-        });
+        this.pages.set(pageI, page);
       }
 
       if (page.ns !== NetworkStatus.SUCCESS) {
-        autorun((reaction) => {
-          if (page && (page.ns === NetworkStatus.UNSENT || page.ns === NetworkStatus.FAILURE)) {
-            this._fetchPage(pageI).finally(() => {
-              reaction.dispose();
-            });
-          }
-        });
+        if (page && (page.ns === NetworkStatus.UNSENT || page.ns === NetworkStatus.FAILURE)) {
+          this._fetchPage(pageI);
+        }
       }
     });
 

@@ -1,10 +1,12 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { getClassNames, usePagination } from "src/utils";
 
 import styles from "./_sequences.module.scss";
 import { observer } from "mobx-react-lite";
 import { SequencesContext } from "src/state/stores/sequences";
+import { UIContext } from "src/state/stores/ui";
+import { reaction } from "mobx";
 
 type IOwnProps = {
   datasetId: string;
@@ -35,9 +37,27 @@ const useNetworkPagination = ({ datasetId }: IOwnProps) => {
 };
 
 export const Sequences = observer<IOwnProps>((props) => {
+  const uiStore = useContext(UIContext);
   const [open, setOpen] = useState(false);
   const [selection, setSelection] = useState("");
-  const { page, setPage, loading, maxPage, sequences } = useNetworkPagination(props);
+  const { page, setPage, maxPage, loading, sequences } = useNetworkPagination(props);
+
+  // This should never rerender.
+  useEffect(() => {
+    const disposer = reaction(
+      () => uiStore.filter,
+      () => {
+        setPage(0);
+      },
+      {
+        name: ""
+      }
+    );
+
+    return () => {
+      disposer();
+    };
+  }, []);
 
   return (
     <div className={styles.container}>

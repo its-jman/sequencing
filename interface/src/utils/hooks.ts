@@ -27,13 +27,18 @@ export const usePagination = (
 ): [number, (p: number) => void] => {
   const [page, setPageRaw] = useState(initial);
 
-  const setPage = useCallback((p: number): void => {
+  const setPage = (p: number): void => {
     if (p < 0 || p > maxPage) {
       console.warn(`Invalid page: ${p}`);
     } else if (p !== page) {
       setPageRaw(p);
+    } else {
+      console.groupCollapsed("Pages are equal... Ignoring.");
+      console.log("Old: ", page);
+      console.log("New: ", p);
+      console.groupEnd();
     }
-  }, [maxPage]);
+  };
 
   return [page, setPage];
 };
