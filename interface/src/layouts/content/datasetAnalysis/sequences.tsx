@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react";
 import { getClassNames, usePagination } from "src/utils";
 
 import styles from "./_sequences.module.scss";
-import { observer, useObservable } from "mobx-react-lite";
+import { observer } from "mobx-react-lite";
 import { SequencesContext } from "src/state/stores/sequences";
 
 type IOwnProps = {

@@ -9,7 +9,7 @@ type IProps = {
   maxPage: number;
 };
 
-export const Pagination = React.memo(({ page, setPage, maxPage }: IProps) => {
+export const Pagination = React.memo<IProps>(({ page, setPage, maxPage }) => {
   return (
     <div className={styles.pagination}>
       <div className={styles.pageLink} onClick={() => setPage(page - 1)}>

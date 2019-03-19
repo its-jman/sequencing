@@ -174,18 +174,6 @@ class SequencesStore {
     }
     return dsCache;
   }
-
-  // TODO: Figure out what decorator this should be? Does it even need one?
-  // getSequences(datasetId: string, li: IListIndexes): IGetSequences {
-  //   const dsCache = this.getDSCache(datasetId);
-  //   return dsCache.getSequences(li);
-  // }
-
-  // TODO: This is de-referencing the totalCount.. Should this be @computed?
-  // getTotalCount(datasetId: string) {
-  //   const dsCache = this.getDSCache(datasetId);
-  //   return dsCache.totalCount;
-  // }
 }
 
 const sequencesStoreRaw = new SequencesStore(uiStoreRaw);

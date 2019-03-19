@@ -2,8 +2,6 @@ import React, { ChangeEvent, useCallback, useEffect, useRef, useState } from "re
 
 // TODO: Figure out the proper way to destroy and re-use this instead of passing in an empty array
 export const useKeydownHandler = (keydownMap: { [keyCode: number]: () => void }) => {
-  // console.log("REDOING");
-
   useEffect(() => {
     const handler = (event: React.KeyboardEvent<HTMLDivElement>) => {
       if (event.keyCode in keydownMap) {
@@ -17,16 +15,16 @@ export const useKeydownHandler = (keydownMap: { [keyCode: number]: () => void })
     // @ts-ignore
     document.addEventListener("keydown", handler, false);
     return () => {
-      // console.log("INNER CLEAR");
       // @ts-ignore
       document.removeEventListener("keydown", handler, false);
     };
   }, []);
 };
 
-type IUsePagination = [number, (p: number) => void];
-
-export const usePagination = (maxPage: number, initial: number = 0): IUsePagination => {
+export const usePagination = (
+  maxPage: number,
+  initial: number = 0
+): [number, (p: number) => void] => {
   const [page, setPageRaw] = useState(initial);
 
   const setPage = useCallback((p: number): void => {
