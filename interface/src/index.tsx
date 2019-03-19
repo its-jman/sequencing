@@ -7,7 +7,12 @@ import { App } from "./app";
 
 mobx.configure({ enforceActions: "always", computedRequiresReaction: true });
 
-const discardedActionNames = ["limitedMap._removeOldest", "limitedMap.get", "limitedMap.set"];
+const discardedActionNames = [
+  "limitedMap._removeOldest",
+  "limitedMap.get",
+  "limitedMap.set",
+  "getDSCache"
+];
 mobx.spy((event) => {
   if (event.type === "action") {
     if (discardedActionNames.indexOf(event.name) === -1) {

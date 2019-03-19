@@ -21,10 +21,10 @@ class DatasetSequencesCache {
     this.uiStore = uiStore;
 
     (async () => {
-      // for (let i = 0; i < 3; i++) {
-      await this._fetchItemCount();
-      // if (this.totalCount !== null) break;
-      // }
+      for (let i = 0; i < 3; i++) {
+        await this._fetchItemCount();
+        if (this.totalCount !== null) break;
+      }
     })();
   }
 
@@ -33,9 +33,11 @@ class DatasetSequencesCache {
       if (this.totalCount !== null) return;
       const response = await api.fetchSequences(this.datasetId, 0, this.uiStore.filter, 0);
 
-      if (this.totalCount === null) {
-        this.totalCount = response.total_count;
-      }
+      runInAction("_fetchItemCount.success", () => {
+        if (this.totalCount === null) {
+          this.totalCount = response.total_count;
+        }
+      });
     } catch {}
   }
 

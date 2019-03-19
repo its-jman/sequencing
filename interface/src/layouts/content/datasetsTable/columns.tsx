@@ -1,5 +1,5 @@
-import React from "react";
-import { FiArrowUp, FiBarChart2, FiDisc } from "react-icons/fi";
+import React, { useContext } from "react";
+import { FiArrowUp, FiBarChart2, FiDisc, FiFilter } from "react-icons/fi";
 import { Link } from "react-router-dom";
 
 import { getClassNames } from "src/utils";
@@ -7,6 +7,9 @@ import Checkbox from "src/components/checkbox";
 import { IDataset } from "src/state/models";
 
 import styles from "./_tableStyles.module.scss";
+import { observer } from "mobx-react-lite";
+import { UIContext } from "src/state/stores/ui";
+import { SequencesContext } from "src/state/stores/sequences";
 
 type IColProps = {
   dataset: IDataset;
@@ -35,11 +38,29 @@ const DatasetCol = React.memo<IColProps>(({ dataset }) => {
   );
 });
 
+const FilterComponent = observer<IColProps>(({ dataset }) => {
+  const sequencesStore = useContext(SequencesContext);
+  const dsCache = sequencesStore.getDSCache(dataset._id);
+
+  return (
+    <div className={styles.recordCount}>
+      <FiFilter className={styles.recordCountIcon} size={24} />
+      <span className={styles.recordCountNumber}>{dsCache.totalCount}</span>
+      <span className={styles.recordCountText}>{"matches"}</span>
+    </div>
+  );
+});
+
 const DetailsHeader = React.memo(() => <th className={styles.leftHeader}>Details</th>);
-const DetailsCol = React.memo<IColProps>(({ dataset }: { dataset: IDataset }) => {
+const DetailsCol = observer<IColProps>(({ dataset }: { dataset: IDataset }) => {
+  const uiStore = useContext(UIContext);
+
   return (
     <td className={styles.col}>
       <div className={styles.infoCol}>
+        {(uiStore.filter.descFilter !== null || uiStore.filter.queryId !== null) && (
+          <FilterComponent dataset={dataset} />
+        )}
         <div className={styles.recordCount}>
           <FiDisc className={styles.recordCountIcon} size={24} />
           <span className={styles.recordCountNumber}>{dataset.analysis.record_count}</span>
