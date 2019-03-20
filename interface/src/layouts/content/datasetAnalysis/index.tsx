@@ -10,7 +10,7 @@ import { isEmpty } from "src/utils";
 
 import containerStyles from "../_content.module.scss";
 import styles from "./_analysis.module.scss";
-import { Sequences } from "./sequences";
+import { Records } from "./records";
 import { Distribution } from "../distribution";
 
 type IProps = {};
@@ -59,7 +59,7 @@ export const DatasetAnalysis = observer(({ match }: IProps & IRouteProps) => {
 
       <div className={styles.content}>
         <Distribution dataset={dataset} />
-        <Sequences datasetId={dataset._id} />
+        <Records datasetId={dataset._id} />
       </div>
     </div>
   );

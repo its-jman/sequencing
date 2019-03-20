@@ -3,11 +3,10 @@ import "src/styles/main.scss";
 
 import React, { useContext } from "react";
 import Helmet from "react-helmet";
-import { Provider } from "react-redux";
 import { observer } from "mobx-react-lite";
 import { BrowserRouter as Router, Redirect, Route, RouteProps, Switch } from "react-router-dom";
 
-import { ModalManager } from "src/components/modalManager";
+import Manager from "src/components/manager";
 import { UIContext } from "src/state/stores/ui";
 import { Layout } from "src/layouts";
 
@@ -49,7 +48,7 @@ export const App = () => {
       <>
         <Head />
 
-        <ModalManager />
+        <Manager />
 
         <Body />
       </>

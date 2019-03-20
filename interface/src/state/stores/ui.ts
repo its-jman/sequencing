@@ -3,8 +3,9 @@ import { action, computed, observable, runInAction } from "mobx";
 
 import { api } from "src/api";
 import { IFilter, NetworkStatus } from "src/state/models";
-import { ConfirmationType, ModalType } from "src/state/constants";
 import { isEmpty, validateUpload } from "src/utils";
+import { ConfirmationType, ModalType } from "src/state/constants";
+import { DatasetsStore, datasetsStoreRaw } from "src/state/stores/datasets";
 
 type IUploadParams = {
   name: string;
@@ -24,6 +25,8 @@ export class UIStore {
   @observable shouldOpenFI: boolean = false;
   @observable uploads: IUpload[] | null = null;
   @observable filter: IFilter = { queryId: null, descFilter: null };
+
+  constructor(private datasetStore: DatasetsStore) {}
 
   @computed get canResumeUpload() {
     return this.uploads !== null && this.uploads.every((upl) => upl.ns !== NetworkStatus.SUCCESS);
@@ -114,14 +117,14 @@ export class UIStore {
           return;
         }
 
-        if (i === this.uploads.length) {
+        if (i === this.uploads.length - 1) {
           this.hideModal(ModalType.UPLOAD_MANAGER);
         }
 
         api
           .submitUpload(upload)
           .then((response) => {
-            if (response.errors.length > 0) {
+            if (response.errors.length > 0 || response.dataset === null) {
               console.error("fetchDatasets: Recieved errors");
 
               runInAction("submitUploadFailure", () => {
@@ -131,7 +134,13 @@ export class UIStore {
             } else {
               runInAction("submitUploadSuccess", () => {
                 upload.ns = NetworkStatus.SUCCESS;
-                upload.errors = [];
+                if (response.dataset === null) {
+                  console.error("Recieved null dataset on submit upload with no errors...");
+                  upload.errors = ["null_dataset"];
+                } else {
+                  this.datasetStore.setDataset(response.dataset);
+                  upload.errors = [];
+                }
               });
             }
           })
@@ -149,8 +158,10 @@ export class UIStore {
   }
 
   @action updateFilter(filter: Partial<IFilter>) {
-    if (filter.descFilter === "" || filter.descFilter === undefined) filter.descFilter = null;
-    if (filter.queryId === "" || filter.queryId === undefined) filter.queryId = null;
+    // prettier-ignore
+    if (filter === {}) { filter.descFilter = null; filter.queryId = null }
+    if (filter.descFilter === "") filter.descFilter = null;
+    if (filter.queryId === "") filter.queryId = null;
 
     this.filter = {
       ...this.filter,
@@ -159,5 +170,5 @@ export class UIStore {
   }
 }
 
-export const uiStoreRaw = new UIStore();
+export const uiStoreRaw = new UIStore(datasetsStoreRaw);
 export const UIContext = createContext(uiStoreRaw);

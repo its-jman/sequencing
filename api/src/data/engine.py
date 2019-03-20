@@ -1,5 +1,5 @@
 import re
-
+import time
 import bson
 import pymongo
 from flask import g
@@ -205,7 +205,7 @@ class DataEngine:
             if pattern_re is None:
                 return None, ["invalid_pattern"]
 
-            query_model = models.Query(raw_pattern=raw_pattern, pattern=pattern)
+            query_model = models.Query(raw_pattern=raw_pattern)
             query = utils.convert_model(query_model)
             inserted = self._queries.insert_one(query)
             return query, []

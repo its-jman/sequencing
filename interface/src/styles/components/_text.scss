@@ -10,7 +10,7 @@ body {
 
 .light-1 {
   @extend .regular;
-  font-weight: $light-weight;
+  font-weight: $light;
 }
 
 .light-2 {
@@ -21,7 +21,7 @@ body {
 .bold-1 {
   color: transparentize($text-2, $text-transparency);
 
-  font-weight: $bold-weight;
+  font-weight: $bold;
 }
 
 .bold-2 {

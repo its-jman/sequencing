@@ -1,0 +1,17 @@
+.arrowContainer {
+  position: relative;
+}
+
+.arrowIcon {
+  display: inline-block;
+  margin-right: 12px;
+
+  position: relative;
+  top: -1px;
+
+  transition: transform .1s linear;
+  &.arrowIconOpen {
+    top: 1px;
+    transform: rotate(90deg);
+  }
+}

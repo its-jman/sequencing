@@ -1,4 +1,5 @@
-import { IUpload } from "src/state/models";
+import { IMatch, IUpload } from "src/state/models";
+import { COLORS } from "src/constants";
 
 export * from "./types";
 export * from "./hooks";
@@ -59,4 +60,33 @@ export const validateUpload = (upload: IUpload) => {
   }
 
   return errs;
+};
+
+export const getRandomColor = (): string => {
+  const keys = Object.keys(COLORS);
+  const key = keys[Math.floor(Math.random() * keys.length)];
+  return COLORS[key];
+};
+
+export const groupOverlappingMatches = (matches: IMatch[]): IMatch[][] => {
+  if (matches.length === 0) return [];
+
+  const out = [];
+  let matchSet = [matches[0]];
+  let maxEnd = matches[0][1];
+  for (let i = 0; i < matches.length - 1; i++) {
+    const nxt = matches[i + 1];
+
+    if (nxt[0] <= maxEnd) {
+      maxEnd = nxt[1];
+      matchSet.push(nxt);
+    } else {
+      maxEnd = nxt[1];
+      out.push(matchSet);
+      matchSet = [nxt];
+    }
+  }
+  out.push(matchSet);
+
+  return out;
 };

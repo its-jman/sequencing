@@ -150,7 +150,7 @@ def get_queries():
 def create_query():
     body = request.get_json(force=True)
 
-    raw_pattern = body.get("pattern", None)
+    raw_pattern = body.get("raw_pattern", None)
     if raw_pattern is None:
         return jsonify({"errors": ["missing_pattern"]})
 

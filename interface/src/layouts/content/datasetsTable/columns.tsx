@@ -72,8 +72,8 @@ const DetailsCol = observer<IColProps>(({ dataset }: { dataset: IDataset }) => {
   );
 });
 
-const QueryHeader = React.memo(() => <th className={styles.leftHeader}>Query</th>);
-const QueryCol = React.memo<IColProps>(({ dataset }) => {
+const AnalysisHeader = React.memo(() => <th className={styles.leftHeader}>Analysis</th>);
+const AnalysisCol = React.memo<IColProps>(({ dataset }) => {
   return (
     <td className={styles.col}>
       <div className={styles.queryCol}>
@@ -106,6 +106,6 @@ export const columnMap: [React.FC, React.FC<IColProps>][] = [
   [CheckboxHeader, CheckboxCol],
   [DatasetHeader, DatasetCol],
   [DetailsHeader, DetailsCol],
-  [QueryHeader, QueryCol],
+  [AnalysisHeader, AnalysisCol],
   [DistHeader, DistCol]
 ];

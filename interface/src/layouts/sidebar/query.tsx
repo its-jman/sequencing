@@ -1,4 +1,4 @@
-import React, { KeyboardEvent, useContext, useState } from "react";
+import React, { KeyboardEvent, useContext, useEffect, useState } from "react";
 import { FiX } from "react-icons/fi";
 
 import { useTextInput } from "src/utils";
@@ -8,12 +8,25 @@ import styles from "./_sidebar.module.scss";
 import { observer } from "mobx-react-lite";
 import { UIContext } from "src/state/stores/ui";
 import { NetworkStatus } from "src/state/models";
+import { when } from "mobx";
 
 export const Query = observer(() => {
   const queriesStore = useContext(QueriesContext);
   const uiStore = useContext(UIContext);
-  const [disabled, setDisabled] = useState(false);
+  // const [disabled, setDisabled] = useState(false);
   const { value, setValue, onChange, ref } = useTextInput("", (val) => val.toUpperCase());
+
+  useEffect(() => {
+    const dispose = when(
+      () => queriesStore.creation !== null && queriesStore.creation.ns === NetworkStatus.SUCCESS,
+      () => {
+        setValue("");
+        queriesStore.creation = null;
+      }
+    );
+
+    return () => dispose();
+  }, []);
 
   return (
     <div>
@@ -26,7 +39,9 @@ export const Query = observer(() => {
           placeholder={"e.g. RXRX33RR"}
           spellCheck={false}
           ref={ref}
-          disabled={!!(queriesStore.creation && queriesStore.creation.ns === NetworkStatus.REQUEST)}
+          disabled={
+            !!(queriesStore.creation !== null && queriesStore.creation.ns === NetworkStatus.REQUEST)
+          }
           value={value}
           onChange={onChange}
           onKeyUp={(event: KeyboardEvent<HTMLInputElement>) => {
@@ -36,8 +51,16 @@ export const Query = observer(() => {
               //    this should lock the inputs,
               //      onSuccess: Clear value, and set query.
               //      onFailure: list errors, unlock input
-              queriesStore.createQuery(value);
-              setValue("");
+              const matching = queriesStore.getMatchingPattern(value);
+              if (matching !== undefined) {
+                uiStore.updateFilter({
+                  queryId: matching._id
+                });
+                setValue("");
+                ref.current!.blur();
+              } else {
+                queriesStore.createQuery(value);
+              }
             }
           }}
         />
@@ -54,7 +77,15 @@ export const Query = observer(() => {
           <option key={item._id} value={item.raw_pattern} />
         ))}
       </datalist>
-      <div style={{ height: 180 }} />
+      <div style={{ height: 180 }}>
+        {queriesStore.creation !== null && queriesStore.creation.errors.length > 0 && (
+          <ul>
+            {queriesStore.creation.errors.map((err, i) => (
+              <li key={i}>{err}</li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 });

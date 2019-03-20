@@ -1,19 +1,21 @@
 import React, { ChangeEvent, useContext, useEffect, useRef } from "react";
 import { observer } from "mobx-react-lite";
 
-import { ModalType } from "src/state/constants";
 import { UIContext } from "src/state/stores/ui";
+import { ModalType } from "src/state/constants";
 
 export const ControlledFileInput = observer(() => {
   const uiStore = useContext(UIContext);
   const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    console.log("SHOULD OPEN");
+    console.log(uiStore.shouldOpenFI);
     if (uiStore.shouldOpenFI) {
       fileInput.current!.click();
       uiStore.popupFileInput(false);
     }
-  });
+  }, [uiStore.shouldOpenFI]);
 
   return (
     <input
@@ -33,7 +35,7 @@ export const ControlledFileInput = observer(() => {
         // `File` is a custom object which is not enumerable through traditional Object means.
         if (file === null || file === undefined || file.name.length === 0) {
           console.warn('File is "empty"');
-          console.log(file);
+          console.warn(file);
         } else {
           uiStore.setUploads([file]);
           uiStore.showModal(ModalType.UPLOAD_MANAGER);

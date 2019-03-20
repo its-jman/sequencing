@@ -21,7 +21,7 @@ export type IDatasetQueryAnalysis = {
   total_matches: number;
 };
 
-export interface ISequence {
+export interface IRecord {
   _id: string;
   seq_id: string;
   description: string;
@@ -49,7 +49,7 @@ export interface IDataset {
   sequences?: {
     page: number;
     sort_by: string;
-    items: ISequence[];
+    items: IRecord[];
   };
 }
 

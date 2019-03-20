@@ -2,12 +2,13 @@ import React, { ChangeEvent, useCallback, useContext, useRef, useState } from "r
 import { FiEdit, FiX } from "react-icons/fi";
 import { observer } from "mobx-react-lite";
 
-import { ModalType } from "src/state/constants";
 import { getClassNames } from "src/utils";
 import { useKeydownHandler } from "src/utils";
 import { UIContext } from "src/state/stores/ui";
 
 import styles from "./_UploadModal.module.scss";
+import { ModalType } from "src/state/constants";
+import Modal from "src/components/modal";
 
 /**
  * TODO: This should be changed to show a list of files that are being uploaded.
@@ -86,64 +87,66 @@ export const UploadModal = observer(() => {
   });
 
   return (
-    <div className={styles.positioningContainer}>
-      <div className={styles.container}>
-        <MultiSelectionHeader ci={ci} total={uiStore.uploads.length} />
+    <Modal>
+      <div className={styles.positioningContainer}>
+        <div className={styles.container}>
+          <MultiSelectionHeader ci={ci} total={uiStore.uploads.length} />
 
-        {/* Header */}
-        <div className={styles.header}>
-          <div className={styles.headerTop}>
-            <div className={styles.fileName}>{upload.file.name}</div>
-            <div className={styles.headerRight}>
-              <button
-                className={styles.formReset}
-                onClick={() => uiStore.modifyUpload(ci, { name: "" })}
-              >
-                {"Reset Form"}
-              </button>
-              <FiX className={styles.closeIcon} onClick={hideModal} />
+          {/* Header */}
+          <div className={styles.header}>
+            <div className={styles.headerTop}>
+              <div className={styles.fileName}>{upload.file.name}</div>
+              <div className={styles.headerRight}>
+                <button
+                  className={styles.formReset}
+                  onClick={() => uiStore.modifyUpload(ci, { name: "" })}
+                >
+                  {"Reset Form"}
+                </button>
+                <FiX className={styles.closeIcon} onClick={hideModal} />
+              </div>
+            </div>
+            <div className={styles.nameInputContainer}>
+              <FiEdit
+                className={styles.nameInputIcon}
+                onClick={() => {
+                  nameInput.current!.focus();
+                  nameInput.current!.select();
+                }}
+              />
+              <input
+                className={styles.nameInput}
+                type="text"
+                placeholder="Dataset name... "
+                value={upload.name}
+                onChange={(event: ChangeEvent<HTMLInputElement>) => {
+                  uiStore.modifyUpload(ci, { name: event.target.value });
+                }}
+                ref={nameInput}
+              />
             </div>
           </div>
-          <div className={styles.nameInputContainer}>
-            <FiEdit
-              className={styles.nameInputIcon}
-              onClick={() => {
-                nameInput.current!.focus();
-                nameInput.current!.select();
-              }}
-            />
-            <input
-              className={styles.nameInput}
-              type="text"
-              placeholder="Dataset name... "
-              value={upload.name}
-              onChange={(event: ChangeEvent<HTMLInputElement>) => {
-                uiStore.modifyUpload(ci, { name: event.target.value });
-              }}
-              ref={nameInput}
-            />
+
+          {/* Content */}
+          <div className={styles.content}>
+            <div>{"Future ideas go here..."}</div>
+            {upload.errors.length > 0 && (
+              <ul style={{ marginLeft: 20 }}>
+                {upload.errors.map((err, i) => (
+                  <li key={i}>{err}</li>
+                ))}
+              </ul>
+            )}
           </div>
-        </div>
 
-        {/* Content */}
-        <div className={styles.content}>
-          <div>{"Future ideas go here..."}</div>
-          {upload.errors.length > 0 && (
-            <ul style={{ marginLeft: 20 }}>
-              {upload.errors.map((err, i) => (
-                <li key={i}>{err}</li>
-              ))}
-            </ul>
-          )}
+          {/* Footer */}
+          <ModalFooter
+            skipOne={ci >= 1 ? () => uiStore.modifyUpload(ci, { ignored: true }) : undefined}
+            hideModal={hideModal}
+            submit={() => uiStore.submitUpload(ci)}
+          />
         </div>
-
-        {/* Footer */}
-        <ModalFooter
-          skipOne={ci >= 1 ? () => uiStore.modifyUpload(ci, { ignored: true }) : undefined}
-          hideModal={hideModal}
-          submit={() => uiStore.submitUpload(ci)}
-        />
       </div>
-    </div>
+    </Modal>
   );
 });

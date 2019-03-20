@@ -3,8 +3,8 @@ import React, { useContext } from "react";
 import styles from "./_ClearUpload.module.scss";
 import { UIContext } from "src/state/stores/ui";
 import Modal from "src/components/modal";
-import { ModalType } from "src/state/constants";
 import { observer } from "mobx-react-lite";
+import { ModalType } from "src/state/constants";
 
 export const ResumeUpload = observer(() => {
   const uiStore = useContext(UIContext);

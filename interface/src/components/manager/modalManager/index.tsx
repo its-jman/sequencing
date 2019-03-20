@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
 import { observer } from "mobx-react-lite";
 
-import { ModalMap, ConfirmationMap } from "src/state/constants";
 import { UIContext } from "src/state/stores/ui";
 import { isEmpty } from "src/utils";
+import { ModalMap } from "./modals";
+import { ConfirmationMap } from "./confirmations";
 
 // type IModalManagerProps = { modalManager: IModalManager };
 // class ModalManager extends PureComponent<IModalManagerProps> {
@@ -60,22 +61,25 @@ import { isEmpty } from "src/utils";
 export const ModalManager = observer(() => {
   const uiStore = useContext(UIContext);
 
-  let modal = null;
+  let Modal = null;
   if (uiStore.modal !== null) {
-    modal = ModalMap[uiStore.modal.type];
-    if (isEmpty(modal)) modal = null;
+    Modal = ModalMap[uiStore.modal.type];
+    if (isEmpty(Modal)) Modal = null;
   }
 
-  let confirmation = null;
-  if (uiStore.modal !== null) {
-    confirmation = ConfirmationMap[uiStore.confirmations[0].type];
-    if (isEmpty(confirmation)) confirmation = null;
+  let Confirmation = null;
+  if (uiStore.confirmations.length > 0) {
+    Confirmation = ConfirmationMap[uiStore.confirmations[0].type];
+    if (isEmpty(Confirmation)) Confirmation = null;
   }
+
+  console.log("Modal ");
+  console.log(Modal);
 
   return (
     <>
-      {modal !== null && modal({})}
-      {confirmation !== null && confirmation({})}
+      {Modal !== null && <Modal />}
+      {Confirmation !== null && <Confirmation />}
     </>
   );
 });

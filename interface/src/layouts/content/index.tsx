@@ -3,22 +3,22 @@ import { FiUpload, FiX } from "react-icons/fi";
 import { Route, Switch } from "react-router-dom";
 import { observer } from "mobx-react-lite";
 
-import { ControlledFileInput } from "src/components/controlledFileInput";
-import { ConfirmationType, ModalType } from "src/state/constants";
 import { UIContext } from "src/state/stores/ui";
+import { QueriesContext } from "src/state/stores/queries";
+import { ConfirmationType } from "src/state/constants";
 
 import DatasetsTable from "./datasetsTable";
 import { DatasetAnalysis } from "./datasetAnalysis";
-
 import containerStyles from "../_layout.module.scss";
 import styles from "./_content.module.scss";
-import { QueriesContext } from "src/state/stores/queries";
 
 const ContentHeader = observer(() => {
   const uiStore = useContext(UIContext);
   const queriesStore = useContext(QueriesContext);
 
-  const _uploadClick = useCallback(() => {
+  const _uploadClick = useCallback((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.stopPropagation();
+
     if (!uiStore.canResumeUpload) {
       uiStore.popupFileInput(true);
     } else {
@@ -33,7 +33,7 @@ const ContentHeader = observer(() => {
           <>
             <span style={{ fontWeight: "bolder", marginRight: 8 }}>{"Query: "}</span>
             <div className={styles.filterPill}>
-              {queriesStore.history[uiStore.filter.queryId] || "Unknown query..."}
+              {queriesStore.history[uiStore.filter.queryId].raw_pattern || "Unknown query..."}
               <FiX
                 className={styles.x}
                 size={18}
@@ -66,16 +66,15 @@ const ContentHeader = observer(() => {
             fetch("http://localhost:5000/clear").then((resp) => {
               console.warn("Clearing data...");
               console.warn(resp);
+              location.reload();
             });
           }}
         >
           Clear All
         </button>
-
         <button className={`btn btn-2`} onClick={_uploadClick}>
-          <ControlledFileInput /> {/* display: none; */}
           <FiUpload className={styles.uploadIcon} />
-          <span>{" Upload"}</span>
+          {" Upload"}
         </button>
       </div>
     </div>

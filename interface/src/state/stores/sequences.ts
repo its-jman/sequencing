@@ -1,15 +1,15 @@
 import { action, autorun, computed, IComputedValue, observable, reaction, runInAction } from "mobx";
 
 import { api } from "src/api";
-import { DATASETS_NETWORK_PAGE_SIZE, ISequence, NetworkStatus } from "src/state/models";
+import { DATASETS_NETWORK_PAGE_SIZE, IRecord, NetworkStatus } from "src/state/models";
 import { LimitedObservableMap, range, timeout } from "src/utils";
 import { UIStore, uiStoreRaw } from "./ui";
 import { createContext } from "react";
 
 type IListIndexes = { start: number; end: number };
-type IPage = { i: number; ns: NetworkStatus; items: ISequence[] };
+type IPage = { i: number; ns: NetworkStatus; items: IRecord[] };
 
-type IGetSequences = { loading: boolean; sequences: ISequence[] };
+type IGetSequences = { loading: boolean; sequences: IRecord[] };
 
 class DatasetSequencesCache {
   static PAGE_SIZE = DATASETS_NETWORK_PAGE_SIZE;
@@ -125,7 +125,7 @@ class DatasetSequencesCache {
       }
     });
 
-    let sequences: ISequence[] = [];
+    let sequences: IRecord[] = [];
     if (!loading) {
       for (const pageI of pagesI) {
         const page = this.pages.get(pageI);

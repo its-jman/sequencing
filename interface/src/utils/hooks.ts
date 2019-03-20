@@ -24,15 +24,17 @@ export const useKeydownHandler = (keydownMap: { [keyCode: number]: () => void })
 export const usePagination = (
   maxPage: number,
   initial: number = 0
-): [number, (p: number) => void] => {
+): [number, (p: number) => boolean] => {
   const [page, setPageRaw] = useState(initial);
 
-  const setPage = (p: number): void => {
+  const setPage = (p: number): boolean => {
     if (p < 0 || p > maxPage) {
       console.warn(`Invalid page: ${p}`);
     } else {
       setPageRaw(p);
+      return true;
     }
+    return false;
   };
 
   return [page, setPage];

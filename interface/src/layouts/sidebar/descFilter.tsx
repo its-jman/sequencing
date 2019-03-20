@@ -9,7 +9,7 @@ import styles from "./_sidebar.module.scss";
 
 export const DescFilter = observer(() => {
   const uiStore = useContext(UIContext);
-  const { value, setValue, onChange } = useTextInput("");
+  const { value, setValue, onChange, ref } = useTextInput("");
 
   return (
     <div>
@@ -19,12 +19,14 @@ export const DescFilter = observer(() => {
           className={styles.input}
           value={value}
           onChange={onChange}
+          ref={ref}
           placeholder={'e.g. "DNA replication"'}
           onKeyUp={(event: KeyboardEvent<HTMLInputElement>) => {
             if (event.keyCode === 13) {
               event.stopPropagation();
               uiStore.updateFilter({ descFilter: value });
               setValue("");
+              ref.current!.blur();
             }
           }}
         />

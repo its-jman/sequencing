@@ -6,8 +6,8 @@ import { IDataset, NetworkStatus } from "src/state/models";
 import { arrayToObject, objectIdToDate } from "src/utils";
 import { timeout } from "src/utils";
 
-class DatasetsStore {
-  @observable datasets: { [id: string]: IDataset } = {};
+export class DatasetsStore {
+  @observable private _datasets: { [id: string]: IDataset } = {};
   @observable ns: NetworkStatus = NetworkStatus.UNSENT;
 
   constructor() {
@@ -17,6 +17,16 @@ class DatasetsStore {
         if (this.ns === NetworkStatus.SUCCESS) break;
       }
     })();
+  }
+
+  @computed get datasets() {
+    return this._datasets;
+  }
+
+  @action setDataset(dataset: IDataset) {
+    dataset.upload_time = objectIdToDate(dataset._id);
+    this._datasets[dataset._id] = dataset;
+    console.log(this.datasets);
   }
 
   @action async fetchDatasets() {
@@ -29,10 +39,7 @@ class DatasetsStore {
 
         runInAction("fetchDatasetsSuccess", () => {
           this.ns = NetworkStatus.SUCCESS;
-          response.forEach((item) => {
-            item.upload_time = objectIdToDate(item._id);
-          });
-          this.datasets = arrayToObject(response);
+          response.forEach((item) => this.setDataset(item));
         });
       } catch (error) {
         runInAction("fetchDatasetsFailure", () => {
@@ -58,5 +65,5 @@ class DatasetsStore {
   }
 }
 
-const datasetsStoreRaw = new DatasetsStore();
+export const datasetsStoreRaw = new DatasetsStore();
 export const DatasetsContext = createContext(datasetsStoreRaw);
