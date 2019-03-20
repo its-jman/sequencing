@@ -18,7 +18,7 @@ services:
       - "5000:5000"
   interface:
     build: "./interface"
-    command: "npm run start"
+    command: bash -c "yarn install && yarn start"
     volumes:
       - "./interface/:/code/"
     ports:
