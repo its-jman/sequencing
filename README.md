@@ -3,6 +3,7 @@
 - You must have [Docker](https://docs.docker.com/docker-for-windows/) installed.
 - If you are on a platform other than Windows, you may need to install [Docker Compose](https://docs.docker.com/compose/install/) seperately.
 - Download this [repository](https://github.com/jbmanning/sequencing/archive/master.zip) and unzip into your preferred location.
+- On windows only: You must go to docker settings -> Shared Drives, and select the drive that the repository is located on. Click apply.
 
 ## Running
 
