@@ -178,12 +178,14 @@ class SequencesStore {
   }
 
   // TODO: Should this have a decorator?
-  @action getDSCache(datasetId: string): DatasetSequencesCache {
+  getDSCache(datasetId: string): DatasetSequencesCache {
     let dsCache = this.dsMap[datasetId];
     if (dsCache === undefined) {
-      // Since this is not part of an observable object to start, mark it as observable by hand
-      dsCache = observable(new DatasetSequencesCache(datasetId, this.uiStore));
-      this.dsMap[datasetId] = dsCache;
+      runInAction("setNewDSCache", () => {
+        // Since this is not part of an observable object to start, mark it as observable by hand
+        dsCache = observable(new DatasetSequencesCache(datasetId, this.uiStore));
+        this.dsMap[datasetId] = dsCache;
+      });
     }
     return dsCache;
   }
