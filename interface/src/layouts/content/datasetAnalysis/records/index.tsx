@@ -50,7 +50,9 @@ const RecordsListItem = React.memo<{
         {sequence.seq_id}
         {sequence.discarded && " - Discarded"}
       </span>
-      <div className={styles.sequenceDescription}>{sequence.description}</div>
+      <div className={styles.sequenceDescription} onClick={() => setSelection(sequence)}>
+        {sequence.description}
+      </div>
     </div>
   );
 });
