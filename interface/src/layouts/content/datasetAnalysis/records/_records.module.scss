@@ -30,9 +30,9 @@
   transition: max-height .5s ease-out;
 
   display: flex;
-
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
+
   flex-direction: row;
   flex: 1 0 auto;
 
@@ -49,10 +49,9 @@
 }
 
 .sequencesList {
-
   overflow-y: scroll;
 
-  width: 365px;
+  width: 100%;
   height: 100%;
   border-right: 1px solid $grey-4;
 }
@@ -85,18 +84,19 @@
 }
 
 .selectionContent {
-
 }
 
 .sequence {
   font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
 
+  margin: 0 auto;
   background: $grey-3;
   border-radius: 8px;
   border: 1px solid $grey-5;
   padding: 6px 16px;
+  margin: 12px;
 
   line-height: 2em;
-  width: 240px;
+  width: 90%;
   word-wrap: break-word;
 }

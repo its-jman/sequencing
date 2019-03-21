@@ -10,6 +10,7 @@ import { IMatch, IRecord, ISequenceQueryAnalysis } from "src/state/models";
 import { Selection } from "./selection";
 import styles from "./_records.module.scss";
 import { ArrowIcon } from "src/components/arrowIcon";
+import { FiArrowLeft } from "react-icons/fi";
 
 type IOwnProps = {
   datasetId: string;
@@ -81,48 +82,53 @@ export const Records = observer<IOwnProps>(({ datasetId }) => {
       </div>
 
       <div className={gcn(styles.content, open ? styles.contentOpen : styles.contentCollapsed)}>
-        <div className={styles.sequencesList} ref={listContainer}>
-          {loading ? (
-            <div>Loading... </div>
-          ) : sequences.length === 0 ? (
-            <div>No items...</div>
-          ) : (
-            sequences.map((sequence, i) => (
-              <RecordsListItem key={sequence._id} sequence={sequence} setSelection={setSelection} />
-            ))
-          )}
-          <div className={styles.paginationContainer}>
-            <button
-              onClick={() => {
-                if (setPage(page - 1)) {
-                  listContainer.current!.scrollTo(0, 0);
-                  setSelection(null);
-                }
-              }}
-            >
-              prev
+        {selectedRecord !== null ? (
+          <div className={styles.sequencesList}>
+            <button onClick={() => setSelection(null)}>
+              <FiArrowLeft size={28} />
             </button>
-            {" : "}
-            <button
-              onClick={() => {
-                if (setPage(page + 1)) {
-                  listContainer.current!.scrollTo(0, 0);
-                  setSelection(null);
-                }
-              }}
-            >
-              next
-            </button>
-          </div>
-        </div>
-
-        <div className={styles.selection}>
-          {selectedRecord === null ? (
-            <div>Select a record...</div>
-          ) : (
             <Selection record={selectedRecord} />
-          )}
-        </div>
+          </div>
+        ) : (
+          <div className={styles.sequencesList} ref={listContainer}>
+            {loading ? (
+              <div>Loading... </div>
+            ) : sequences.length === 0 ? (
+              <div>No items...</div>
+            ) : (
+              sequences.map((sequence, i) => (
+                <RecordsListItem
+                  key={sequence._id}
+                  sequence={sequence}
+                  setSelection={setSelection}
+                />
+              ))
+            )}
+            <div className={styles.paginationContainer}>
+              <button
+                onClick={() => {
+                  if (setPage(page - 1)) {
+                    listContainer.current!.scrollTo(0, 0);
+                    setSelection(null);
+                  }
+                }}
+              >
+                prev
+              </button>
+              {" : "}
+              <button
+                onClick={() => {
+                  if (setPage(page + 1)) {
+                    listContainer.current!.scrollTo(0, 0);
+                    setSelection(null);
+                  }
+                }}
+              >
+                next
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

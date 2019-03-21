@@ -73,9 +73,6 @@ export const ModalManager = observer(() => {
     if (isEmpty(Confirmation)) Confirmation = null;
   }
 
-  console.log("Modal ");
-  console.log(Modal);
-
   return (
     <>
       {Modal !== null && <Modal />}

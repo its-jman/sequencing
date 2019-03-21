@@ -26,7 +26,6 @@ export class DatasetsStore {
   @action setDataset(dataset: IDataset) {
     dataset.upload_time = objectIdToDate(dataset._id);
     this._datasets[dataset._id] = dataset;
-    console.log(this.datasets);
   }
 
   @action async fetchDatasets() {

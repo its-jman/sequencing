@@ -48,6 +48,17 @@ export const Selection = React.memo<{ record: IRecord }>(({ record }) => {
   // const analysisStore = useContext(AnalysisContext);
   return (
     <div className={styles.selectionContent}>
+      <div style={{ fontWeight: "bold" }}>{record.seq_id}</div>
+      {record.analysis !== undefined && (
+        <div>
+          <span style={{ fontWeight: "bold" }}>{"Amino Count: "}</span>
+          {record.analysis.amino_count}
+        </div>
+      )}
+      <div>
+        <span style={{ fontWeight: "bold" }}>{"Description: "}</span>
+        <span style={{ fontWeight: "lighter", fontSize: 14 }}>{record.description}</span>
+      </div>
       <div className={styles.sequence}>{record.sequence}</div>
     </div>
   );

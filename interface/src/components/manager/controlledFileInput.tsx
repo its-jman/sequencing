@@ -9,8 +9,6 @@ export const ControlledFileInput = observer(() => {
   const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    console.log("SHOULD OPEN");
-    console.log(uiStore.shouldOpenFI);
     if (uiStore.shouldOpenFI) {
       fileInput.current!.click();
       uiStore.popupFileInput(false);
