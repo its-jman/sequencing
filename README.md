@@ -24,7 +24,7 @@ All-in-one: Install dependencies, database, and start server
 docker-compose up
 ```
 
-Once containers have finished installing (may take a few minutes), navigate to `localhost:3000` in your browser.
+Once containers have finished installing (may take a few minutes), navigate to `localhost:3000` in your browser. I recommend keeping the browser console open during use since network requests/failures have not been added as a feature of the UI yet.
 
 ## Sample interface (Missing features)
 ![sequencing-data-table](https://user-images.githubusercontent.com/11013297/55007662-cdab4180-4fad-11e9-9389-a6f2818863ab.png)
