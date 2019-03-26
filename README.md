@@ -1,4 +1,4 @@
-### Sequencing
+# Sequencing
 This is a WIP project conceptualized for a PhD student who needed to search for irregularities/patterns across a genome. Specific analysis is still TBD, but the data layer has been designed to cache complex calculations lazily and to work with a flexible data model to support any future changes.
 
 ## Pre-requisites
