@@ -1,11 +1,29 @@
 ## Pre-requisites
 
+- WARNING: There are known issues with Docker's functionality on Windows. It is recommended to run on MacOS or Linux machine.
 - You must have [Docker](https://docs.docker.com/docker-for-windows/) installed.
-- If you are on a platform other than Windows, you may need to install [Docker Compose](https://docs.docker.com/compose/install/) seperately.
-- Download this [repository](https://github.com/jbmanning/sequencing/archive/master.zip) and unzip into your preferred location.
-- On windows only: You must go to docker settings -> Shared Drives, and select the drive that the repository is located on. Click apply.
+- You will also need to install [Docker Compose](https://docs.docker.com/compose/install/).
+
 
 ## Running
 
-- To run the program, you will need to run docker-compose inside the folder that was downloaded. For OS specific instruction view Docker documentation.
-- Once Docker containers have started navigate to localhost:3000 in a browser.
+Clone a copy of the repo:
+```bash
+git clone https://github.com/jbmanning/sequencing
+```
+
+Change to the sequencing directory
+```bash
+cd sequencing/
+```
+
+All-in-one: Install dependencies, database, and start server
+```bash
+docker-compose up
+```
+
+Once containers have finished installing (may take a few minutes), navigate to `localhost:3000` in your browser.
+
+## Sample interface (Missing features)
+![sequencing-data-table](https://user-images.githubusercontent.com/11013297/55007662-cdab4180-4fad-11e9-9389-a6f2818863ab.png)
+![sequencing-analysis](https://user-images.githubusercontent.com/11013297/55007723-e9aee300-4fad-11e9-997c-8126f483e19a.png)
