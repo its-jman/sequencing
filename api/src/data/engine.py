@@ -1,3 +1,4 @@
+import os
 import re
 import time
 import bson
@@ -36,8 +37,10 @@ class DataEngine:
     }
 
     def __init__(self):
+        mongo_url = os.environ.get('SEQUENCING_MONGO_URL', "mongodb://mongo:27017")
+        
         self.client = MongoClient(
-            "mongodb://localhost:27017/",
+            mongo_url,
             username="myuser",
             password="mypass",
             authSource="admin",

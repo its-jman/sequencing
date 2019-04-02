@@ -9,14 +9,17 @@ services:
     ports:
       - "27017:27017"
   api:
+    depends_on:
+      - mongo
     build: "./api"
-    network_mode: "host"
     command: bash -c "pipenv install && pipenv run flask run -h 0.0.0.0"
     volumes:
       - "./api/:/code/"
     ports:
       - "5000:5000"
   interface:
+    depends_on:
+      - api
     build: "./interface"
     command: bash -c "yarn install && yarn start"
     volumes:
