@@ -1,64 +1,69 @@
 {
-    "openapi": "3.0.2",
-    "info": {"title": "Sequencing", "version": "0.1.0"},
-    "tags": [{"name": "Server", "description": "Server information"}],
-    "paths": {
-        "/datasets": {
-            "get": {
-                "summary": "Retrieve list of datasets including basic metadata",
-                "responses": {
-                    "200": {"$ref": "#/components/responses/get_datasets_200"}
-                },
-            },
-            "post": {
-                "summary": "Upload new dataset",
-                "responses": {
-                    "201": {"$ref": "#/components/responses/post_datasets_201"}
-                },
-            },
-        },
-        "/ping": {
-            "get": {
-                "summary": "Status endpoint",
-                "responses": {"200": {"$ref": "#/components/responses/get_ping_200"}},
-                "tags": ["Server"],
-            }
-        },
-    },
-    "components": {
-        "schemas": {
-            "dataset": {"type": "object", "properties": {"id": {"type": "string"}}},
-            "datatasetArray": {
-                "type": "array",
-                "items": {"$ref": "#/components/schemas/dataset"},
-            },
-            "pong": {"type": "string", "enum": ["pong"]},
-        },
+  "openapi": "3.0.2",
+  "info": { "title": "Sequencing", "version": "0.1.0" },
+  "tags": [{ "name": "Server", "description": "Server information" }],
+  "paths": {
+    "/datasets": {
+      "get": {
+        "summary": "Retrieve list of datasets including basic metadata",
         "responses": {
-            "get_datasets_200": {
-                "description": "OK",
-                "content": {
-                    "application/json": {
-                        "schema": {"$ref": "#/components/schemas/datatasetArray"}
-                    }
-                },
-            },
-            "post_datasets_201": {
-                "description": "OK",
-                "content": {
-                    "application/json": {
-                        "schema": {"$ref": "#/components/schemas/dataset"}
-                    }
-                },
-            },
-            "get_ping_200": {
-                "description": "OK",
-                "content": {
-                    "application/json": {
-                        "schema": {"$ref": "#/components/schemas/pong"}
-                    }
-                },
-            },
-        },
+          "200": { "$ref": "#/components/responses/get_datasets_200" }
+        }
+      },
+      "post": {
+        "summary": "Upload new dataset",
+        "responses": {
+          "201": { "$ref": "#/components/responses/post_datasets_201" }
+        }
+      }
     },
+    "/ping": {
+      "get": {
+        "summary": "Status endpoint",
+        "responses": {
+          "200": { "$ref": "#/components/responses/get_ping_200" }
+        },
+        "tags": ["Server"]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "dataset": {
+        "type": "object",
+        "properties": { "id": { "type": "string" } }
+      },
+      "datatasetArray": {
+        "type": "array",
+        "items": { "$ref": "#/components/schemas/dataset" }
+      },
+      "pong": { "type": "string", "enum": ["pong"] }
+    },
+    "responses": {
+      "get_datasets_200": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/datatasetArray" }
+          }
+        }
+      },
+      "post_datasets_201": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/dataset" }
+          }
+        }
+      },
+      "get_ping_200": {
+        "description": "OK",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/pong" }
+          }
+        }
+      }
+    }
+  }
 }
